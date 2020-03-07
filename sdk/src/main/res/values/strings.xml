@@ -1,0 +1,5 @@
+<resources>
+    <string name="phone_number">Phone Number</string>
+    <string name="login">Login</string>
+    <string name="login_mysabay">Login with MySabay</string>
+</resources>
