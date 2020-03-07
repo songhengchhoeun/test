@@ -1,8 +1,10 @@
-package kh.com.mysabay.sdk;
+package kh.com.mysabay.sdk.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import kh.com.mysabay.sdk.R;
 
 public class LoginActivity extends AppCompatActivity {
 

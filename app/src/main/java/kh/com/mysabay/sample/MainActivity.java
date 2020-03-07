@@ -6,7 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import kh.com.mysabay.sdk.LoginActivity;
+import kh.com.mysabay.sdk.ui.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -2,4 +2,13 @@
     <string name="phone_number">Phone Number</string>
     <string name="login">Login</string>
     <string name="login_mysabay">Login with MySabay</string>
+    <string name="confirm_otp">Confirm otp</string>
+    <string name="enter_the_otp_that_you_have_received_via_text_message">Enter the OTP that you have received via text message:</string>
+    <string name="confirm">Confirm</string>
+    <string name="resend_otp"><![CDATA[<u>Resend OTP</u>]]></string>
+    <string name="label_close">Close</string>
+    <string name="ok">OK</string>
+    <string name="msg_has_connected_internet">The Internet is reconnected</string>
+    <string name="msg_can_not_connect_internet">Unable to connect to the Internet</string>
+    <string name="msg_can_not_connect_server">Unable to communicate with the server, please try again</string>
 </resources>

@@ -24,15 +24,15 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <!--<style name="ButtonPrimary">
+    <style name="ButtonPrimary">
         <item name="android:background">@drawable/shape_button_primary</item>
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorBackground</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/padding_35</item>
     </style>
 
 
-    <style name="NavigationTabTextAppeareance" parent="TextAppearance.Design.Tab">
+    <!--<style name="NavigationTabTextAppeareance" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textSize">@dimen/font_size_sub_title</item>
     </style>-->

@@ -12,6 +12,11 @@ android {
         vectorDrawables.useSupportLibrary true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
+
+        resValue "string", "store_password", (project.findProperty("STORE_PASS") ?: "")
+        resValue "string", "key_store_password", (project.findProperty("KEY_STORE_PASS") ?: "")
+        resValue "string", "store_name", (project.findProperty("STORE_NAME") ?: "")
+        resValue "string", "alias", (project.findProperty("ALIAS") ?: "")
     }
 
     buildTypes {
@@ -40,9 +45,36 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
 
     //phone validation
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.10.3'
     //material components
-    implementation 'com.google.android.material:material:1.2.0-alpha05'
+    //implementation 'com.google.android.material:material:1.2.0-alpha05'
+    //pin library
+    implementation ('com.alimuzaffar.lib:pinentryedittext:2.0.6') {
+        // Exclude is only needed if you already have
+        // androidx.appcompat as a dependency in your app.
+        exclude group: 'androidx.appcompat', module: 'appcompat'
+    }
+    //
+    implementation compatibility("lifecycleExtensions")
+    //dagger
+    implementation compatibility("dagger")
+    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+    implementation compatibility("material")
+    implementation compatibility("commonsLang3")
+    implementation compatibility("rxjava")
+    implementation compatibility("rxBindingMaterial")
+    implementation compatibility("gson")
+    implementation compatibility("retrofit")
+    implementation compatibility("retrofit-convert-gson")
+    implementation compatibility("retrofit-adapter-rxjava2")
+    implementation compatibility("okhttp3-logging-interceptor")
+    implementation compatibility("retrofit-convert-gson")
+    implementation compatibility("converterScalars")
+    //dialog
+    api 'com.afollestad.material-dialogs:core:0.9.6.0'
+    //rsa
+    api 'com.yakivmospan:scytale:1.0.1'
 }
