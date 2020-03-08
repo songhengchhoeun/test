@@ -12,4 +12,6 @@
     <string name="msg_has_connected_internet">អ៊ីនធឺណិតត្រូវបានតភ្ជាប់ឡើងវិញ</string>
     <string name="msg_can_not_connect_internet">មិនអាចតភ្ជាប់អ៊ីនធឺណិត</string>
     <string name="msg_can_not_connect_server">មិនអាចទំនាកទំនងជាមួយមាសុីនមេបានទេ។សូមព្យាយាមម្តងទៀត</string>
+    <string name="msg_no_data">No data</string>
+    <string name="title_retry">Retry</string>
 </resources>

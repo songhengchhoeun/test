@@ -45,9 +45,7 @@ public class ServiceGenerator {
     @Provides
     public Retrofit instance() {
         return new Retrofit.Builder()
-                .baseUrl("https://app.legalcouncilmef.com/")
-                // .baseUrl("http://172.24.64.246:4000/")
-                //.baseUrl("http://192.168.0.111:4000/")
+                .baseUrl("https://user.master.mysabay.com/")
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

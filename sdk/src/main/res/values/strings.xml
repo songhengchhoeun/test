@@ -11,4 +11,6 @@
     <string name="msg_has_connected_internet">The Internet is reconnected</string>
     <string name="msg_can_not_connect_internet">Unable to connect to the Internet</string>
     <string name="msg_can_not_connect_server">Unable to communicate with the server, please try again</string>
+    <string name="msg_no_data">No data</string>
+    <string name="title_retry">Retry</string>
 </resources>

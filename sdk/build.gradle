@@ -77,4 +77,9 @@ dependencies {
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
     //rsa
     api 'com.yakivmospan:scytale:1.0.1'
+    //localization strings
+    implementation 'com.akexorcist:localizationactivity:1.2.2'
+    //animation lib
+    api 'com.daimajia.easing:library:2.1@aar'
+    api 'com.daimajia.androidanimations:library:2.3@aar'
 }
