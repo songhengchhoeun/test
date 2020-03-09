@@ -1,7 +1,9 @@
 package kh.com.mysabay.sdk;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
 import com.akexorcist.localizationactivity.core.LocalizationApplicationDelegate;
@@ -21,6 +23,7 @@ public class Apps extends Application {
     LocalizationApplicationDelegate mLocalizationApplicationDelegate = new LocalizationApplicationDelegate(this);
 
     private static Apps mInstance;
+    private SharedPreferences mPreferences;
     public BaseAppComponent mComponent;
 
     @Override
@@ -50,5 +53,27 @@ public class Apps extends Application {
     @Contract(pure = true)
     public static synchronized Apps getInstance() {
         return mInstance;
+    }
+
+    public SharedPreferences getPreferences(Activity context) {
+        if (mPreferences == null)
+            mPreferences = context.getSharedPreferences(Globals.PREF_NAME, MODE_PRIVATE);
+        return mPreferences;
+    }
+
+    public SharedPreferences getPreferences() {
+        if (mPreferences == null)
+            mPreferences = mInstance.getSharedPreferences(Globals.PREF_NAME, MODE_PRIVATE);
+        return mPreferences;
+    }
+
+    public void saveAppItem(String item) {
+        SharedPreferences.Editor editor = getPreferences().edit();
+        editor.putString(Globals.EXT_KEY_APP_ITEM, item);
+        editor.apply();
+    }
+
+    public String getAppItem() {
+        return getPreferences().getString(Globals.EXT_KEY_APP_ITEM, null);
     }
 }

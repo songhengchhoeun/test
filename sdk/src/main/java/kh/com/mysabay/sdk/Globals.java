@@ -25,12 +25,14 @@ public class Globals {
     public static final String EXT_KEY_LANG = "key_lang";
     public static final String LANGUAGE_KHMER = "km";
     public static final String LANGUAGE_ENGLISH = "en";
-    public static final String PREF_NAME = "pref_mmi";
+    public static final String PREF_NAME = "pref_sabaysdk";
     public static final String EXT_KEY_NAME = "ext_name";
     public static final String EXT_KEY_ID = "ext_id";
     private static final String EXT_KEY_TOKEN = "EXT_KEY_TOKEN";
     private static final String EXT_KEY_DISCOUNT = "EXT_KEY_DISCOUNT";
     public static final String EXT_KEY_DATA = "ext_key_data";
+    public static final String EXT_KEY_APP_ITEM = "EXT_KEY_APP_ITEM";
+
 
     /**
      * Method replace fragment with set title to activity and add backpress

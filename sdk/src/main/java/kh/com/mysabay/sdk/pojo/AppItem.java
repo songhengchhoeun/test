@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Tan Phirum on 3/9/20
  * Gmail phirumtan@gmail.com
  */
-public class AppRequiredItem implements Parcelable {
+public class AppItem implements Parcelable {
 
     @SerializedName("app_secret")
     @Expose
@@ -24,49 +24,49 @@ public class AppRequiredItem implements Parcelable {
     @Expose
     public String uuid;
 
-    public AppRequiredItem(String appSecret, String token, String uuid) {
+    public AppItem(String appSecret, String token, String uuid) {
         this.appSecret = appSecret;
         this.token = token;
         this.uuid = uuid;
     }
 
-    public AppRequiredItem(String appSecret, String token) {
+    public AppItem(String appSecret, String token) {
         this(appSecret, token, null);
     }
 
-    public AppRequiredItem(String appSecret) {
+    public AppItem(String appSecret) {
         this(appSecret, null, null);
     }
 
-    protected AppRequiredItem(Parcel in) {
+    protected AppItem(Parcel in) {
         appSecret = in.readString();
         token = in.readString();
         uuid = in.readString();
     }
 
-    public static final Creator<AppRequiredItem> CREATOR = new Creator<AppRequiredItem>() {
+    public static final Creator<AppItem> CREATOR = new Creator<AppItem>() {
         @Override
-        public AppRequiredItem createFromParcel(Parcel in) {
-            return new AppRequiredItem(in);
+        public AppItem createFromParcel(Parcel in) {
+            return new AppItem(in);
         }
 
         @Override
-        public AppRequiredItem[] newArray(int size) {
-            return new AppRequiredItem[size];
+        public AppItem[] newArray(int size) {
+            return new AppItem[size];
         }
     };
 
-    public AppRequiredItem withAppSecret(String appSecret) {
+    public AppItem withAppSecret(String appSecret) {
         this.appSecret = appSecret;
         return this;
     }
 
-    public AppRequiredItem withToken(String token) {
+    public AppItem withToken(String token) {
         this.token = token;
         return this;
     }
 
-    public AppRequiredItem withUuid(String uuid) {
+    public AppItem withUuid(String uuid) {
         this.uuid = uuid;
         return this;
     }

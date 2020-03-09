@@ -2,6 +2,8 @@ package kh.com.mysabay.sdk.webservice;
 
 import android.content.Context;
 
+import androidx.lifecycle.MediatorLiveData;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -10,7 +12,7 @@ import java.net.SocketTimeoutException;
 
 import io.reactivex.observers.DisposableObserver;
 import kh.com.mysabay.sdk.R;
-import kh.com.mysabay.sdk.base.BaseView;
+import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.utils.IdlingResourceHelper;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 import okhttp3.ResponseBody;
@@ -21,7 +23,7 @@ import retrofit2.HttpException;
  */
 public abstract class AbstractDisposableObs<T> extends DisposableObserver<T> {
 
-    private WeakReference<BaseView> mWeakRefBaseView;
+    private WeakReference<MediatorLiveData<NetworkState>> mWeakRefBaseView;
     private WeakReference<IdlingResourceHelper> mWeakRefIdlingState;
     private WeakReference<Context> mWeakRefContext;
 
@@ -34,12 +36,12 @@ public abstract class AbstractDisposableObs<T> extends DisposableObserver<T> {
      * @param baseView nullable
      * @param mHelper  can't null, convenient on unit test
      */
-    public AbstractDisposableObs(Context context, BaseView baseView, IdlingResourceHelper mHelper) {
+    public AbstractDisposableObs(Context context, MediatorLiveData<NetworkState> baseView, IdlingResourceHelper mHelper) {
         this.mWeakRefBaseView = new WeakReference<>(baseView);
         this.mWeakRefIdlingState = new WeakReference<>(mHelper);
         this.mWeakRefContext = new WeakReference<>(context);
         if (baseView != null)
-            baseView.showProgressBar(true);
+            baseView.setValue(new NetworkState(NetworkState.Status.LOADING));
 
         if (mHelper != null)
             mHelper.setIdleState(false);
@@ -47,12 +49,14 @@ public abstract class AbstractDisposableObs<T> extends DisposableObserver<T> {
 
     protected abstract void onSuccess(T t);
 
+    protected abstract void onErrors(Throwable error);
+
     @Override
     public void onNext(T object) {
         releaseIdlingState();
         if (mWeakRefBaseView.get() != null) {
-            BaseView view = mWeakRefBaseView.get();
-            view.showProgressBar(false);
+            MediatorLiveData<NetworkState> view = mWeakRefBaseView.get();
+            view.setValue(new NetworkState(NetworkState.Status.SUCCESS));
         }
 
         onSuccess(object);
@@ -60,11 +64,9 @@ public abstract class AbstractDisposableObs<T> extends DisposableObserver<T> {
 
     @Override
     public void onError(Throwable e) {
+        onErrors(e);
+
         releaseIdlingState();
-        if (mWeakRefBaseView.get() != null) {
-            BaseView view = mWeakRefBaseView.get();
-            view.showProgressBar(false);
-        }
 
         Context context = null;
         if (mWeakRefContext != null)
@@ -72,15 +74,7 @@ public abstract class AbstractDisposableObs<T> extends DisposableObserver<T> {
         if (context == null)
             return;
 
-        if (e instanceof HttpException) {
-            //ResponseBody responseBody = ((HttpException) e).response().errorBody();
-            MessageUtil.displayToast(context, context.getString(R.string.msg_can_not_connect_server));
-        } else if (e instanceof SocketTimeoutException) {
-            MessageUtil.displayToast(context, context.getString(R.string.msg_can_not_connect_internet));
-        } else if (e instanceof IOException) {
-            MessageUtil.displayToast(context, context.getString(R.string.msg_can_not_connect_internet));
-        } else
-            MessageUtil.displayToast(context, context.getString(R.string.msg_can_not_connect_server));
+
     }
 
     @Override

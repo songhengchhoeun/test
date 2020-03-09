@@ -8,7 +8,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatEditText;
-import androidx.lifecycle.Observer;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -23,7 +22,6 @@ import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FragmentLoginBinding;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
-import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.utils.MyPhoneUtils;
 import kh.com.mysabay.sdk.viewmodel.UserApiVM;
@@ -70,23 +68,21 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, UserApiVM>
     @Override
     public void addListeners() {
         // mViewBinding.btnLoginMysabay.setOnClickListener(this);
-        mViewBinding.edtPhone.setOnFocusChangeListener((v, hasFocus) -> {
+        /*mViewBinding.edtPhone.setOnFocusChangeListener((v, hasFocus) -> {
             Editable editable = ((AppCompatEditText) v).getText();
             if (editable != null && editable.length() > 0) {
                 if (!hasFocus) {
                     MyPhoneUtils.formatPhoneKh(v.getContext(), editable.toString());
                 }
             }
+        });*/
+
+        viewModel.liveNetworkState.observe(this, initialLoadState -> {
+            showProgressState(initialLoadState);
         });
 
-        viewModel.liveNetworkState.observe(this, this::showProgressState);
-
-        viewModel.login.observe(this, new Observer<Object>() {
-            @Override
-            public void onChanged(Object o) {
-                LogUtil.debug(TAG, "success with object " + gson.toJson(o));
-            }
-        });
+        viewModel.login.observe(this, phone ->
+                mViewBinding.edtPhone.setText(phone));
 
         mViewBinding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,9 +96,8 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, UserApiVM>
                 }*/
                 if (StringUtils.isAnyBlank(phoneNo)) {
                     showCheckFields(mViewBinding.edtPhone, R.string.msg_input_phone);
-                } else {
+                } else
                     viewModel.postToLogin(v.getContext(), "", phoneNo);
-                }
             }
         });
     }

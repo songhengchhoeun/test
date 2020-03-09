@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.di.module.ViewModelModule;
 import kh.com.mysabay.sdk.utils.RSAEncryptUtils;
 
@@ -29,6 +30,12 @@ public class ApplicationModule {
     @Provides
     Gson provideGson() {
         return new Gson();
+    }
+
+    @Singleton
+    @Provides
+    Context provideContext() {
+        return Apps.getInstance();
     }
 
 }

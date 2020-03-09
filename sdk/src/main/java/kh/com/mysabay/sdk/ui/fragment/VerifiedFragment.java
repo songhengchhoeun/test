@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 
 import com.alimuzaffar.lib.pin.PinEntryEditText;
 
@@ -15,7 +14,6 @@ import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FragmentVerifiedBinding;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
-import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.viewmodel.UserApiVM;
 
@@ -74,6 +72,20 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
                     ((LoginActivity) getActivity()).initAddFragment(new VerifiedFragment(), VerifiedFragment.TAG, true);
             }
         });*/
+
+        mViewBinding.tvResendOtp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.postToGetUserProfile();
+            }
+        });
+
+        mViewBinding.btnVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.postToVerified("", 0);
+            }
+        });
     }
 
     @Override
