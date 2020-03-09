@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
+import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.utils.IdlingResourceHelper;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 
@@ -48,9 +50,9 @@ public abstract class BaseFragment<D extends ViewDataBinding, V extends ViewMode
 
     public abstract void addListeners();
 
-    public abstract int getViewProgressId();
+    public abstract View assignProgressView();
 
-    public abstract int getViewEmptyId();
+    public abstract View assignEmptyView();
 
     protected abstract Class<V> getViewModel();
 
@@ -69,7 +71,6 @@ public abstract class BaseFragment<D extends ViewDataBinding, V extends ViewMode
 
     private boolean mIsNetworkRegistered;
     private BroadcastReceiver mNetworkReceiver;
-    private View mViewProgress, mViewEmpty;
 
     public boolean isHasLoadedOnce = false;
 
@@ -99,8 +100,6 @@ public abstract class BaseFragment<D extends ViewDataBinding, V extends ViewMode
 
         gson = new Gson();
         mViewBinding = DataBindingUtil.bind(view);
-        initProgressLayout(view);
-        initEmptyLayout(view);
         initializeObjects(view, savedInstanceState);
 
      /*   if (view.findViewById(R.id.btn_retry) != null)
@@ -178,26 +177,6 @@ public abstract class BaseFragment<D extends ViewDataBinding, V extends ViewMode
         MessageUtil.displayToast(getContext(), "retry click hye");
     }
 
-    private void initProgressLayout(@NotNull View view) {
-        mViewProgress = view.findViewById(getViewProgressId());
-        if (mViewProgress == null)
-            throw new IllegalArgumentException("view progress can't be null");
-    }
-
-    private void initEmptyLayout(@NotNull View view) {
-        mViewEmpty = view.findViewById(getViewEmptyId());
-        if (mViewEmpty == null)
-            throw new IllegalArgumentException("view empty can't be null");
-    }
-
-    public View getViewProgress() {
-        return this.mViewProgress;
-    }
-
-    public View getViewEmpty() {
-        return this.mViewEmpty;
-    }
-
     /**
      * Only called from test, creates and returns a new {@link IdlingResourceHelper}.
      */
@@ -207,6 +186,34 @@ public abstract class BaseFragment<D extends ViewDataBinding, V extends ViewMode
         if (mIdlingResourceHelper == null)
             mIdlingResourceHelper = new IdlingResourceHelper();
         return mIdlingResourceHelper;
+    }
+
+    protected void showProgressState(@NotNull NetworkState initialLoadState) {
+        switch (initialLoadState.status()) {
+            case NetworkState.Status.SUCCESS:
+                showProgress(false);
+                break;
+            case NetworkState.Status.ERROR:
+                showProgress(false);
+                Toast.makeText(getContext(), initialLoadState.message(), Toast.LENGTH_SHORT).show();
+                break;
+            case NetworkState.Status.LOADING:
+            default:
+                showProgress(true);
+                break;
+        }
+    }
+
+    private void showProgress(boolean isShow) {
+        if (assignProgressView() == null)
+            throw new IllegalArgumentException("view progress can't be null");
+        assignProgressView().setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    public void showEmptyView(boolean isShow) {
+        if (assignEmptyView() == null)
+            throw new IllegalArgumentException("view Empty can't be null");
+        assignEmptyView().setVisibility(isShow ? View.VISIBLE : View.GONE);
     }
 
 }

@@ -8,10 +8,12 @@
     <string name="confirm">បញ្ជាក់</string>
     <string name="resend_otp"><![CDATA[<u>ផ្ញើ OTP ម្តងទៀត</u>]]></string>
     <string name="label_close">Close</string>
-    <string name="ok">Ok</string>
+    <string name="ok">យល់ព្រម</string>
     <string name="msg_has_connected_internet">អ៊ីនធឺណិតត្រូវបានតភ្ជាប់ឡើងវិញ</string>
     <string name="msg_can_not_connect_internet">មិនអាចតភ្ជាប់អ៊ីនធឺណិត</string>
     <string name="msg_can_not_connect_server">មិនអាចទំនាកទំនងជាមួយមាសុីនមេបានទេ។សូមព្យាយាមម្តងទៀត</string>
-    <string name="msg_no_data">No data</string>
-    <string name="title_retry">Retry</string>
+    <string name="msg_no_data">មិនមានទិន្នន័យ</string>
+    <string name="title_retry">ម្តងទៀត</string>
+    <string name="msg_phone_incorrect">ទម្រង់លេខទូរស័ព្ទរបស់លោកអ្នកមិនត្រឹមត្រូវទេ</string>
+    <string name="msg_input_phone">បញ្ចូលលេខទូរស័ព្ទ</string>
 </resources>

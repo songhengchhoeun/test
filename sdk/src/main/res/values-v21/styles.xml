@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SdkAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorYellow</item>
+        <item name="colorPrimaryDark">@color/colorYellow</item>
+        <item name="colorAccent">@color/colorYellow</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="SdkAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.FullScreen">
+    <style name="SdkAppTheme.NoActionBar.FullScreen">
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="SdkAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
+    <style name="SdkAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!--<style name="ButtonPrimary">
         <item name="android:background">@drawable/shape_button_primary</item>
@@ -38,7 +37,7 @@
         <item name="android:textSize">@dimen/font_size_sub_title</item>
     </style>-->
 
-    <style name="BaseAppearanceTitle.MyAppearanceTitle">
+  <!--  <style name="BaseAppearanceTitle.MyAppearanceTitle">
         <item name="android:textSize">@dimen/font_size_header</item>
     </style>
 
@@ -76,5 +75,5 @@
 
     <style name="MyAppearanceCaption.Primary">
         <item name="android:textColor">@color/colorPrimary</item>
-    </style>
+    </style>-->
 </resources>

@@ -1,27 +1,27 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SdkAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorYellow</item>
+        <item name="colorPrimaryDark">@color/colorYellow</item>
+        <item name="colorAccent">@color/colorYellow</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="SdkAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.FullScreen">
+    <style name="SdkAppTheme.NoActionBar.FullScreen">
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="SdkAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="SdkAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
     <style name="ButtonPrimary">
@@ -38,7 +38,7 @@
     </style>-->
 
     <style name="BaseAppearanceTitle">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorYellow</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
         <item name="fontFamily">@font/font_battambang_bold</item>
     </style>
@@ -63,7 +63,7 @@
     </style>
 
     <style name="MyAppearanceBody1.Primary">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorYellow</item>
     </style>
 
     <style name="MyAppearanceBody1.Accent">
@@ -81,7 +81,11 @@
     </style>
 
     <style name="MyAppearanceCaption.Primary">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorYellow</item>
+    </style>
+
+    <style name="SdkAppTheme.MyStyleOutlineBox" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="android:fontFamily">@font/font_battambang_regular</item>
     </style>
 
 

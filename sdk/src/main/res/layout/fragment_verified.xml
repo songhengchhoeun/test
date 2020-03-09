@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackground"
         android:gravity="center"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="?actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/colorBackground"
-                app:srcCompat="@drawable/abc_vector_test" />
-        </androidx.appcompat.widget.Toolbar>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackground"
+            app:srcCompat="@drawable/abc_vector_test" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -52,21 +53,36 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
 
+            <!--
+        width is 6*48 + 4*5 = 308
+        6 characters
+        48dp width for each character (circle is the same as rect) so same width and height
+        4dp space between each character
+        5 spaces (spaces are usually characters - 1.
+        -->
             <com.alimuzaffar.lib.pin.PinEntryEditText
-                android:id="@+id/appCompatEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:id="@+id/edt_verify_code"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="32dp"
+                android:background="@null"
                 android:cursorVisible="false"
                 android:digits="1234567890"
                 android:inputType="number"
                 android:maxLength="4"
-                android:textAppearance="@style/BaseAppearanceTitle.MyAppearanceTitle"
                 android:textIsSelectable="false"
-                android:textSize="20sp"
+                android:textSize="24dp"
+                android:textColor="@color/colorYellow"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_show_otp" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_show_otp"
+                app:pinAnimationType="fromBottom"
+                app:pinBackgroundDrawable="@drawable/bg_pin"
+                app:pinBackgroundIsSquare="true"
+                app:pinCharacterSpacing="@dimen/padding_10"
+                app:pinTextBottomPadding="16dp"
+                tools:ignore="SpUsage" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_resend_otp"
@@ -75,7 +91,7 @@
                 android:text="@string/resend_otp"
                 app:layout_constraintBottom_toBottomOf="@+id/btn_login_mysabay"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatEditText" />
+                app:layout_constraintTop_toBottomOf="@+id/edt_verify_code" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_login_mysabay"
@@ -87,10 +103,11 @@
                 android:text="@string/confirm"
                 android:textAppearance="@style/MyAppearanceBody1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatEditText" />
+                app:layout_constraintTop_toBottomOf="@+id/edt_verify_code" />
 
             <include
-                layout="@layout/rc_view_empty"
+                android:id="@+id/view_empty"
+                layout="@layout/view_empty"
                 android:visibility="gone" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

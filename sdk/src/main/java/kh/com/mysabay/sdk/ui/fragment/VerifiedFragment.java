@@ -5,11 +5,18 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
+
+import com.alimuzaffar.lib.pin.PinEntryEditText;
+
+import org.apache.commons.lang3.StringUtils;
 
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FragmentVerifiedBinding;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
+import kh.com.mysabay.sdk.utils.LogUtil;
+import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.viewmodel.UserApiVM;
 
 /**
@@ -37,17 +44,46 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
 
     @Override
     public void addListeners() {
+        mViewBinding.edtVerifyCode.setAnimateText(true);
+        mViewBinding.edtVerifyCode.setOnPinEnteredListener(new PinEntryEditText.OnPinEnteredListener() {
+            @Override
+            public void onPinEntered(CharSequence str) {
+                if (StringUtils.equalsIgnoreCase(str, "5555")) {
+                    MessageUtil.displayToast(getContext(), "verified success");
+                } else {
+                    MessageUtil.displayToast(getContext(), "verified failed");
+                    mViewBinding.edtVerifyCode.setError(true);
+                    mViewBinding.edtVerifyCode.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mViewBinding.edtVerifyCode.setText(null);
+                        }
+                    }, 1000);
+                }
+            }
+        });
 
+
+        viewModel.liveNetworkState.observe(this, this::showProgressState);
+
+       /* viewModel.ver.observe(this, new Observer<Object>() {
+            @Override
+            public void onChanged(Object o) {
+                LogUtil.debug(TAG, "success with object " + gson.toJson(o));
+                if (getActivity() instanceof LoginActivity)
+                    ((LoginActivity) getActivity()).initAddFragment(new VerifiedFragment(), VerifiedFragment.TAG, true);
+            }
+        });*/
     }
 
     @Override
-    public int getViewProgressId() {
-        return R.id.progress_bar;
+    public View assignProgressView() {
+        return mViewBinding.viewEmpty.progressBar;
     }
 
     @Override
-    public int getViewEmptyId() {
-        return R.id.view_empty;
+    public View assignEmptyView() {
+        return mViewBinding.viewEmpty.viewRetry;
     }
 
     @Override

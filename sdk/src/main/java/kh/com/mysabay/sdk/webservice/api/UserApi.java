@@ -6,7 +6,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 /**
  * Created by Tan Phirum on 3/7/20
@@ -15,7 +15,7 @@ import retrofit2.http.Part;
 public interface UserApi {
 
     @GET("api/user/login/{phone}")
-    Observable<Object> getUserLogin(@Header("app_secret") String appSecret, @Part("phone") String phone);
+    Observable<Object> getUserLogin(@Header("app_secret") String appSecret, @Path("phone") String phone);
 
     @FormUrlEncoded
     @POST("api/user/verify_code")
