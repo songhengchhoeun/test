@@ -7,6 +7,10 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+
+import javax.inject.Inject;
 
 import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.Globals;
@@ -14,6 +18,7 @@ import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseActivity;
 import kh.com.mysabay.sdk.di.component.UserComponent;
 import kh.com.mysabay.sdk.ui.fragment.LoginFragment;
+import kh.com.mysabay.sdk.viewmodel.UserApiVM;
 
 public class LoginActivity extends BaseActivity {
 
@@ -24,6 +29,12 @@ public class LoginActivity extends BaseActivity {
 
     // Reference to the main graph
     public UserComponent userComponent;
+    public static LoginActivity loginActivity;
+
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
+    public UserApiVM viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +42,8 @@ public class LoginActivity extends BaseActivity {
         userComponent = Apps.getInstance().mComponent.mainComponent().create();
         // Make Dagger instantiate @Inject fields in MaiActivity
         userComponent.inject(this);
+        loginActivity = this;
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserApiVM.class);
         super.onCreate(savedInstanceState);
     }
 

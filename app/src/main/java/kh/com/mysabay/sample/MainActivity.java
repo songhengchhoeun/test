@@ -10,16 +10,26 @@ import kh.com.mysabay.sdk.ui.activity.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    private View viewProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        viewProgress = findViewById(R.id.view_pb);
         findViewById(R.id.show_login_screen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                viewProgress.setVisibility(View.VISIBLE);
                 startActivity(new Intent(v.getContext(), LoginActivity.class));
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        viewProgress.setVisibility(View.GONE);
+        super.onStop();
     }
 }

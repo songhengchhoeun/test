@@ -6,17 +6,12 @@ import androidx.lifecycle.MediatorLiveData;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.net.SocketTimeoutException;
 
 import io.reactivex.observers.DisposableObserver;
-import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.utils.IdlingResourceHelper;
-import kh.com.mysabay.sdk.utils.MessageUtil;
 import okhttp3.ResponseBody;
-import retrofit2.HttpException;
 
 /**
  * Created by Tan Phirum on 3/2/18.
@@ -29,6 +24,10 @@ public abstract class AbstractDisposableObs<T> extends DisposableObserver<T> {
 
     public AbstractDisposableObs(Context context, IdlingResourceHelper idlingResource) {
         this(context, null, idlingResource);
+    }
+
+    public AbstractDisposableObs(Context context, MediatorLiveData<NetworkState> baseView) {
+        this(context, baseView, null);
     }
 
     /**

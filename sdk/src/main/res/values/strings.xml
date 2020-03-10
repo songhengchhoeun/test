@@ -16,4 +16,5 @@
     <string name="msg_phone_incorrect">your phone number format is incorrect</string>
     <string name="msg_input_phone">Input phone number</string>
     <string name="arena_of_glory">arena of glory</string>
+    <string name="verify_code_required">verify code is required</string>
 </resources>

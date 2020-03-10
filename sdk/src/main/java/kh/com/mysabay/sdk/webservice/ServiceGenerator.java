@@ -3,6 +3,8 @@ package kh.com.mysabay.sdk.webservice;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.GsonBuilder;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +49,7 @@ public class ServiceGenerator {
         return new Retrofit.Builder()
                 .baseUrl("https://user.master.mysabay.com/")
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(getClientConfig())
                 .build();

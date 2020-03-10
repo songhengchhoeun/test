@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 
 import com.alimuzaffar.lib.pin.PinEntryEditText;
 
@@ -13,7 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FragmentVerifiedBinding;
+import kh.com.mysabay.sdk.pojo.login.LoginItem;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
+import kh.com.mysabay.sdk.utils.KeyboardUtils;
+import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.viewmodel.UserApiVM;
 
@@ -32,35 +36,42 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
 
     @Override
     public void initializeObjects(View v, Bundle args) {
-
+        this.viewModel = LoginActivity.loginActivity.viewModel;
     }
 
     @Override
     public void assignValues() {
-
     }
 
     @Override
     public void addListeners() {
+
+        viewModel.getResponseLogin().observe(getViewLifecycleOwner(), new Observer<LoginItem>() {
+            @Override
+            public void onChanged(LoginItem item) {
+                LogUtil.debug(TAG, "item from login " + gson.toJson(item));
+            }
+        });
+
         mViewBinding.edtVerifyCode.setAnimateText(true);
         mViewBinding.edtVerifyCode.setOnPinEnteredListener(new PinEntryEditText.OnPinEnteredListener() {
             @Override
             public void onPinEntered(CharSequence str) {
-                if (StringUtils.equalsIgnoreCase(str, "5555")) {
-                    MessageUtil.displayToast(getContext(), "verified success");
+                LoginItem item = viewModel.getResponseLogin().getValue();
+                if (item == null) return;
+
+                if (Integer.parseInt(str.toString()) == item.data.verifyCode) {
+                    KeyboardUtils.hideKeyboard(getContext(), mViewBinding.edtVerifyCode);
+                    viewModel.postToVerified(Integer.parseInt(str.toString()));
                 } else {
+                    KeyboardUtils.hideKeyboard(getContext(), mViewBinding.edtVerifyCode);
                     MessageUtil.displayToast(getContext(), "verified failed");
                     mViewBinding.edtVerifyCode.setError(true);
-                    mViewBinding.edtVerifyCode.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mViewBinding.edtVerifyCode.setText(null);
-                        }
-                    }, 1000);
+                    mViewBinding.edtVerifyCode.postDelayed(() ->
+                            mViewBinding.edtVerifyCode.setText(null), 1000);
                 }
             }
         });
-
 
         viewModel.liveNetworkState.observe(this, this::showProgressState);
 
@@ -73,18 +84,18 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
             }
         });*/
 
-        mViewBinding.tvResendOtp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewModel.postToGetUserProfile();
-            }
+        mViewBinding.tvResendOtp.setOnClickListener(v -> {
+            mViewBinding.edtVerifyCode.setText("");
+            viewModel.resendOTP(v.getContext());
         });
 
-        mViewBinding.btnVerify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewModel.postToVerified("", 0);
-            }
+        mViewBinding.btnVerify.setOnClickListener(v -> {
+            String code = mViewBinding.edtVerifyCode.getText() != null ? mViewBinding.edtVerifyCode.getText().toString() : "";
+            if (!StringUtils.isEmpty(code)) {
+                KeyboardUtils.hideKeyboard(v.getContext(), v);
+                viewModel.postToVerified(Integer.parseInt(code));
+            } else
+                MessageUtil.displayToast(v.getContext(), getString(R.string.verify_code_required));
         });
     }
 

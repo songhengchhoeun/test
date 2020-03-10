@@ -1,9 +1,14 @@
 package kh.com.mysabay.sdk.repository;
 
+import android.text.Html;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import kh.com.mysabay.sdk.pojo.login.LoginItem;
+import kh.com.mysabay.sdk.pojo.profile.UserProfileItem;
+import kh.com.mysabay.sdk.pojo.verified.VerifiedItem;
 import kh.com.mysabay.sdk.webservice.api.UserApi;
 
 /**
@@ -21,22 +26,22 @@ public class UserRepo implements UserApi {
     }
 
     @Override
-    public Observable<Object> getUserLogin(String appSecret, String phone) {
+    public Observable<LoginItem> getUserLogin(String appSecret, String phone) {
         return userApi.getUserLogin(appSecret, phone);
     }
 
     @Override
-    public Observable<Object> postVerifyCode(String appSecret, String token, String phone, int code) {
+    public Observable<VerifiedItem> postVerifyCode(String appSecret, String token, String phone, int code) {
         return userApi.postVerifyCode(appSecret, "Bearer " + token, phone, code);
     }
 
     @Override
-    public Observable<Object> postLoginWithMySabay(String appSecret) {
+    public Observable<String> postLoginWithMySabay(String appSecret) {
         return userApi.postLoginWithMySabay(appSecret);
     }
 
     @Override
-    public Observable<Object> getUserProfile(String appSecret, String token) {
+    public Observable<UserProfileItem> getUserProfile(String appSecret, String token) {
         return this.userApi.getUserProfile(appSecret, token);
     }
 

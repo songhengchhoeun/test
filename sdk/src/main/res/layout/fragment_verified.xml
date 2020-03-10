@@ -70,7 +70,7 @@
                 android:cursorVisible="false"
                 android:digits="1234567890"
                 android:inputType="number"
-                android:maxLength="4"
+                android:maxLength="6"
                 android:textColor="@color/colorYellow"
                 android:textIsSelectable="false"
                 android:textSize="24dp"
@@ -80,7 +80,7 @@
                 app:pinAnimationType="fromBottom"
                 app:pinBackgroundDrawable="@drawable/bg_pin"
                 app:pinBackgroundIsSquare="true"
-                app:pinCharacterSpacing="@dimen/padding_30"
+                app:pinCharacterSpacing="@dimen/padding_20"
                 app:pinTextBottomPadding="16dp"
                 tools:ignore="SpUsage" />
 

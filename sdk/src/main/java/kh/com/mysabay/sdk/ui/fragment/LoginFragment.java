@@ -3,7 +3,6 @@ package kh.com.mysabay.sdk.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -23,7 +22,6 @@ import kh.com.mysabay.sdk.databinding.FragmentLoginBinding;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
 import kh.com.mysabay.sdk.utils.MessageUtil;
-import kh.com.mysabay.sdk.utils.MyPhoneUtils;
 import kh.com.mysabay.sdk.viewmodel.UserApiVM;
 
 /**
@@ -47,7 +45,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, UserApiVM>
 
     @Override
     public void initializeObjects(View v, Bundle args) {
-
+        this.viewModel = LoginActivity.loginActivity.viewModel;
     }
 
     @Override
@@ -62,7 +60,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, UserApiVM>
             public void run() {
                 showProgressState(new NetworkState(NetworkState.Status.SUCCESS));
             }
-        }, 2000);
+        }, 500);
     }
 
     @Override
@@ -77,12 +75,9 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, UserApiVM>
             }
         });*/
 
-        viewModel.liveNetworkState.observe(this, initialLoadState -> {
-            showProgressState(initialLoadState);
-        });
+        viewModel.liveNetworkState.observe(this, this::showProgressState);
 
-        viewModel.login.observe(this, phone ->
-                mViewBinding.edtPhone.setText(phone));
+        viewModel.login.observe(this, phone -> mViewBinding.edtPhone.setText(phone));
 
         mViewBinding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,9 +92,18 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, UserApiVM>
                 if (StringUtils.isAnyBlank(phoneNo)) {
                     showCheckFields(mViewBinding.edtPhone, R.string.msg_input_phone);
                 } else
-                    viewModel.postToLogin(v.getContext(), "", phoneNo);
+                    viewModel.postToLogin(v.getContext(), "9c85c50a4362f687cd4507771ba81db5cf50eaa0b3008f4f943f77ba3ac6386b", phoneNo);
             }
         });
+
+        mViewBinding.btnLoginMysabay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.postToLoginWithMySabay(v.getContext(), "9c85c50a4362f687cd4507771ba81db5cf50eaa0b3008f4f943f77ba3ac6386b");
+            }
+        });
+
+
     }
 
     @Override
