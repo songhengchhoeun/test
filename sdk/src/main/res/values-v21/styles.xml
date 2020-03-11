@@ -15,9 +15,12 @@
 
     <style name="SdkAppTheme.NoActionBar.FullScreen">
         <item name="android:windowFullscreen">false</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowContentOverlay">@color/colorBackground</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="statusBarBackground">@color/colorBackground</item>
+        <item name="statusBarScrim">@color/colorBackground</item>
+        <item name="android:statusBarColor">@color/colorBackground</item>
     </style>
 
     <style name="SdkAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -37,43 +40,43 @@
         <item name="android:textSize">@dimen/font_size_sub_title</item>
     </style>-->
 
-  <!--  <style name="BaseAppearanceTitle.MyAppearanceTitle">
-        <item name="android:textSize">@dimen/font_size_header</item>
-    </style>
+    <!--  <style name="BaseAppearanceTitle.MyAppearanceTitle">
+          <item name="android:textSize">@dimen/font_size_header</item>
+      </style>
 
-    <style name="BaseAppearanceTitle.MyAppearanceTitle.Accent">
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
+      <style name="BaseAppearanceTitle.MyAppearanceTitle.Accent">
+          <item name="android:textColor">@color/colorAccent</item>
+      </style>
 
-    <style name="MyAppearanceTitleBold">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
-        <item name="android:textSize">@dimen/font_size_header</item>
-    </style>
+      <style name="MyAppearanceTitleBold">
+          <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+          <item name="android:textSize">@dimen/font_size_header</item>
+      </style>
 
-    <style name="MyAppearanceBody1">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
-        <item name="android:textSize">@dimen/font_size_body</item>
-    </style>
+      <style name="MyAppearanceBody1">
+          <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+          <item name="android:textSize">@dimen/font_size_body</item>
+      </style>
 
-    <style name="MyAppearanceBody1.Primary">
-        <item name="android:textColor">@color/colorPrimary</item>
-    </style>
+      <style name="MyAppearanceBody1.Primary">
+          <item name="android:textColor">@color/colorPrimary</item>
+      </style>
 
-    <style name="MyAppearanceBody1.Accent">
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
+      <style name="MyAppearanceBody1.Accent">
+          <item name="android:textColor">@color/colorAccent</item>
+      </style>
 
-    <style name="MyAppearanceBody1Bold">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
-        <item name="android:textSize">@dimen/font_size_body</item>
-    </style>
+      <style name="MyAppearanceBody1Bold">
+          <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+          <item name="android:textSize">@dimen/font_size_body</item>
+      </style>
 
-    <style name="MyAppearanceCaption">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
-        <item name="android:textSize">@dimen/font_size_sub_title</item>
-    </style>
+      <style name="MyAppearanceCaption">
+          <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+          <item name="android:textSize">@dimen/font_size_sub_title</item>
+      </style>
 
-    <style name="MyAppearanceCaption.Primary">
-        <item name="android:textColor">@color/colorPrimary</item>
-    </style>-->
+      <style name="MyAppearanceCaption.Primary">
+          <item name="android:textColor">@color/colorPrimary</item>
+      </style>-->
 </resources>

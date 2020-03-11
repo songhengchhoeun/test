@@ -21,10 +21,10 @@ public class Data implements Parcelable {
     public String accessToken;
     @SerializedName("verify_code")
     @Expose
-    public Integer verifyCode;
+    public int verifyCode;
     @SerializedName("expire")
     @Expose
-    public Integer expire;
+    public int expire;
     @SerializedName("message")
     @Expose
     public String message;
@@ -56,8 +56,8 @@ public class Data implements Parcelable {
 
     protected Data(Parcel in) {
         this.accessToken = ((String) in.readValue((String.class.getClassLoader())));
-        this.verifyCode = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.expire = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.verifyCode = ((int) in.readValue((int.class.getClassLoader())));
+        this.expire = ((int) in.readValue((int.class.getClassLoader())));
         this.message = ((String) in.readValue((String.class.getClassLoader())));
     }
 
@@ -73,7 +73,7 @@ public class Data implements Parcelable {
      * @param accessToken
      * @param message
      */
-    public Data(String accessToken, Integer verifyCode, Integer expire, String message) {
+    public Data(String accessToken, int verifyCode, int expire, String message) {
         super();
         this.accessToken = accessToken;
         this.verifyCode = verifyCode;
@@ -86,12 +86,12 @@ public class Data implements Parcelable {
         return this;
     }
 
-    public Data withVerifyCode(Integer verifyCode) {
+    public Data withVerifyCode(int verifyCode) {
         this.verifyCode = verifyCode;
         return this;
     }
 
-    public Data withExpire(Integer expire) {
+    public Data withExpire(int expire) {
         this.expire = expire;
         return this;
     }

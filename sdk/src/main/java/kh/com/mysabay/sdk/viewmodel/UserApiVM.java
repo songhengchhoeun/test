@@ -47,7 +47,6 @@ public class UserApiVM extends ViewModel {
     private final MediatorLiveData<String> _login;
     public LiveData<String> login;
     public LiveData<String> loginMySabay;
-    public LiveData<LoginItem> baseLoginVd;
 
     public CompositeDisposable mCompositeDisposable;
 
@@ -109,10 +108,12 @@ public class UserApiVM extends ViewModel {
                 .observeOn(appRxSchedulers.mainThread())
                 .subscribe(new AbstractDisposableObs<LoginItem>(context, _networkState) {
                     @Override
-                    protected void onSuccess(LoginItem item) {
-                        if (item.status == 200) {
-                            _responseLogin.setValue(item);
-                            MessageUtil.displayToast(context, item.data.message);
+                    protected void onSuccess(LoginItem item1) {
+                        if (item1.status == 200) {
+                            item1.data.withPhone(item.data.phone);
+                            item1.data.withAppSecret(item.data.appSecret);
+                            _responseLogin.setValue(item1);
+                            MessageUtil.displayToast(context, item1.data.message);
                         }
                     }
 

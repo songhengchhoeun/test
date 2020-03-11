@@ -1,5 +1,7 @@
 package kh.com.mysabay.sdk.ui.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -10,6 +12,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.inject.Inject;
 
 import kh.com.mysabay.sdk.Apps;
@@ -18,9 +22,13 @@ import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseActivity;
 import kh.com.mysabay.sdk.di.component.UserComponent;
 import kh.com.mysabay.sdk.ui.fragment.LoginFragment;
+import kh.com.mysabay.sdk.ui.fragment.MySabayLoginFm;
+import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.viewmodel.UserApiVM;
 
 public class LoginActivity extends BaseActivity {
+
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     private static final int DELAY = 1000;
 
@@ -35,9 +43,14 @@ public class LoginActivity extends BaseActivity {
     ViewModelProvider.Factory viewModelFactory;
 
     public UserApiVM viewModel;
+    private Uri mDeepLink;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        mDeepLink = intent.getData();
+        LogUtil.debug(TAG, "");
         // Creation of the main graph using the application graph
         userComponent = Apps.getInstance().mComponent.mainComponent().create();
         // Make Dagger instantiate @Inject fields in MaiActivity
@@ -61,7 +74,9 @@ public class LoginActivity extends BaseActivity {
     public void initializeObjects(Bundle args) {
         mManager = getSupportFragmentManager();
         mHandler = new Handler();
-        initAddFragment(LoginFragment.newInstance(), LoginFragment.TAG);
+        if (mDeepLink != null && StringUtils.contains(mDeepLink.toString(), "user.master.mysabay.com/api/v1/user/mysabay/login/deeplink"))
+            initAddFragment(MySabayLoginFm.newInstance(mDeepLink.toString()), MySabayLoginFm.TAG);
+        else initAddFragment(LoginFragment.newInstance(), LoginFragment.TAG);
     }
 
     @Override

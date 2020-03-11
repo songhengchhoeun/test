@@ -61,4 +61,10 @@ public class MainActivity extends AppCompatActivity {
         mViewBinding.viewPb.setVisibility(View.GONE);
         super.onStop();
     }
+
+    @Override
+    public void onBackPressed() {
+        mViewBinding.viewPb.setVisibility(View.GONE);
+        super.onBackPressed();
+    }
 }

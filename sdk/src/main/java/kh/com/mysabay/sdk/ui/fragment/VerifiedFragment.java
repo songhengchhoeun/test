@@ -6,8 +6,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.alimuzaffar.lib.pin.PinEntryEditText;
-
 import org.apache.commons.lang3.StringUtils;
 
 import kh.com.mysabay.sdk.R;
@@ -39,27 +37,29 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
 
     @Override
     public void assignValues() {
+        viewModel.getResponseLogin().observe(this, item -> {
+            if (item != null && item.data.verifyCode > 0)
+                MessageUtil.displayDialog(getContext(), String.valueOf(item.data.verifyCode));
+            //mViewBinding.edtVerifyCode.setText(String.valueOf(item.data.verifyCode));
+        });
     }
 
     @Override
     public void addListeners() {
         mViewBinding.edtVerifyCode.setAnimateText(true);
-        mViewBinding.edtVerifyCode.setOnPinEnteredListener(new PinEntryEditText.OnPinEnteredListener() {
-            @Override
-            public void onPinEntered(CharSequence str) {
-                LoginItem item = viewModel.getResponseLogin().getValue();
-                if (item == null) return;
+        mViewBinding.edtVerifyCode.setOnPinEnteredListener(str -> {
+            LoginItem item = viewModel.getResponseLogin().getValue();
+            if (item == null) return;
 
-                if (Integer.parseInt(str.toString()) == item.data.verifyCode) {
-                    KeyboardUtils.hideKeyboard(getContext(), mViewBinding.edtVerifyCode);
-                    viewModel.postToVerified(getContext(), Integer.parseInt(str.toString()));
-                } else {
-                    KeyboardUtils.hideKeyboard(getContext(), mViewBinding.edtVerifyCode);
-                    MessageUtil.displayToast(getContext(), "verified failed");
-                    mViewBinding.edtVerifyCode.setError(true);
-                    mViewBinding.edtVerifyCode.postDelayed(() ->
-                            mViewBinding.edtVerifyCode.setText(null), 1000);
-                }
+            if (Integer.parseInt(str.toString()) == item.data.verifyCode) {
+                KeyboardUtils.hideKeyboard(getContext(), mViewBinding.edtVerifyCode);
+                viewModel.postToVerified(getContext(), Integer.parseInt(str.toString()));
+            } else {
+                KeyboardUtils.hideKeyboard(getContext(), mViewBinding.edtVerifyCode);
+                MessageUtil.displayToast(getContext(), "verified failed");
+                mViewBinding.edtVerifyCode.setError(true);
+                mViewBinding.edtVerifyCode.postDelayed(() ->
+                        mViewBinding.edtVerifyCode.setText(null), 1000);
             }
         });
 
