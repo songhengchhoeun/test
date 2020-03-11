@@ -8,8 +8,8 @@ android {
         applicationId "kh.com.mysabay.sample"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode versioningCode
+        versionName versioningName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,6 +28,12 @@ android {
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "MySabaySample-v" + versioningName + "-c" + versioningCode + "-" + getDate() + ".apk"
+        }
     }
 
 }

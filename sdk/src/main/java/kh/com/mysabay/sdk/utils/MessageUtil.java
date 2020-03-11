@@ -87,6 +87,28 @@ public class MessageUtil {
         displayDialog(context, title, msg, 0, txtPos, null, posListener);
     }
 
+    public static void displayDialog(Context context, String title, String msg, String txtNeg, String txtPos,
+                                     MaterialDialog.SingleButtonCallback negListener,
+                                     MaterialDialog.SingleButtonCallback posListener) {
+        new MaterialDialog.Builder(context)
+                .typeface(FontUtils.getTypefaceKhmerBold(context), FontUtils.getTypefaceKhmer(context))
+                .title(title)
+                .content(msg).canceledOnTouchOutside(false)
+                .negativeText(txtNeg)
+                .positiveText(txtPos)
+                .onNegative((dialog, which) -> {
+                    if (negListener != null)
+                        negListener.onClick(dialog, which);
+                    else
+                        dialog.dismiss();
+                }).onPositive((dialog, which) -> {
+            if (posListener != null)
+                posListener.onClick(dialog, which);
+            else
+                dialog.dismiss();
+        }).build().show();
+    }
+
     public static void displayDialog(Context context, int title, String msg, int txtNeg, int txtPos,
                                      MaterialDialog.SingleButtonCallback negListener,
                                      MaterialDialog.SingleButtonCallback posListener) {

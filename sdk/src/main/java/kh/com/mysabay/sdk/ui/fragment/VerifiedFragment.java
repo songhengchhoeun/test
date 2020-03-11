@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 
 import com.alimuzaffar.lib.pin.PinEntryEditText;
 
@@ -17,7 +16,6 @@ import kh.com.mysabay.sdk.databinding.FragmentVerifiedBinding;
 import kh.com.mysabay.sdk.pojo.login.LoginItem;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
 import kh.com.mysabay.sdk.utils.KeyboardUtils;
-import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.viewmodel.UserApiVM;
 
@@ -45,14 +43,6 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
 
     @Override
     public void addListeners() {
-
-        viewModel.getResponseLogin().observe(getViewLifecycleOwner(), new Observer<LoginItem>() {
-            @Override
-            public void onChanged(LoginItem item) {
-                LogUtil.debug(TAG, "item from login " + gson.toJson(item));
-            }
-        });
-
         mViewBinding.edtVerifyCode.setAnimateText(true);
         mViewBinding.edtVerifyCode.setOnPinEnteredListener(new PinEntryEditText.OnPinEnteredListener() {
             @Override
@@ -62,7 +52,7 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
 
                 if (Integer.parseInt(str.toString()) == item.data.verifyCode) {
                     KeyboardUtils.hideKeyboard(getContext(), mViewBinding.edtVerifyCode);
-                    viewModel.postToVerified(Integer.parseInt(str.toString()));
+                    viewModel.postToVerified(getContext(), Integer.parseInt(str.toString()));
                 } else {
                     KeyboardUtils.hideKeyboard(getContext(), mViewBinding.edtVerifyCode);
                     MessageUtil.displayToast(getContext(), "verified failed");
@@ -93,9 +83,17 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
             String code = mViewBinding.edtVerifyCode.getText() != null ? mViewBinding.edtVerifyCode.getText().toString() : "";
             if (!StringUtils.isEmpty(code)) {
                 KeyboardUtils.hideKeyboard(v.getContext(), v);
-                viewModel.postToVerified(Integer.parseInt(code));
+                viewModel.postToVerified(v.getContext(), Integer.parseInt(code));
             } else
                 MessageUtil.displayToast(v.getContext(), getString(R.string.verify_code_required));
+        });
+
+        mViewBinding.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() != null)
+                    getActivity().onBackPressed();
+            }
         });
     }
 

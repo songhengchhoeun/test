@@ -65,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
         networkRequestUtils.setOnConnectionChangedListener(this);*/
 
         if (getToolbarId() > 0) {
-            mToolbar = findViewById(R.id.toolbar);
+            mToolbar = findViewById(getToolbarId());
             setSupportActionBar(mToolbar);
             if (getSupportActionBar() != null)
                 getSupportActionBar().setDisplayShowTitleEnabled(false);

@@ -22,6 +22,10 @@ public abstract class AbstractDisposableObs<T> extends DisposableObserver<T> {
     private WeakReference<IdlingResourceHelper> mWeakRefIdlingState;
     private WeakReference<Context> mWeakRefContext;
 
+    public AbstractDisposableObs(Context context) {
+        this(context, null, null);
+    }
+
     public AbstractDisposableObs(Context context, IdlingResourceHelper idlingResource) {
         this(context, null, idlingResource);
     }

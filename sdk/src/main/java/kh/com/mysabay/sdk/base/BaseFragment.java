@@ -81,7 +81,8 @@ public abstract class BaseFragment<D extends ViewDataBinding, V extends ViewMode
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModel());
+        if (getViewModel() != null)
+            viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModel());
     }
 
     @Nullable

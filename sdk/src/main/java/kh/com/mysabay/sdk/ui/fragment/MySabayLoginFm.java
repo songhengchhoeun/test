@@ -1,7 +1,10 @@
 package kh.com.mysabay.sdk.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -26,9 +29,21 @@ public class MySabayLoginFm extends BaseFragment {
         return R.layout.fm_mysabay_login;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initializeObjects(View v, Bundle args) {
         mViewBinding = DataBindingUtil.bind(v);
+        WebView.setWebContentsDebuggingEnabled(true);
+        mViewBinding.wv.getSettings().setJavaScriptEnabled(true);
+        mViewBinding.wv.getSettings().setLoadsImagesAutomatically(true);
+        mViewBinding.wv.getSettings().setLoadWithOverviewMode(true);
+        mViewBinding.wv.getSettings().setUseWideViewPort(true);
+        mViewBinding.wv.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+        mViewBinding.wv.getSettings().setSupportZoom(true);
+        mViewBinding.wv.getSettings().setBuiltInZoomControls(true);
+        mViewBinding.wv.getSettings().setDisplayZoomControls(false);
+        mViewBinding.wv.clearHistory();
+        mViewBinding.wv.clearCache(true);
     }
 
     @Override
@@ -36,7 +51,7 @@ public class MySabayLoginFm extends BaseFragment {
         LoginActivity.loginActivity.viewModel.loginMySabay.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                mViewBinding.wv.loadData(s, "text/html", "utf-8");
+                mViewBinding.wv.loadDataWithBaseURL("https://user.master.mysabay.com", s, "text/html", "utf-8", "https://user.master.mysabay.com");
             }
         });
 

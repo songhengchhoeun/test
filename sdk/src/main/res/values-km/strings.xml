@@ -6,7 +6,7 @@
     <string name="confirm_otp">បញ្ជាក់ otp</string>
     <string name="enter_the_otp_that_you_have_received_via_text_message">បញ្ចូលលេខ OTP ដែលអ្នកបានទទួលតាមរយៈសារជាអក្សរ៖</string>
     <string name="confirm">បញ្ជាក់</string>
-    <string name="resend_otp"><![CDATA[<u>ផ្ញើ OTP ម្តងទៀត</u>]]></string>
+    <string name="resend_otp"><u>ផ្ញើ OTP ម្តងទៀត</u></string>
     <string name="label_close">Close</string>
     <string name="ok">យល់ព្រម</string>
     <string name="msg_has_connected_internet">អ៊ីនធឺណិតត្រូវបានតភ្ជាប់ឡើងវិញ</string>

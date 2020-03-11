@@ -47,7 +47,7 @@ public class UserApiVM extends ViewModel {
     private final MediatorLiveData<String> _login;
     public LiveData<String> login;
     public LiveData<String> loginMySabay;
-    public LiveData<LoginItem> baseLoginVd = _responseLogin;
+    public LiveData<LoginItem> baseLoginVd;
 
     public CompositeDisposable mCompositeDisposable;
 
@@ -123,7 +123,7 @@ public class UserApiVM extends ViewModel {
                 });
     }
 
-    public void postToVerified(int code) {
+    public void postToVerified(Context context, int code) {
         _networkState.setValue(new NetworkState(NetworkState.Status.LOADING));
         LoginItem item = getResponseLogin().getValue();
         if (item == null) {
@@ -137,10 +137,11 @@ public class UserApiVM extends ViewModel {
                             AppItem appItem = new AppItem(item.data.appSecret, item.data.accessToken, response.data.uuid);
                             String encrypted = gson.toJson(appItem);
                             Apps.getInstance().saveAppItem(encrypted);
+                            MessageUtil.displayToast(context, "verified code success");
                             LogUtil.debug(TAG, "write appItem success");
+                            LoginActivity.loginActivity.finish();
                         } else
                             LogUtil.error(TAG, "verified data is null");
-
                     } else
                         LogUtil.error(TAG, "verify code response with status :" + response.status);
 

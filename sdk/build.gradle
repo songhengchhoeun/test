@@ -63,7 +63,7 @@ dependencies {
     implementation compatibility("dagger")
     annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
     implementation compatibility("material")
-    implementation compatibility("commonsLang3")
+    api compatibility("commonsLang3")
     implementation compatibility("rxjava")
     implementation compatibility("rxBindingMaterial")
     implementation compatibility("gson")

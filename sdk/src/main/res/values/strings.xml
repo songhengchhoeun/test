@@ -5,7 +5,7 @@
     <string name="confirm_otp">Confirm otp</string>
     <string name="enter_the_otp_that_you_have_received_via_text_message">Enter the OTP that you have received via text message:</string>
     <string name="confirm">Confirm</string>
-    <string name="resend_otp"><![CDATA[<u>Resend OTP</u>]]></string>
+    <string name="resend_otp"><u>Resend OTP</u></string>
     <string name="label_close">Close</string>
     <string name="ok">OK</string>
     <string name="msg_has_connected_internet">The Internet is reconnected</string>

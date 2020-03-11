@@ -42,7 +42,7 @@ public class UserRepo implements UserApi {
 
     @Override
     public Observable<UserProfileItem> getUserProfile(String appSecret, String token) {
-        return this.userApi.getUserProfile(appSecret, token);
+        return this.userApi.getUserProfile(appSecret, "Bearer " + token);
     }
 
 
