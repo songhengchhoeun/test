@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import kh.com.mysabay.sdk.BuildConfig;
+import kh.com.mysabay.sdk.webservice.api.StoreApi;
 import kh.com.mysabay.sdk.webservice.api.UserApi;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
@@ -45,9 +46,21 @@ public class ServiceGenerator {
 
     @Singleton
     @Provides
-    public Retrofit instance() {
+    public Retrofit instanceUser() {
         return new Retrofit.Builder()
                 .baseUrl("https://user.master.mysabay.com/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(getClientConfig())
+                .build();
+    }
+
+    @Singleton
+    @Provides
+    public Retrofit instanceStore() {
+        return new Retrofit.Builder()
+                .baseUrl("https://store.master.mysabay.com/")
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -107,34 +120,16 @@ public class ServiceGenerator {
      */
     @Singleton
     @Provides
-    public UserApi createNewsApi(@NotNull Retrofit retrofit) {
-        return retrofit.create(UserApi.class);
-    }
-
-    /**
-     * create a interface to call api endpoint
-     *//*
-    @Singleton
-    @Provides
-    public UpComingApi createUpComingApi(@NotNull Retrofit retrofit) {
-        return retrofit.create(UpComingApi.class);
+    public UserApi createNewsApi() {
+        return instanceUser().create(UserApi.class);
     }
 
     @Singleton
     @Provides
-    public MapsApi createMapsApi(@NotNull Retrofit retrofit) {
-        return retrofit.create(MapsApi.class);
+    public StoreApi createStoreApi() {
+        return instanceStore().create(StoreApi.class);
     }
 
-    @Singleton
-    @Provides
-    public NotificationApi createNotificationApi(@NotNull Retrofit retrofit) {
-        return retrofit.create(NotificationApi.class);
-    }
-
-    public EncryptTestApi createEncryptTestApi() {
-        return sRetrofit.create(EncryptTestApi.class);
-    }*/
     private static Cache provideCache() {
         Cache cache = null;
         try {

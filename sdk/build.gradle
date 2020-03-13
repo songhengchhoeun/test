@@ -17,6 +17,7 @@ android {
         resValue "string", "key_store_password", (project.findProperty("KEY_STORE_PASS") ?: "")
         resValue "string", "store_name", (project.findProperty("STORE_NAME") ?: "")
         resValue "string", "alias", (project.findProperty("ALIAS") ?: "")
+        resValue "string", "app_secret", (project.findProperty("APP_SECRET") ?: "")
     }
 
     buildTypes {
@@ -52,7 +53,7 @@ dependencies {
     //material components
     //implementation 'com.google.android.material:material:1.2.0-alpha05'
     //pin library
-    implementation ('com.alimuzaffar.lib:pinentryedittext:2.0.6') {
+    implementation('com.alimuzaffar.lib:pinentryedittext:2.0.6') {
         // Exclude is only needed if you already have
         // androidx.appcompat as a dependency in your app.
         exclude group: 'androidx.appcompat', module: 'appcompat'

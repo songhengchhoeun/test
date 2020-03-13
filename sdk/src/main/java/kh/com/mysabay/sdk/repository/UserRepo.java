@@ -1,7 +1,5 @@
 package kh.com.mysabay.sdk.repository;
 
-import android.text.Html;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

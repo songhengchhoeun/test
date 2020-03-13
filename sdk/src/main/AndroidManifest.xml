@@ -3,6 +3,12 @@
     package="kh.com.mysabay.sdk">
 
     <application android:name=".Apps">
+
+        <activity
+            android:name=".ui.activity.StoreActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/SdkAppTheme.NoActionBar.FullScreen" />
+
         <activity
             android:name=".ui.activity.LoginActivity"
             android:configChanges="orientation|screenSize"
@@ -24,7 +30,6 @@
                     android:scheme="mysabay55" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

@@ -3,28 +3,16 @@ package kh.com.mysabay.sdk;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
 import com.akexorcist.localizationactivity.core.LocalizationApplicationDelegate;
-import com.google.gson.Gson;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import javax.inject.Inject;
-
-import kh.com.mysabay.sdk.callback.UserInfoListener;
 import kh.com.mysabay.sdk.di.BaseAppComponent;
 import kh.com.mysabay.sdk.di.DaggerBaseAppComponent;
-import kh.com.mysabay.sdk.pojo.AppItem;
-import kh.com.mysabay.sdk.pojo.profile.UserProfileItem;
-import kh.com.mysabay.sdk.repository.UserRepo;
-import kh.com.mysabay.sdk.ui.activity.LoginActivity;
-import kh.com.mysabay.sdk.utils.AppRxSchedulers;
-import kh.com.mysabay.sdk.utils.MessageUtil;
-import kh.com.mysabay.sdk.webservice.AbstractDisposableObs;
 
 /**
  * Created by Tan Phirum on 3/7/20
@@ -80,6 +68,7 @@ public class Apps extends Application {
     }
 
     public void saveAppItem(String item) {
+
         SharedPreferences.Editor editor = getPreferences().edit();
         editor.putString(Globals.EXT_KEY_APP_ITEM, item);
         editor.apply();
@@ -88,38 +77,4 @@ public class Apps extends Application {
     public String getAppItem() {
         return getPreferences().getString(Globals.EXT_KEY_APP_ITEM, null);
     }
-
-    public void showLoginView() {
-        startActivity(new Intent(this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-    }
-
-    public void logout() {
-        saveAppItem("");
-    }
-
-    @Inject
-    UserRepo userRepo;
-    @Inject
-    Gson gson;
-    @Inject
-    AppRxSchedulers appRxSchedulers;
-
-    public void getUserInfo(UserInfoListener listener) {
-        AppItem item = gson.fromJson(getAppItem(), AppItem.class);
-        userRepo.getUserProfile(item.appSecret, item.token).subscribeOn(appRxSchedulers.io())
-                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<UserProfileItem>(this) {
-            @Override
-            protected void onSuccess(UserProfileItem userProfileItem) {
-                if (listener != null)
-                    listener.userInfo(gson.toJson(userProfileItem));
-                else MessageUtil.displayToast(getInstance(), "don't see listener handle.");
-            }
-
-            @Override
-            protected void onErrors(Throwable error) {
-
-            }
-        });
-    }
-
 }
