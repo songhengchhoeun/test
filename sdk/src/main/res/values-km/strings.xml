@@ -18,4 +18,6 @@
     <string name="msg_input_phone">បញ្ចូលលេខទូរស័ព្ទ</string>
     <string name="arena_of_glory">arena of glory</string>
     <string name="verify_code_required">លេខកូដចាំបាច់ត្រូវបញ្ចូល</string>
+    <string name="pay">បង់</string>
+    <string name="shops">ហាង</string>
 </resources>

@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +16,7 @@ import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.adapter.ShopAdapter;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FmShopBinding;
+import kh.com.mysabay.sdk.pojo.shop.Data;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
 import kh.com.mysabay.sdk.viewmodel.StoreApiVM;
 
@@ -27,7 +29,12 @@ public class ShopsFragment extends BaseFragment<FmShopBinding, StoreApiVM> {
     public static final String TAG = ShopsFragment.class.getSimpleName();
 
     private ShopAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private GridLayoutManager mLayoutManager;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @NotNull
     @Contract(" -> new")
@@ -44,12 +51,21 @@ public class ShopsFragment extends BaseFragment<FmShopBinding, StoreApiVM> {
     public void initializeObjects(@NotNull View v, Bundle args) {
         mAdapter = new ShopAdapter(v.getContext());
         mAdapter.setHasStableIds(true);
-        mLayoutManager = new GridLayoutManager(v.getContext(), 2);
-        mViewBinding.rcv.setLayoutManager(mLayoutManager);
+        /*mLayoutManager = new GridLayoutManager(v.getContext(), getResources().getInteger(R.integer.layout_size));
+        mViewBinding.rcv.setLayoutManager(mLayoutManager);*/
         mViewBinding.rcv.setAdapter(mAdapter);
 
         viewModel.getNetworkState().observe(this, this::showProgressState);
-        viewModel.getShopItem().observe(this, item -> mAdapter.insert(item.data));
+        viewModel.getShopItem().observe(this, item -> {
+            /*mLayoutManager.setSpanCount(getResources().getInteger(R.integer.layout_size));
+            mViewBinding.rcv.setLayoutManager(mLayoutManager);*/
+            mAdapter.clear();
+            for (Data ob : item.data) {
+                if (StringUtils.equalsIgnoreCase(ob.cashierName, Data.PLAY_STORE))
+                    mAdapter.insert(ob);
+            }
+
+        });
     }
 
     @Override
@@ -60,7 +76,11 @@ public class ShopsFragment extends BaseFragment<FmShopBinding, StoreApiVM> {
 
     @Override
     public void addListeners() {
-
+        assert mViewBinding.btnClose != null;
+        mViewBinding.btnClose.setOnClickListener(v -> {
+            if (v.getContext() instanceof StoreActivity)
+                ((StoreActivity) v.getContext()).onBackPressed();
+        });
     }
 
     @Override

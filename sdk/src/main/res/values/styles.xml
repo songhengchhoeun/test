@@ -88,5 +88,14 @@
         <item name="android:fontFamily">@font/font_battambang_regular</item>
     </style>
 
+    <!--custom radio button style-->
+    <style name="MyRaidoButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:colorControlNormal">@color/colorYellow</item>
+        <item name="android:colorControlActivated">@color/colorYellow</item>
+        <item name="android:colorControlHighlight">@color/colorYellow</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/colorYellow</item>
+        <item name="android:textAppearance">@style/MyAppearanceBody1.Primary</item>
+    </style>
+
 
 </resources>

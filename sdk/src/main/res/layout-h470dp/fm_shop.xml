@@ -14,10 +14,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:text="@string/shops"
             android:textAppearance="@style/MyAppearanceBody1.Primary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/shops"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btn_close"
@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_shop"
-            app:spanCount="3"
+            app:spanCount="2"
             tools:listitem="@layout/partial_shop_item" />
 
         <include

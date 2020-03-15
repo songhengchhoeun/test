@@ -140,4 +140,6 @@ public class Data implements Parcelable {
         return "$" + this.priceInUsd;
     }
 
+    public static final String PLAY_STORE = "play_store";
+
 }

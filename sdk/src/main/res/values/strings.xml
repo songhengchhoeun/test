@@ -17,4 +17,6 @@
     <string name="msg_input_phone">Input phone number</string>
     <string name="arena_of_glory">arena of glory</string>
     <string name="verify_code_required">verify code is required</string>
+    <string name="pay">pay</string>
+    <string name="shops">Shops</string>
 </resources>

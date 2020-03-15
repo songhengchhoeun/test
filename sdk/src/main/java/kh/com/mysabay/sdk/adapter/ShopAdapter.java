@@ -59,4 +59,8 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopItmVH> {
     public Data getItem(int pos) {
         return shopItems.get(pos);
     }
+
+    public void clear() {
+        shopItems.clear();
+    }
 }
