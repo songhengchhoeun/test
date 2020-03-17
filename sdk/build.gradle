@@ -83,4 +83,7 @@ dependencies {
     //animation lib
     api 'com.daimajia.easing:library:2.1@aar'
     api 'com.daimajia.androidanimations:library:2.3@aar'
+    //api billing
+    //implementation 'com.android.billingclient:billing:2.1.0'
+    implementation 'com.anjlab.android.iab.v3:library:1.1.0'
 }

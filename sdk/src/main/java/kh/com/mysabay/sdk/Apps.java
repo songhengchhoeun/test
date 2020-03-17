@@ -68,7 +68,6 @@ public class Apps extends Application {
     }
 
     public void saveAppItem(String item) {
-
         SharedPreferences.Editor editor = getPreferences().edit();
         editor.putString(Globals.EXT_KEY_APP_ITEM, item);
         editor.apply();

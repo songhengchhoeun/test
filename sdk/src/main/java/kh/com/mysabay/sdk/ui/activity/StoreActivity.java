@@ -1,5 +1,6 @@
 package kh.com.mysabay.sdk.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -12,6 +13,7 @@ import kh.com.mysabay.sdk.Globals;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseActivity;
 import kh.com.mysabay.sdk.di.component.StoreComponent;
+import kh.com.mysabay.sdk.ui.fragment.PaymentFm;
 import kh.com.mysabay.sdk.ui.fragment.ShopsFragment;
 
 public class StoreActivity extends BaseActivity {
@@ -69,6 +71,15 @@ public class StoreActivity extends BaseActivity {
         return null;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (mManager.getFragments().size() > 0) {
+            PaymentFm f = (PaymentFm) mManager.findFragmentByTag(PaymentFm.TAG);
+            if (f != null)
+                f.onActivityResult(requestCode, resultCode, data);
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
+    }
 
     public void initAddFragment(Fragment f, String tag) {
         initAddFragment(f, tag, false);
