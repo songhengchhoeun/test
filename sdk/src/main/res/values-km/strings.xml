@@ -20,4 +20,6 @@
     <string name="verify_code_required">លេខកូដចាំបាច់ត្រូវបញ្ចូល</string>
     <string name="pay">បង់</string>
     <string name="shops">ហាង</string>
+    <string name="total_s">សរុប: %s</string>
+    <string name="payment_options">ជម្រើស​ការ​ទូទាត់</string>
 </resources>

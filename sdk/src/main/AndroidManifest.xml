@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kh.com.mysabay.sdk">
 
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <application android:name=".Apps">
 
         <activity

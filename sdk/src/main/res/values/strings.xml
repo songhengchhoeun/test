@@ -19,4 +19,6 @@
     <string name="verify_code_required">verify code is required</string>
     <string name="pay">pay</string>
     <string name="shops">Shops</string>
+    <string name="total_s">Total: %s</string>
+    <string name="payment_options">Payment Options</string>
 </resources>

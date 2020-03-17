@@ -51,14 +51,14 @@ public class ShopsFragment extends BaseFragment<FmShopBinding, StoreApiVM> {
     public void initializeObjects(@NotNull View v, Bundle args) {
         mAdapter = new ShopAdapter(v.getContext());
         mAdapter.setHasStableIds(true);
-        /*mLayoutManager = new GridLayoutManager(v.getContext(), getResources().getInteger(R.integer.layout_size));
-        mViewBinding.rcv.setLayoutManager(mLayoutManager);*/
+        mLayoutManager = new GridLayoutManager(v.getContext(), getResources().getInteger(R.integer.layout_size));
+        mViewBinding.rcv.setLayoutManager(mLayoutManager);
         mViewBinding.rcv.setAdapter(mAdapter);
 
         viewModel.getNetworkState().observe(this, this::showProgressState);
         viewModel.getShopItem().observe(this, item -> {
-            /*mLayoutManager.setSpanCount(getResources().getInteger(R.integer.layout_size));
-            mViewBinding.rcv.setLayoutManager(mLayoutManager);*/
+            mLayoutManager.setSpanCount(getResources().getInteger(R.integer.layout_size));
+            mViewBinding.rcv.setLayoutManager(mLayoutManager);
             mAdapter.clear();
             for (Data ob : item.data) {
                 if (StringUtils.equalsIgnoreCase(ob.cashierName, Data.PLAY_STORE))

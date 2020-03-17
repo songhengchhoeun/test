@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -15,7 +17,10 @@ import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.NetworkState;
+import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
+import kh.com.mysabay.sdk.pojo.shop.Data;
 import kh.com.mysabay.sdk.pojo.shop.ShopItem;
+import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
 import kh.com.mysabay.sdk.repository.StoreRepo;
 import kh.com.mysabay.sdk.utils.AppRxSchedulers;
 import kh.com.mysabay.sdk.utils.LogUtil;
@@ -41,6 +46,7 @@ public class StoreApiVM extends ViewModel {
     private final MediatorLiveData<NetworkState> _networkState;
     private final MediatorLiveData<ShopItem> _shopItem;
     private final CompositeDisposable mCompos;
+    private final MediatorLiveData<Data> mDataSelected;
 
 
     @Inject
@@ -49,6 +55,7 @@ public class StoreApiVM extends ViewModel {
         this._networkState = new MediatorLiveData<>();
         this._shopItem = new MediatorLiveData<>();
         this.mCompos = new CompositeDisposable();
+        this.mDataSelected = new MediatorLiveData<>();
     }
 
     @Override
@@ -60,7 +67,7 @@ public class StoreApiVM extends ViewModel {
         }
     }
 
-    public void getShopFromServer(Context context) {
+    public void getShopFromServer(@NotNull Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         storeRepo.getShopItem(context.getString(R.string.app_secret), appItem.token).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<ShopItem>(context, _networkState) {
@@ -84,5 +91,48 @@ public class StoreApiVM extends ViewModel {
 
     public LiveData<NetworkState> getNetworkState() {
         return _networkState;
+    }
+
+    public void setShopItemSelected(Data data) {
+        _networkState.setValue(new NetworkState(NetworkState.Status.SUCCESS));
+        this.mDataSelected.setValue(data);
+    }
+
+    public LiveData<Data> getItemSelected() {
+        return this.mDataSelected;
+    }
+
+    public void getMySabayCheckout(Context context) {
+        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        storeRepo.getMySabayCheckout(context.getString(R.string.app_secret), appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
+                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<MySabayItem>(context, _networkState) {
+            @Override
+            protected void onSuccess(MySabayItem mySabayItem) {
+                LogUtil.debug(TAG, "mySabayImte " + mySabayItem);
+            }
+
+            @Override
+            protected void onErrors(Throwable error) {
+
+            }
+        });
+
+    }
+
+    public void get3PartyCheckout(Context context) {
+        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        storeRepo.get3PartyCheckout(context.getString(R.string.app_secret), appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
+                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<ThirdPartyItem>(context, _networkState) {
+            @Override
+            protected void onSuccess(ThirdPartyItem thirdPartyItem) {
+                LogUtil.debug(TAG, "ThirdPartyItem " + thirdPartyItem);
+            }
+
+            @Override
+            protected void onErrors(Throwable error) {
+
+            }
+        });
+
     }
 }

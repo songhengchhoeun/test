@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Tan Phirum on 3/10/20
@@ -54,7 +55,7 @@ public class Data implements Parcelable {
 
     };
 
-    protected Data(Parcel in) {
+    protected Data(@NotNull Parcel in) {
         this.accessToken = ((String) in.readValue((String.class.getClassLoader())));
         this.verifyCode = ((int) in.readValue((int.class.getClassLoader())));
         this.expire = ((int) in.readValue((int.class.getClassLoader())));

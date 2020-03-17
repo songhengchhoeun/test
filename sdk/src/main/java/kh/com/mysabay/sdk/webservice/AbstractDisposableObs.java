@@ -6,12 +6,16 @@ import androidx.lifecycle.MediatorLiveData;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.SocketTimeoutException;
 
 import io.reactivex.observers.DisposableObserver;
+import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.utils.IdlingResourceHelper;
 import okhttp3.ResponseBody;
+import retrofit2.HttpException;
 
 /**
  * Created by Tan Phirum on 3/2/18.
@@ -77,7 +81,18 @@ public abstract class AbstractDisposableObs<T> extends DisposableObserver<T> {
         if (context == null)
             return;
 
+        String errorMsg;
+        if (e instanceof HttpException) {
+            errorMsg = context.getString(R.string.msg_can_not_connect_server);
+        } else if (e instanceof SocketTimeoutException) {
+            errorMsg = context.getString(R.string.msg_can_not_connect_internet);
+        } else if (e instanceof IOException) {
+            errorMsg = context.getString(R.string.msg_can_not_connect_internet);
+        } else
+            errorMsg = context.getString(R.string.msg_can_not_connect_server);
 
+        if (mWeakRefBaseView != null)
+            mWeakRefBaseView.get().setValue(new NetworkState(NetworkState.Status.ERROR, errorMsg));
     }
 
     @Override

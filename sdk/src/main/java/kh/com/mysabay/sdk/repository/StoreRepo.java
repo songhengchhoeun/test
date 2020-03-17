@@ -32,12 +32,12 @@ public class StoreRepo implements StoreApi {
 
     @Override
     public Observable<MySabayItem> getMySabayCheckout(String appSecret, String token, String uuid) {
-        return null;
+        return this.storeApi.getMySabayCheckout(appSecret, "Bearer " + token, uuid);
     }
 
     @Override
     public Observable<ThirdPartyItem> get3PartyCheckout(String appSecret, String token, String uuid) {
-        return null;
+        return this.storeApi.get3PartyCheckout(appSecret, "Bearer " + token, uuid);
     }
 
     @Override

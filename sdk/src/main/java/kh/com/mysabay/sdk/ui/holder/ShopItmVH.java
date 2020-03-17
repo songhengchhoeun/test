@@ -33,7 +33,7 @@ public class ShopItmVH extends RecyclerView.ViewHolder implements View.OnClickLi
     public void onClick(@NotNull View v) {
         if (v.getId() == R.id.card) {
             if (v.getContext() instanceof StoreActivity)
-                ((StoreActivity) v.getContext()).initAddFragment(PaymentFm.newInstance(), PaymentFm.TAG, true);
+                ((StoreActivity) v.getContext()).initAddFragment(PaymentFm.newInstance(viewBinding.getItem()), PaymentFm.TAG, true);
         }
     }
 }

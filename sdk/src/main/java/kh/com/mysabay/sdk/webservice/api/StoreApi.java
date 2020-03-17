@@ -22,10 +22,10 @@ public interface StoreApi {
     @GET("api/v1/store")
     Observable<ShopItem> getShopItem(@Header("app_secret") String appSecret, @Header("Authorization") String token);
 
-    @GET("api/v1/checkout")
+    @GET("api/v1/checkout/{uuid}")
     Observable<MySabayItem> getMySabayCheckout(@Header("app_secret") String appSecret, @Header("Authorization") String token, @Path("uuid") String uuid);
 
-    @GET("api/v1/cashier")
+    @GET("api/v1/cashier/{uuid}")
     Observable<ThirdPartyItem> get3PartyCheckout(@Header("app_secret") String appSecret, @Header("Authorization") String token, @Path("uuid") String uuid);
 
     @FormUrlEncoded
