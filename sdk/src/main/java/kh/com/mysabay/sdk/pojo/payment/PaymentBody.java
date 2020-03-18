@@ -52,16 +52,6 @@ public class PaymentBody implements Parcelable {
     }
 
     /**
-     * No args constructor for use in serialization
-     * @param uuid
-     * @param priceInUsd
-     * @param code
-     * @param assetCode
-     */
-    public PaymentBody(String uuid, Float priceInUsd, String code, String assetCode) {
-    }
-
-    /**
      * @param amount
      * @param assetCode
      * @param cashierCode
