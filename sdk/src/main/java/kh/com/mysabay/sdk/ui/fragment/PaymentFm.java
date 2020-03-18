@@ -132,16 +132,27 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
         mViewBinding.btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bp.isOneTimePurchaseSupported() && (viewModel.getItemSelected().getValue() != null)) {
-                    if (!BuildConfig.DEBUG)
-                        PURCHASE_ID = viewModel.getItemSelected().getValue().packageId;
-                    boolean isPurchase = bp.purchase(getActivity(), PURCHASE_ID);
-                    boolean isConsumePurchase = bp.consumePurchase(PURCHASE_ID);
+                int checkedId = mViewBinding.radioGroup.getCheckedRadioButtonId();
 
-                    LogUtil.info(TAG, "purchase =" + isPurchase + ", comsumePurcase = " + isConsumePurchase);
+                if (checkedId == R.id.rdb_in_app_purchase) {
+                    if (bp.isOneTimePurchaseSupported() && (viewModel.getItemSelected().getValue() != null)) {
+                        if (!BuildConfig.DEBUG)
+                            PURCHASE_ID = viewModel.getItemSelected().getValue().packageId;
+                        boolean isPurchase = bp.purchase(getActivity(), PURCHASE_ID);
+                        boolean isConsumePurchase = bp.consumePurchase(PURCHASE_ID);
+
+                        LogUtil.info(TAG, "purchase =" + isPurchase + ", comsumePurcase = " + isConsumePurchase);
+                    } else
+                        MessageUtil.displayDialog(v.getContext(), "sorry your device not support in app purchase");
+
+                } else if (checkedId == R.id.rdb_my_sabay) {
+                    viewModel.postToPaidWithProvider(v.getContext());
+                } else if (checkedId == R.id.rdb_third_bank_provider) {
+                    MessageUtil.displayToast(v.getContext(), "In development");
+                } else if (checkedId == R.id.rdb_pre_auth_pay) {
+
                 } else
-                    MessageUtil.displayDialog(v.getContext(), "sorry your device not support in app purchase");
-
+                    MessageUtil.displayToast(v.getContext(), getString(R.string.please_choose_payment_option));
             }
         });
 
@@ -152,6 +163,23 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
                     getActivity().onBackPressed();
             }
         });
+
+        /*mViewBinding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.rdb_in_app_purchase) {
+
+                } else if (checkedId == R.id.rdb_my_sabay) {
+
+                } else if (checkedId == R.id.rdb_third_bank_provider) {
+
+                } else if (checkedId == R.id.rdb_pre_auth_pay) {
+
+                } else {
+                    LogUtil.info(TAG, "nothing selected");
+                }
+            }
+        });*/
     }
 
     @Override

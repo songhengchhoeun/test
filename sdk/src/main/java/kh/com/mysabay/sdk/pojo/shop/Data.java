@@ -30,7 +30,7 @@ public class Data implements Parcelable {
     public Float priceInUsd;
     @SerializedName("price_in_sc")
     @Expose
-    public Integer priceInSc;
+    public Float priceInSc;
     public final static Parcelable.Creator<Data> CREATOR = new Creator<Data>() {
 
 
@@ -52,7 +52,7 @@ public class Data implements Parcelable {
         this.packageId = ((String) in.readValue((String.class.getClassLoader())));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
         this.priceInUsd = ((Float) in.readValue((Float.class.getClassLoader())));
-        this.priceInSc = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.priceInSc = ((Float) in.readValue((Float.class.getClassLoader())));
     }
 
     /**
@@ -68,7 +68,7 @@ public class Data implements Parcelable {
      * @param priceInSc
      * @param cashierName
      */
-    public Data(String cashierName, String packageId, String name, Float priceInUsd, Integer priceInSc) {
+    public Data(String cashierName, String packageId, String name, Float priceInUsd, Float priceInSc) {
         super();
         this.cashierName = cashierName;
         this.packageId = packageId;
@@ -97,7 +97,7 @@ public class Data implements Parcelable {
         return this;
     }
 
-    public Data withPriceInSc(Integer priceInSc) {
+    public Data withPriceInSc(Float priceInSc) {
         this.priceInSc = priceInSc;
         return this;
     }

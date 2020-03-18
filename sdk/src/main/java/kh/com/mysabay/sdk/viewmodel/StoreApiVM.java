@@ -8,8 +8,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -24,6 +25,8 @@ import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyResponse;
 import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
+import kh.com.mysabay.sdk.pojo.payment.PaymentBody;
+import kh.com.mysabay.sdk.pojo.payment.PaymentResponseItem;
 import kh.com.mysabay.sdk.pojo.shop.Data;
 import kh.com.mysabay.sdk.pojo.shop.ShopItem;
 import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
@@ -180,5 +183,30 @@ public class StoreApiVM extends ViewModel {
                         LogUtil.error(TAG, "error " + throwable.getLocalizedMessage());
                     }
                 }));
+    }
+
+    public void postToPaidWithProvider(Context context) {
+        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        Data shopItem = getItemSelected().getValue();
+        if (getMySabayProvider().getValue() == null) return;
+
+        List<kh.com.mysabay.sdk.pojo.mysabay.Data> listMySabayProvider = getMySabayProvider().getValue().data;
+        if (listMySabayProvider.size() > 0 && shopItem != null) {
+            PaymentBody body = new PaymentBody(appItem.uuid, shopItem.priceInUsd, listMySabayProvider.get(0).code, listMySabayProvider.get(0).assetCode);
+            storeRepo.postToPaid(context.getString(R.string.app_secret), appItem.token, body).subscribeOn(appRxSchedulers.io())
+                    .observeOn(appRxSchedulers.mainThread())
+                    .subscribe(new AbstractDisposableObs<PaymentResponseItem>(context, _networkState) {
+                        @Override
+                        protected void onSuccess(PaymentResponseItem item) {
+                            MessageUtil.displayToast(context, item.message);
+                        }
+
+                        @Override
+                        protected void onErrors(Throwable error) {
+
+                        }
+                    });
+        }
+
     }
 }

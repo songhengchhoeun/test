@@ -5,10 +5,10 @@ import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyResponse;
 import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
 import kh.com.mysabay.sdk.pojo.payment.PaymentBody;
+import kh.com.mysabay.sdk.pojo.payment.PaymentResponseItem;
 import kh.com.mysabay.sdk.pojo.shop.ShopItem;
 import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
 import retrofit2.http.Body;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -33,9 +33,8 @@ public interface StoreApi {
     Observable<GoogleVerifyResponse> postToVerifyGoogle(@Header("app_secret") String appSecret, @Header("Authorization") String token,
                                                         @Body() GoogleVerifyBody body);
 
-    @FormUrlEncoded
     @POST("api/v1/charge/auth")
-    Observable<Object> postToPaid(@Header("app_secret") String appSecret, @Header("Authorization") String token,
-                                  @Body() PaymentBody body);
+    Observable<PaymentResponseItem> postToPaid(@Header("app_secret") String appSecret, @Header("Authorization") String token,
+                                               @Body() PaymentBody body);
 
 }

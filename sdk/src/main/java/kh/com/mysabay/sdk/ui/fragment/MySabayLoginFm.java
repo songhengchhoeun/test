@@ -78,7 +78,7 @@ public class MySabayLoginFm extends BaseFragment<FmMysabayLoginBinding, UserApiV
                 LogUtil.debug(TAG, "url =" + request.getUrl() + " token =" + request.getUrl().getQueryParameter("access_token"));
                 String token = request.getUrl().getQueryParameter("access_token");
                 if (!StringUtils.isBlank(token) && getActivity() != null)
-                    viewModel.postToGetUserProfile(getActivity(), token);
+                    getActivity().runOnUiThread(() -> viewModel.postToGetUserProfile(getActivity(), token));
 
                 return super.shouldInterceptRequest(view, request);
             }

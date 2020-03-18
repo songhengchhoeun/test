@@ -116,7 +116,7 @@
             app:layout_constraintEnd_toStartOf="@+id/btn_close"
             app:layout_constraintStart_toEndOf="@+id/btn_back">
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rdb_in_app_purchase"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -126,33 +126,36 @@
                 android:text="Android In-app Purchase"
                 android:textColor="@color/colorYellow" />
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rdb_my_sabay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
+                android:layout_marginTop="@dimen/padding_5"
                 android:button="@drawable/radio_button_state"
                 android:gravity="start|center"
                 android:text="@string/mysabay"
                 android:textColor="@color/colorYellow"
                 android:visibility="gone" />
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rdb_pre_auth_pay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
+                android:layout_marginTop="@dimen/padding_5"
                 android:button="@drawable/radio_button_state"
                 android:gravity="start|center"
                 android:text="ABA Bank"
                 android:textColor="@color/colorYellow"
                 android:visibility="gone" />
 
-            <RadioButton
+            <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/rdb_third_bank_provider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|start"
+                android:layout_marginTop="@dimen/padding_5"
                 android:button="@drawable/radio_button_state"
                 android:gravity="start|center"
                 android:text="@string/select_a_partner_bank"
