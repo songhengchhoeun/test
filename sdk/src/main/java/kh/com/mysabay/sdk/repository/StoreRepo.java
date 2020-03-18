@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
+import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyResponse;
 import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
 import kh.com.mysabay.sdk.pojo.payment.PaymentBody;
 import kh.com.mysabay.sdk.pojo.shop.ShopItem;
@@ -41,8 +42,8 @@ public class StoreRepo implements StoreApi {
     }
 
     @Override
-    public Observable<Object> postToVerifyGoogle(String appSecret, String token, GoogleVerifyBody body) {
-        return null;
+    public Observable<GoogleVerifyResponse> postToVerifyGoogle(String appSecret, String token, GoogleVerifyBody body) {
+        return this.storeApi.postToVerifyGoogle(appSecret, "Bearer " + token, body);
     }
 
     @Override

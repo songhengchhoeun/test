@@ -29,7 +29,7 @@ public class DataBody implements Parcelable {
     public String productId;
     @SerializedName("purchaseTime")
     @Expose
-    public Integer purchaseTime;
+    public long purchaseTime;
     @SerializedName("purchaseState")
     @Expose
     public Integer purchaseState;
@@ -57,7 +57,7 @@ public class DataBody implements Parcelable {
         this.orderId = ((String) in.readValue((String.class.getClassLoader())));
         this.packageName = ((String) in.readValue((String.class.getClassLoader())));
         this.productId = ((String) in.readValue((String.class.getClassLoader())));
-        this.purchaseTime = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.purchaseTime = ((Long) in.readValue((Long.class.getClassLoader())));
         this.purchaseState = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.purchaseToken = ((String) in.readValue((String.class.getClassLoader())));
     }
@@ -76,7 +76,7 @@ public class DataBody implements Parcelable {
      * @param packageName
      * @param purchaseState
      */
-    public DataBody(String orderId, String packageName, String productId, Integer purchaseTime, Integer purchaseState, String purchaseToken) {
+    public DataBody(String orderId, String packageName, String productId, long purchaseTime, Integer purchaseState, String purchaseToken) {
         super();
         this.orderId = orderId;
         this.packageName = packageName;
@@ -101,7 +101,7 @@ public class DataBody implements Parcelable {
         return this;
     }
 
-    public DataBody withPurchaseTime(Integer purchaseTime) {
+    public DataBody withPurchaseTime(long purchaseTime) {
         this.purchaseTime = purchaseTime;
         return this;
     }

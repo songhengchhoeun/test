@@ -21,4 +21,5 @@
     <string name="shops">Shops</string>
     <string name="total_s">Total: %s</string>
     <string name="payment_options">Payment Options</string>
+    <string name="upgrade_google_play">In-app billing service is unavailable, please upgrade Google Play</string>
 </resources>

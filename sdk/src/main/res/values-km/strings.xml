@@ -22,4 +22,5 @@
     <string name="shops">ហាង</string>
     <string name="total_s">សរុប: %s</string>
     <string name="payment_options">ជម្រើស​ការ​ទូទាត់</string>
+    <string name="upgrade_google_play">In-app billing service is unavailable, please upgrade Google Play</string>
 </resources>

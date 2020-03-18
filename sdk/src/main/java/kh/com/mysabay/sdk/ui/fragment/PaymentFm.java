@@ -8,18 +8,30 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.anjlab.android.iab.v3.BillingCommunicationException;
+import com.anjlab.android.iab.v3.BillingHistoryRecord;
 import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.Constants;
+import com.anjlab.android.iab.v3.PurchaseData;
+import com.anjlab.android.iab.v3.PurchaseInfo;
+import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FmPaymentBinding;
+import kh.com.mysabay.sdk.pojo.googleVerify.DataBody;
+import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
+import kh.com.mysabay.sdk.pojo.googleVerify.ReceiptBody;
 import kh.com.mysabay.sdk.pojo.shop.Data;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
 import kh.com.mysabay.sdk.utils.LogUtil;
+import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.viewmodel.StoreApiVM;
 
 /**
@@ -63,6 +75,8 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
         viewModel.setShopItemSelected(mData);
         viewModel.get3PartyCheckout(v.getContext());
         viewModel.getMySabayCheckout(v.getContext());
+        if (!BillingProcessor.isIabServiceAvailable(v.getContext()))
+            MessageUtil.displayDialog(v.getContext(), getString(R.string.upgrade_google_play));
 
         bp = new BillingProcessor(v.getContext(), null, this);
         bp.initialize();
@@ -90,7 +104,22 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
             public void onClick(View v) {
                 // if (viewModel.getItemSelected().getValue() != null)
                 //   bp.purchase(getActivity(), viewModel.getItemSelected().getValue().packageId);
-                bp.purchase(getActivity(), "android.test.purchased");
+                if (bp.isOneTimePurchaseSupported()) {
+                    boolean isPurchase = bp.purchase(getActivity(), "android.test.purchased");
+                    boolean isConsumePurchase = bp.consumePurchase("android.test.purchased");
+
+                    LogUtil.info(TAG, "purchase =" + isPurchase + ", comsumePurcase = " + isConsumePurchase);
+                } else
+                    MessageUtil.displayDialog(v.getContext(), "sorry your device not support in app purchase");
+
+            }
+        });
+
+        mViewBinding.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() != null)
+                    getActivity().onBackPressed();
             }
         });
     }
@@ -124,23 +153,60 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
     }
 
     @Override
-    public void onProductPurchased(String productId, TransactionDetails details) {
-        LogUtil.debug(TAG, "product id " + productId + " TransactionDetails :" + details);
+    public void onProductPurchased(@NonNull String productId, TransactionDetails details) {
+        LogUtil.debug(TAG, "product id " + productId + " TransactionDetails :" + details + " : " + bp.getPurchaseTransactionDetails(productId));
+        if (details == null) {
+            SkuDetails skuDetails = bp.getPurchaseListingDetails(productId);
+            LogUtil.debug(TAG, "skuDetails =" + skuDetails);
+        } else {
+            PurchaseInfo info = details.purchaseInfo;
+            PurchaseData purchaseData = info.purchaseData;
+            GoogleVerifyBody googleVerifyBody = new GoogleVerifyBody();
+            ReceiptBody receiptBody = new ReceiptBody();
+            receiptBody.withSignature(info.signature);
+            DataBody dataBody = new DataBody(purchaseData.orderId, purchaseData.packageName, purchaseData.productId,
+                    purchaseData.purchaseTime.getTime(), purchaseData.purchaseState.ordinal(), purchaseData.purchaseToken);
+            receiptBody.withData(dataBody);
+            googleVerifyBody.withReceipt(receiptBody);
+            if (getActivity() != null)
+                viewModel.postToVerifyAppInPurchase(getActivity(), googleVerifyBody);
+        }
     }
 
     @Override
     public void onPurchaseHistoryRestored() {
+        /*
+         * Called when purchase history was restored and the list of all owned PRODUCT ID's
+         * was loaded from Google Play
+         */
         LogUtil.debug(TAG, "onPurchaseHistoryRestored");
     }
 
     @Override
     public void onBillingError(int errorCode, Throwable error) {
+        if (errorCode == Constants.BILLING_RESPONSE_RESULT_USER_CANCELED) {
+            LogUtil.info(TAG, "user cancel purchase");
+        }
         LogUtil.debug(TAG, "error code " + errorCode + " smg " + (error != null ? error.toString() : ""));
     }
 
     @Override
     public void onBillingInitialized() {
         LogUtil.debug(TAG, "onBillingInitialized");
+        try {
+            if (bp.isRequestBillingHistorySupported(Constants.PRODUCT_TYPE_MANAGED)) {
+                Bundle extraParams = new Bundle();
+
+                List<BillingHistoryRecord> lsBilling = bp.getPurchaseHistory(Constants.PRODUCT_TYPE_MANAGED, extraParams);
+                LogUtil.debug(TAG, "listBilling " + lsBilling.size() + " payload ");
+
+
+            }
+
+        } catch (BillingCommunicationException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

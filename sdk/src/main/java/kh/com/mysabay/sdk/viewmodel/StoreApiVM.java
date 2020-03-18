@@ -17,6 +17,8 @@ import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.NetworkState;
+import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
+import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyResponse;
 import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
 import kh.com.mysabay.sdk.pojo.shop.Data;
 import kh.com.mysabay.sdk.pojo.shop.ShopItem;
@@ -42,6 +44,8 @@ public class StoreApiVM extends ViewModel {
     @Inject
     Gson gson;
 
+    private AppItem appItem;
+
     private final MediatorLiveData<String> _msgError = new MediatorLiveData<>();
     private final MediatorLiveData<NetworkState> _networkState;
     private final MediatorLiveData<ShopItem> _shopItem;
@@ -56,6 +60,8 @@ public class StoreApiVM extends ViewModel {
         this._shopItem = new MediatorLiveData<>();
         this.mCompos = new CompositeDisposable();
         this.mDataSelected = new MediatorLiveData<>();
+        if (gson != null)
+            this.appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
     }
 
     @Override
@@ -120,7 +126,6 @@ public class StoreApiVM extends ViewModel {
     }
 
     public void get3PartyCheckout(Context context) {
-        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         storeRepo.get3PartyCheckout(context.getString(R.string.app_secret), appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<ThirdPartyItem>(context, _networkState) {
             @Override
@@ -134,5 +139,20 @@ public class StoreApiVM extends ViewModel {
             }
         });
 
+    }
+
+    public void postToVerifyAppInPurchase(@NotNull Context context, GoogleVerifyBody body) {
+        storeRepo.postToVerifyGoogle(context.getString(R.string.app_secret), appItem.token, body).subscribeOn(appRxSchedulers.io())
+                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<GoogleVerifyResponse>(context, _networkState) {
+            @Override
+            protected void onSuccess(GoogleVerifyResponse googleVerifyResponse) {
+                MessageUtil.displayDialog(context, googleVerifyResponse.message);
+            }
+
+            @Override
+            protected void onErrors(Throwable error) {
+
+            }
+        });
     }
 }
