@@ -12,7 +12,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Tan Phirum on 3/13/20
@@ -23,13 +23,12 @@ public interface StoreApi {
     @GET("api/v1/store")
     Observable<ShopItem> getShopItem(@Header("app_secret") String appSecret, @Header("Authorization") String token);
 
-    @GET("api/v1/checkout/{uuid}")
-    Observable<MySabayItem> getMySabayCheckout(@Header("app_secret") String appSecret, @Header("Authorization") String token, @Path("uuid") String uuid);
+    @GET("api/v1/checkout")
+    Observable<MySabayItem> getMySabayCheckout(@Header("app_secret") String appSecret, @Header("Authorization") String token, @Query("uuid") String uuid);
 
-    @GET("api/v1/cashier/{uuid}")
-    Observable<ThirdPartyItem> get3PartyCheckout(@Header("app_secret") String appSecret, @Header("Authorization") String token, @Path("uuid") String uuid);
+    @GET("api/v1/cashier")
+    Observable<ThirdPartyItem> get3PartyCheckout(@Header("app_secret") String appSecret, @Header("Authorization") String token, @Query("uuid") String uuid);
 
-    @FormUrlEncoded
     @POST("api/v1/verify_receipt/google")
     Observable<GoogleVerifyResponse> postToVerifyGoogle(@Header("app_secret") String appSecret, @Header("Authorization") String token,
                                                         @Body() GoogleVerifyBody body);
