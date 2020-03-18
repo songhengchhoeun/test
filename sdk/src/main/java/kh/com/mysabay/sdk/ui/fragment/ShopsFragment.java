@@ -65,6 +65,8 @@ public class ShopsFragment extends BaseFragment<FmShopBinding, StoreApiVM> {
                     mAdapter.insert(ob);
             }
 
+            mAdapter.notifyDataSetChanged();
+
         });
     }
 

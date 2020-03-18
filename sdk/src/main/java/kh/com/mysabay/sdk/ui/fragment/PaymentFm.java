@@ -165,7 +165,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
             ReceiptBody receiptBody = new ReceiptBody();
             receiptBody.withSignature(info.signature);
             DataBody dataBody = new DataBody(purchaseData.orderId, purchaseData.packageName, purchaseData.productId,
-                    purchaseData.purchaseTime.getTime(), purchaseData.purchaseState.ordinal(), purchaseData.purchaseToken);
+                    purchaseData.purchaseTime == null ? 0 : purchaseData.purchaseTime.getTime(), purchaseData.purchaseState.ordinal(), purchaseData.purchaseToken);
             receiptBody.withData(dataBody);
             googleVerifyBody.withReceipt(receiptBody);
             if (getActivity() != null)

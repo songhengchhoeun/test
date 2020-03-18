@@ -48,7 +48,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopItmVH> {
 
     public void insert(Data item) {
         shopItems.add(item);
-        notifyItemInserted(shopItems.size());
+        //notifyItemInserted(shopItems.size());
     }
 
     public void insert(List<Data> items) {
