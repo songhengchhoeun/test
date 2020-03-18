@@ -25,4 +25,7 @@
     <string name="select_a_partner_bank">Select a partner bank</string>
     <string name="mysabay">MySabay</string>
     <string name="please_choose_payment_option">Please choose payment options</string>
+    <string name="cancel">Cancel</string>
+    <string name="payment_confirmation">Payment Confirmation</string>
+    <string name="are_you_pay_with_my_sabay_provider">Are you sure you want to pay %s SC through Mysabay Payment Provider?</string>
 </resources>

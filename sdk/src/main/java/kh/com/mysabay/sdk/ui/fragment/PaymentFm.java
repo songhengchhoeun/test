@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingCommunicationException;
 import com.anjlab.android.iab.v3.BillingHistoryRecord;
 import com.anjlab.android.iab.v3.BillingProcessor;
@@ -146,7 +148,17 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
                         MessageUtil.displayDialog(v.getContext(), "sorry your device not support in app purchase");
 
                 } else if (checkedId == R.id.rdb_my_sabay) {
-                    viewModel.postToPaidWithProvider(v.getContext());
+                    Data data = viewModel.getItemSelected().getValue();
+                    if (data == null) return;
+
+                    MessageUtil.displayDialog(v.getContext(), getString(R.string.payment_confirmation),
+                            String.format(getString(R.string.are_you_pay_with_my_sabay_provider), data.priceInSc.toString()), getString(R.string.cancel), getString(R.string.confirm), null, new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    viewModel.postToPaidWithProvider(v.getContext());
+                                }
+                            });
+
                 } else if (checkedId == R.id.rdb_third_bank_provider) {
                     MessageUtil.displayToast(v.getContext(), "In development");
                 } else if (checkedId == R.id.rdb_pre_auth_pay) {

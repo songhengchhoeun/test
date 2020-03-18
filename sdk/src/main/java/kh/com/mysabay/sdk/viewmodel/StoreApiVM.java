@@ -192,13 +192,13 @@ public class StoreApiVM extends ViewModel {
 
         List<kh.com.mysabay.sdk.pojo.mysabay.Data> listMySabayProvider = getMySabayProvider().getValue().data;
         if (listMySabayProvider.size() > 0 && shopItem != null) {
-            PaymentBody body = new PaymentBody(appItem.uuid, shopItem.priceInSc.toString(), listMySabayProvider.get(0).code, listMySabayProvider.get(0).assetCode);
+            PaymentBody body = new PaymentBody(appItem.uuid, shopItem.priceInSc.toString(), listMySabayProvider.get(0).code.toLowerCase(), listMySabayProvider.get(0).assetCode.toLowerCase());
             storeRepo.postToPaid(context.getString(R.string.app_secret), appItem.token, body).subscribeOn(appRxSchedulers.io())
                     .observeOn(appRxSchedulers.mainThread())
                     .subscribe(new AbstractDisposableObs<PaymentResponseItem>(context, _networkState) {
                         @Override
                         protected void onSuccess(PaymentResponseItem item) {
-                            MessageUtil.displayToast(context, item.message);
+                            MessageUtil.displayDialog(context, item.message);
                         }
 
                         @Override
