@@ -16,21 +16,15 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/show_login_screen"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="Login Flow" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/show_pre_auth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Pre-Authorization and Pay Flow" />
-
-            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/show_payment_pre_auth"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Payment with Pre-Auth Flow" />
+                android:text="Store" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <LinearLayout

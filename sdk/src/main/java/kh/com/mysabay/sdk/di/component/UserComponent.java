@@ -4,6 +4,7 @@ import dagger.Subcomponent;
 import kh.com.mysabay.sdk.di.scopes.ActivityScope;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
 import kh.com.mysabay.sdk.ui.fragment.LoginFragment;
+import kh.com.mysabay.sdk.ui.fragment.MySabayLoginFm;
 import kh.com.mysabay.sdk.ui.fragment.VerifiedFragment;
 
 /**
@@ -25,6 +26,8 @@ public interface UserComponent {
     void inject(LoginActivity loginActivity);
 
     void inject(LoginFragment loginFragment);
+
+    void inject(MySabayLoginFm mySabayLoginFm);
 
     void inject(VerifiedFragment verifiedFragment);
 }

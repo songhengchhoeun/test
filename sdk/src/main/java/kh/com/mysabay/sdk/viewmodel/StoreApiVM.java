@@ -8,11 +8,15 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.pojo.AppItem;
@@ -49,6 +53,8 @@ public class StoreApiVM extends ViewModel {
     private final MediatorLiveData<ShopItem> _shopItem;
     private final CompositeDisposable mCompos;
     private final MediatorLiveData<Data> mDataSelected;
+    private final MediatorLiveData<MySabayItem> mySabayItemMediatorLiveData;
+    private final MediatorLiveData<ThirdPartyItem> thirdPartyItemMediatorLiveData;
 
 
     @Inject
@@ -58,6 +64,8 @@ public class StoreApiVM extends ViewModel {
         this._shopItem = new MediatorLiveData<>();
         this.mCompos = new CompositeDisposable();
         this.mDataSelected = new MediatorLiveData<>();
+        this.mySabayItemMediatorLiveData = new MediatorLiveData<>();
+        this.thirdPartyItemMediatorLiveData = new MediatorLiveData<>();
     }
 
     @Override
@@ -95,6 +103,14 @@ public class StoreApiVM extends ViewModel {
         return _networkState;
     }
 
+    public LiveData<ThirdPartyItem> getThirdPartyProviders() {
+        return thirdPartyItemMediatorLiveData;
+    }
+
+    public LiveData<MySabayItem> getMySabayProvider() {
+        return mySabayItemMediatorLiveData;
+    }
+
     public void setShopItemSelected(Data data) {
         _networkState.setValue(new NetworkState(NetworkState.Status.SUCCESS));
         this.mDataSelected.setValue(data);
@@ -104,35 +120,47 @@ public class StoreApiVM extends ViewModel {
         return this.mDataSelected;
     }
 
-    public void getMySabayCheckout(Context context) {
+    public void getMySabayCheckout(@NotNull Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         storeRepo.getMySabayCheckout(context.getString(R.string.app_secret), appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
-                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<MySabayItem>(context, _networkState) {
+                .observeOn(appRxSchedulers.mainThread()).subscribe(new Observer<MySabayItem>() {
             @Override
-            protected void onSuccess(MySabayItem mySabayItem) {
-                LogUtil.debug(TAG, "mySabayImte " + mySabayItem);
+            public void onSubscribe(Disposable d) {
+                mCompos.add(d);
             }
 
             @Override
-            protected void onErrors(Throwable error) {
+            public void onNext(MySabayItem mySabayItem) {
+                mySabayItemMediatorLiveData.setValue(mySabayItem);
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                LogUtil.debug(TAG, "error " + e.getLocalizedMessage());
+                get3PartyCheckout(context);
+            }
+
+            @Override
+            public void onComplete() {
+                get3PartyCheckout(context);
             }
         });
 
     }
 
-    public void get3PartyCheckout(Context context) {
+    private void get3PartyCheckout(@NotNull Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         storeRepo.get3PartyCheckout(context.getString(R.string.app_secret), appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<ThirdPartyItem>(context, _networkState) {
             @Override
             protected void onSuccess(ThirdPartyItem thirdPartyItem) {
                 LogUtil.debug(TAG, "ThirdPartyItem " + thirdPartyItem);
+                thirdPartyItemMediatorLiveData.setValue(thirdPartyItem);
             }
 
             @Override
             protected void onErrors(Throwable error) {
-
+                LogUtil.error(TAG, "error " + error.getLocalizedMessage());
             }
         });
 
@@ -140,17 +168,17 @@ public class StoreApiVM extends ViewModel {
 
     public void postToVerifyAppInPurchase(@NotNull Context context, GoogleVerifyBody body) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
-        storeRepo.postToVerifyGoogle(context.getString(R.string.app_secret), appItem.token, body).subscribeOn(appRxSchedulers.io())
-                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<GoogleVerifyResponse>(context, _networkState) {
-            @Override
-            protected void onSuccess(GoogleVerifyResponse googleVerifyResponse) {
-                MessageUtil.displayDialog(context, googleVerifyResponse.message);
-            }
-
-            @Override
-            protected void onErrors(Throwable error) {
-
-            }
-        });
+        mCompos.add(storeRepo.postToVerifyGoogle(context.getString(R.string.app_secret), appItem.token, body).subscribeOn(appRxSchedulers.io())
+                .observeOn(appRxSchedulers.mainThread()).subscribe(new Consumer<GoogleVerifyResponse>() {
+                    @Override
+                    public void accept(GoogleVerifyResponse googleVerifyResponse) throws Exception {
+                        MessageUtil.displayDialog(context, googleVerifyResponse.message);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        LogUtil.error(TAG, "error " + throwable.getLocalizedMessage());
+                    }
+                }));
     }
 }

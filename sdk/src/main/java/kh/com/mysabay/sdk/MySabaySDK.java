@@ -4,6 +4,8 @@ import android.content.Intent;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -15,6 +17,7 @@ import kh.com.mysabay.sdk.ui.activity.LoginActivity;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
 import kh.com.mysabay.sdk.utils.AppRxSchedulers;
 import kh.com.mysabay.sdk.utils.LogUtil;
+import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.webservice.AbstractDisposableObs;
 
 /**
@@ -75,6 +78,11 @@ public class MySabaySDK {
     }
 
     public void showShopView() {
+        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        if (appItem == null || StringUtils.isBlank(appItem.token)) {
+            MessageUtil.displayToast(apps, "You need to login first");
+            return;
+        }
         apps.startActivity(new Intent(apps, StoreActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 }

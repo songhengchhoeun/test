@@ -23,4 +23,6 @@
     <string name="total_s">សរុប: %s</string>
     <string name="payment_options">ជម្រើស​ការ​ទូទាត់</string>
     <string name="upgrade_google_play">In-app billing service is unavailable, please upgrade Google Play</string>
+    <string name="select_a_partner_bank">Select a partner bank</string>
+    <string name="mysabay">MySabay</string>
 </resources>

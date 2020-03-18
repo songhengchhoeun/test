@@ -1,5 +1,6 @@
 package kh.com.mysabay.sdk.viewmodel;
 
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
@@ -8,11 +9,14 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import kh.com.mysabay.sdk.Apps;
+import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.pojo.login.LoginItem;
@@ -169,29 +173,23 @@ public class UserApiVM extends ViewModel {
                 }));
     }
 
-    public void postToGetUserProfile() {
-        _networkState.setValue(new NetworkState(NetworkState.Status.LOADING));
-        mCompositeDisposable.add(this.userRepo.getUserProfile("appSecret", "").subscribeOn(appRxSchedulers.io())
+    public void postToGetUserProfile(@NotNull Activity context, String token) {
+        this.userRepo.getUserProfile(context.getString(R.string.app_secret), token)
+                .subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread())
-                .subscribe(new Consumer<UserProfileItem>() {
+                .subscribe(new AbstractDisposableObs<UserProfileItem>(context, _networkState) {
                     @Override
-                    public void accept(UserProfileItem o) throws Exception {
-                        _networkState.setValue(new NetworkState(NetworkState.Status.SUCCESS));
+                    protected void onSuccess(UserProfileItem userProfileItem) {
+                        AppItem appItem = new AppItem(context.getString(R.string.app_secret), userProfileItem.data.refreshToken, userProfileItem.data.uuid);
+                        Apps.getInstance().saveAppItem(gson.toJson(appItem));
+                        context.runOnUiThread(context::finish);
+                    }
+
+                    @Override
+                    protected void onErrors(Throwable error) {
 
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                        _networkState.setValue(new NetworkState(NetworkState.Status.ERROR, throwable.getLocalizedMessage()));
-                        String item = Apps.getInstance().getAppItem();
-                        LogUtil.debug(TAG, "item " + item);
-                        /*if (!StringUtils.isBlank(item)) {
-                            LogUtil.debug(TAG, "item decrypted " + rsaEncryptUtils.decrypt(item));
-                        } else {
-                            LogUtil.debug(TAG, "app item from preference null");
-                        }*/
-                    }
-                }));
+                });
     }
 
     @Override

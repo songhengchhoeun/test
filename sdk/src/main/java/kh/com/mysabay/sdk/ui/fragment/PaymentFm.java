@@ -7,6 +7,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import com.anjlab.android.iab.v3.BillingCommunicationException;
 import com.anjlab.android.iab.v3.BillingHistoryRecord;
@@ -22,13 +23,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import kh.com.mysabay.sdk.BuildConfig;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FmPaymentBinding;
 import kh.com.mysabay.sdk.pojo.googleVerify.DataBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.ReceiptBody;
+import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
 import kh.com.mysabay.sdk.pojo.shop.Data;
+import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
 import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.utils.MessageUtil;
@@ -46,6 +50,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
     private BillingProcessor bp;
 
     private Data mData;
+    private static String PURCHASE_ID = "android.test.purchased";
 
     @NotNull
     @Contract("_ -> new")
@@ -71,9 +76,8 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
     }
 
     @Override
-    public void initializeObjects(View v, Bundle args) {
+    public void initializeObjects(@NotNull View v, Bundle args) {
         viewModel.setShopItemSelected(mData);
-        viewModel.get3PartyCheckout(v.getContext());
         viewModel.getMySabayCheckout(v.getContext());
         if (!BillingProcessor.isIabServiceAvailable(v.getContext()))
             MessageUtil.displayDialog(v.getContext(), getString(R.string.upgrade_google_play));
@@ -95,6 +99,32 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
                 mViewBinding.tvTotal.setText(String.format(getString(R.string.total_s), data.toUSDPrice()));
             }
         });
+
+        viewModel.getMySabayProvider().observe(this, new Observer<MySabayItem>() {
+            @Override
+            public void onChanged(MySabayItem mySabayItem) {
+                if (mySabayItem.status == 200) {
+                    if (mySabayItem.data.size() > 0)
+                        mViewBinding.rdbMySabay.setVisibility(View.VISIBLE);
+                    else
+                        mViewBinding.rdbMySabay.setVisibility(View.GONE);
+                } else
+                    mViewBinding.rdbMySabay.setVisibility(View.GONE);
+            }
+        });
+
+        viewModel.getThirdPartyProviders().observe(this, new Observer<ThirdPartyItem>() {
+            @Override
+            public void onChanged(ThirdPartyItem thirdPartyItem) {
+                if (thirdPartyItem.status == 200) {
+                    if (thirdPartyItem.data.size() > 0) {
+                        mViewBinding.rdbThirdBankProvider.setVisibility(View.VISIBLE);
+                    } else
+                        mViewBinding.rdbThirdBankProvider.setVisibility(View.GONE);
+                } else
+                    mViewBinding.rdbThirdBankProvider.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -102,11 +132,11 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
         mViewBinding.btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // if (viewModel.getItemSelected().getValue() != null)
-                //   bp.purchase(getActivity(), viewModel.getItemSelected().getValue().packageId);
-                if (bp.isOneTimePurchaseSupported()) {
-                    boolean isPurchase = bp.purchase(getActivity(), "android.test.purchased");
-                    boolean isConsumePurchase = bp.consumePurchase("android.test.purchased");
+                if (bp.isOneTimePurchaseSupported() && (viewModel.getItemSelected().getValue() != null)) {
+                    if (!BuildConfig.DEBUG)
+                        PURCHASE_ID = viewModel.getItemSelected().getValue().packageId;
+                    boolean isPurchase = bp.purchase(getActivity(), PURCHASE_ID);
+                    boolean isConsumePurchase = bp.consumePurchase(PURCHASE_ID);
 
                     LogUtil.info(TAG, "purchase =" + isPurchase + ", comsumePurcase = " + isConsumePurchase);
                 } else
@@ -199,7 +229,6 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
 
                 List<BillingHistoryRecord> lsBilling = bp.getPurchaseHistory(Constants.PRODUCT_TYPE_MANAGED, extraParams);
                 LogUtil.debug(TAG, "listBilling " + lsBilling.size() + " payload ");
-
 
             }
 
