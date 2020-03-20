@@ -8,12 +8,12 @@
 
         <activity
             android:name=".ui.activity.StoreActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
             android:theme="@style/SdkAppTheme.NoActionBar.FullScreen" />
 
         <activity
             android:name=".ui.activity.LoginActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
             android:theme="@style/SdkAppTheme.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
