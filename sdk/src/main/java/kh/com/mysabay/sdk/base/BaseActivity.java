@@ -59,7 +59,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         localizationDelegate.addOnLocaleChangedListener(this);
         localizationDelegate.onCreate(savedInstanceState);
-        setLanguage("km");
+        setLanguage("");
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         //register check network change

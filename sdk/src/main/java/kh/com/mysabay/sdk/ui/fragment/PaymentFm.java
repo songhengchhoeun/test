@@ -168,12 +168,14 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
             }
         });
 
-        mViewBinding.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getActivity() != null)
-                    getActivity().onBackPressed();
-            }
+        mViewBinding.btnBack.setOnClickListener(v -> {
+            if (getActivity() != null)
+                getActivity().onBackPressed();
+        });
+
+        mViewBinding.btnClose.setOnClickListener(v -> {
+            if (getActivity() != null)
+                getActivity().onBackPressed();
         });
 
         /*mViewBinding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
