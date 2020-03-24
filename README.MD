@@ -23,7 +23,7 @@ Call ```MySabaySDK.getInstance().showLoginView();``` to open login screen
 
 * **Logout**
 
-Call MySabaySDK.getInstance().logout();
+Call ```MySabaySDK.getInstance().logout();```
 
 *  **Store and checkout**
 
