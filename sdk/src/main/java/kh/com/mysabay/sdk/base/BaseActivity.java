@@ -6,8 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -79,9 +77,12 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        assignValues();
-        addListeners();
-        onActionAfterCreated();
+        if (savedInstanceState == null) {
+            assignValues();
+            addListeners();
+            onActionAfterCreated();
+        }
+
     }
 
     @Override
