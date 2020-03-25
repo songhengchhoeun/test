@@ -15,7 +15,7 @@ import org.apache.commons.lang3.text.WordUtils;
  */
 public class InfoUtil {
 
-    public static String getDeviceImei(Context context) {
+   /* public static String getDeviceImei(Context context) {
         String device_id = "";
         try {
             if (context.checkCallingOrSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
@@ -33,7 +33,7 @@ public class InfoUtil {
             e.printStackTrace();
         }
         return device_id;
-    }
+    }*/
 
     public static String getUniqueID(Context activity) {
         String unique_id = "";

@@ -1,14 +1,9 @@
 package kh.com.mysabay.sdk.webservice;
 
-import android.text.TextUtils;
-import android.util.Log;
-
 import com.google.gson.GsonBuilder;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -18,11 +13,7 @@ import dagger.Provides;
 import kh.com.mysabay.sdk.BuildConfig;
 import kh.com.mysabay.sdk.webservice.api.StoreApi;
 import kh.com.mysabay.sdk.webservice.api.UserApi;
-import okhttp3.Cache;
-import okhttp3.CacheControl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -68,8 +59,10 @@ public class ServiceGenerator {
                 .build();
     }
 
+    @Singleton
+    @Provides
     @NotNull
-    private OkHttpClient getClientConfig() {
+    public OkHttpClient getClientConfig() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY :
                 HttpLoggingInterceptor.Level.NONE);
@@ -82,7 +75,7 @@ public class ServiceGenerator {
                 .build();
     }
 
-    Interceptor timeoutInterceptor = chain -> {
+   /* Interceptor timeoutInterceptor = chain -> {
         Request request = chain.request();
 
         int connectTimeout = chain.connectTimeoutMillis();
@@ -113,7 +106,7 @@ public class ServiceGenerator {
                 .withReadTimeout(readTimeout, TimeUnit.MILLISECONDS)
                 .withWriteTimeout(writeTimeout, TimeUnit.MILLISECONDS)
                 .proceed(builder.build());
-    };
+    };*/
 
     /**
      * create a interface to call api endpoint
@@ -130,7 +123,7 @@ public class ServiceGenerator {
         return instanceStore().create(StoreApi.class);
     }
 
-    private static Cache provideCache() {
+   /* private static Cache provideCache() {
         Cache cache = null;
         try {
             cache = new Cache(new File("", "http-cache"),
@@ -139,9 +132,9 @@ public class ServiceGenerator {
             Log.e("ServiceGenerator", "Could not create Cache!");
         }
         return cache;
-    }
+    }*/
 
-    @NotNull
+  /*  @NotNull
     @Contract(pure = true)
     public static Interceptor provideOfflineCacheInterceptor() {
         return chain -> {
@@ -155,6 +148,6 @@ public class ServiceGenerator {
                     .build();
             return chain.proceed(request);
         };
-    }
+    }*/
 
 }

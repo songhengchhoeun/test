@@ -56,7 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         localizationDelegate.addOnLocaleChangedListener(this);
-        localizationDelegate.onCreate(savedInstanceState);
+        localizationDelegate.onCreate();
         setLanguage("");
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
@@ -191,13 +191,13 @@ public abstract class BaseActivity extends AppCompatActivity implements
         localizationDelegate.setLanguage(this, locale);
     }
 
-    public final void setDefaultLanguage(String language) {
+    /*public final void setDefaultLanguage(String language) {
         localizationDelegate.setDefaultLanguage(language);
     }
 
     public final void setDefaultLanguage(Locale locale) {
         localizationDelegate.setDefaultLanguage(locale);
-    }
+    }*/
 
     public final Locale getCurrentLanguage() {
         return localizationDelegate.getLanguage(this);

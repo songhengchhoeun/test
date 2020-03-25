@@ -2,14 +2,9 @@ package kh.com.mysabay.sdk;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-
-import com.akexorcist.localizationactivity.core.LocalizationApplicationDelegate;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import kh.com.mysabay.sdk.di.BaseAppComponent;
 import kh.com.mysabay.sdk.di.DaggerBaseAppComponent;
@@ -20,7 +15,7 @@ import kh.com.mysabay.sdk.di.DaggerBaseAppComponent;
  */
 public class Apps extends Application {
 
-    LocalizationApplicationDelegate mLocalizationApplicationDelegate = new LocalizationApplicationDelegate(this);
+    //LocalizationApplicationDelegate mLocalizationApplicationDelegate = new LocalizationApplicationDelegate();
 
     private static Apps mInstance;
     private SharedPreferences mPreferences;
@@ -30,11 +25,10 @@ public class Apps extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-
         this.mComponent = DaggerBaseAppComponent.create();
     }
 
-    @Override
+   /* @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(mLocalizationApplicationDelegate.attachBaseContext(base));
     }
@@ -48,7 +42,7 @@ public class Apps extends Application {
     @Override
     public Context getApplicationContext() {
         return mLocalizationApplicationDelegate.getApplicationContext(super.getApplicationContext());
-    }
+    }*/
 
     @Contract(pure = true)
     public static synchronized Apps getInstance() {
