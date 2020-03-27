@@ -51,21 +51,19 @@ dependencies {
 
     //phone validation
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.10.3'
-    //material components
-    //implementation 'com.google.android.material:material:1.2.0-alpha05'
     //pin library
-   /* implementation('com.alimuzaffar.lib:pinentryedittext:2.0.6') {
+    implementation('com.alimuzaffar.lib:pinentryedittext:2.0.6') {
         // Exclude is only needed if you already have
         // androidx.appcompat as a dependency in your app.
         exclude group: 'androidx.appcompat', module: 'appcompat'
-    }*/
+    }
     //
     implementation compatibility("lifecycleExtensions")
     //dagger
     implementation compatibility("dagger")
     annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
     implementation compatibility("material")
-    api compatibility("commonsLang3")
+    implementation compatibility("commonsLang3")
     implementation compatibility("rxjava")
     implementation compatibility("rxBindingMaterial")
     implementation compatibility("gson")
@@ -76,18 +74,18 @@ dependencies {
     implementation compatibility("retrofit-convert-gson")
     implementation compatibility("converterScalars")
     //dialog
-    api 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     //rsa
-    api 'com.yakivmospan:scytale:1.0.1'
+    implementation 'com.yakivmospan:scytale:1.0.1'
     //localization strings
-    //api 'com.akexorcist:localizationactivity:1.2.2'
+    //implementation 'com.akexorcist:localizationactivity:1.2.2'
     implementation 'com.akexorcist:localization:1.2.4'
     //animation lib
-    api 'com.daimajia.easing:library:2.1@aar'
-    api 'com.daimajia.androidanimations:library:2.3@aar'
-    //api billing
+    implementation 'com.daimajia.easing:library:2.1@aar'
+    implementation 'com.daimajia.androidanimations:library:2.3@aar'
+    //implementation billing
     //implementation 'com.android.billingclient:billing:2.1.0'
     implementation 'com.anjlab.android.iab.v3:library:1.1.0'
-    implementation project(path: ':pinentryedittext')
+    //implementation project(path: ':pinentryedittext')
 }
 
