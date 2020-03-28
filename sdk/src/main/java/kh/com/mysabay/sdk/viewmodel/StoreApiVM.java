@@ -172,18 +172,19 @@ public class StoreApiVM extends ViewModel {
     }
 
     public void postToVerifyAppInPurchase(@NotNull Context context, GoogleVerifyBody body) {
+        EventBus.getDefault().post(new SubscribePayment(null, body.receipt, null));
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         mCompos.add(storeRepo.postToVerifyGoogle(context.getString(R.string.app_secret), appItem.token, body).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new Consumer<GoogleVerifyResponse>() {
                     @Override
                     public void accept(GoogleVerifyResponse googleVerifyResponse) throws Exception {
-                        EventBus.getDefault().post(new SubscribePayment(null, googleVerifyResponse.data, null));
+                       // EventBus.getDefault().post(new SubscribePayment(null, googleVerifyResponse.data, null));
                         MessageUtil.displayDialog(context, googleVerifyResponse.message);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        EventBus.getDefault().post(new SubscribePayment(null, null, throwable));
+                  //      EventBus.getDefault().post(new SubscribePayment(null, null, throwable));
                         LogUtil.error(TAG, "error " + throwable.getLocalizedMessage());
                     }
                 }));

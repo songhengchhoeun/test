@@ -6,10 +6,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import org.apache.commons.lang3.StringUtils;
-
 import kh.com.mysabay.sample.databinding.ActivityMainBinding;
-import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.callback.LoginListener;
 import kh.com.mysabay.sdk.callback.PaymentListener;
@@ -26,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         mViewBinding.viewPb.setVisibility(View.GONE);
         findViewById(R.id.show_login_screen).setOnClickListener(v -> {
             mViewBinding.viewPb.setVisibility(View.VISIBLE);
-            if (!StringUtils.isBlank(Apps.getInstance().getAppItem())) {
+            if (MySabaySDK.getInstance().isLogIn()) {
                 MessageUtil.displayDialog(v.getContext(), "User already login", "choose option below",
                         "Logout", "Get user information",
                         (dialog, which) -> {

@@ -67,6 +67,10 @@ public class MySabaySDK {
         apps.startActivity(new Intent(apps, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
+    public boolean isLogIn() {
+        return !StringUtils.isBlank(Apps.getInstance().getAppItem());
+    }
+
     public void logout() {
         apps.saveAppItem("");
     }
