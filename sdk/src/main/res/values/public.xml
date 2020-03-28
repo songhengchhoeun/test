@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <public name="resend_otp" type="string" />
-    <public name="MySabaySDK" type="class" />
-    <public name="LoginListener" type="interface" />
-    <public name="PaymentListener" type="interface" />
-    <public name="UserInfoListener" type="interface" />
-</resources>
