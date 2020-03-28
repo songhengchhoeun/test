@@ -1,8 +1,6 @@
 ## Installation
 
-Add sabaysdk.aar to your lib directory
-
-Then add this dependency to your app build.gradle file.
+Add Jitpack to your project build.gralde file
 
 ```
 allprojects {
@@ -17,7 +15,7 @@ Then add this dependency to your app build.gradle file.
 
 ```
 dependencies {
-    implementation ('kh.com.mysabay:sabaysdk:1.0.6-b02')
+    implementation ('kh.com.mysabay:sabaysdk:1.0.4')
 }
 ```
 
@@ -81,7 +79,3 @@ MySabaySDK.getInstance().showShopView(new PaymentListener() {
 * **Logout**
 
 Call ```MySabaySDK.getInstance().logout();```
-
-*  **Store and checkout**
-
-Call ```MySabaySDK.getInstance().showShopView();```
