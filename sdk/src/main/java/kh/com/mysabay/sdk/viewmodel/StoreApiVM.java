@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyResponse;
 import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
 import kh.com.mysabay.sdk.pojo.payment.PaymentBody;
 import kh.com.mysabay.sdk.pojo.payment.PaymentResponseItem;
+import kh.com.mysabay.sdk.pojo.payment.SubscribePayment;
 import kh.com.mysabay.sdk.pojo.shop.Data;
 import kh.com.mysabay.sdk.pojo.shop.ShopItem;
 import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
@@ -175,11 +177,13 @@ public class StoreApiVM extends ViewModel {
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new Consumer<GoogleVerifyResponse>() {
                     @Override
                     public void accept(GoogleVerifyResponse googleVerifyResponse) throws Exception {
+                        EventBus.getDefault().post(new SubscribePayment(null, googleVerifyResponse.data, null));
                         MessageUtil.displayDialog(context, googleVerifyResponse.message);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        EventBus.getDefault().post(new SubscribePayment(null, null, throwable));
                         LogUtil.error(TAG, "error " + throwable.getLocalizedMessage());
                     }
                 }));
@@ -198,12 +202,13 @@ public class StoreApiVM extends ViewModel {
                     .subscribe(new AbstractDisposableObs<PaymentResponseItem>(context, _networkState) {
                         @Override
                         protected void onSuccess(PaymentResponseItem item) {
+                            EventBus.getDefault().post(new SubscribePayment(item, null, null));
                             MessageUtil.displayDialog(context, item.message);
                         }
 
                         @Override
                         protected void onErrors(Throwable error) {
-
+                            EventBus.getDefault().post(new SubscribePayment(null, null, error));
                         }
                     });
         }

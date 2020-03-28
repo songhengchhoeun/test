@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import kh.com.mysabay.sample.databinding.ActivityMainBinding;
 import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.MySabaySDK;
+import kh.com.mysabay.sdk.callback.LoginListener;
+import kh.com.mysabay.sdk.callback.PaymentListener;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,13 +37,38 @@ public class MainActivity extends AppCompatActivity {
                             mViewBinding.viewPb.setVisibility(View.GONE);
                         }));
             } else
-                MySabaySDK.getInstance().showLoginView();
+                MySabaySDK.getInstance().showLoginView(new LoginListener() {
+                    @Override
+                    public void loginSuccess(String accessToken) {
+                        MessageUtil.displayToast(v.getContext(), "accessToken = " + accessToken);
+                    }
+
+                    @Override
+                    public void loginFailed(Object error) {
+                        MessageUtil.displayToast(v.getContext(), "error = " + error);
+                    }
+                });
         });
 
         mViewBinding.showPaymentPreAuth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MySabaySDK.getInstance().showShopView();
+                MySabaySDK.getInstance().showShopView(new PaymentListener() {
+                    @Override
+                    public void purchaseMySabaySuccess(Object dataMySabay) {
+                        MessageUtil.displayToast(v.getContext(), "dataMySabay = " + dataMySabay);
+                    }
+
+                    @Override
+                    public void purchaseAIPSuccess(Object dataAIP) {
+                        MessageUtil.displayToast(v.getContext(), "dataAIP = " + dataAIP);
+                    }
+
+                    @Override
+                    public void purchaseFailed(Object dataError) {
+                        MessageUtil.displayToast(v.getContext(), "error = " + dataError);
+                    }
+                });
             }
         });
     }

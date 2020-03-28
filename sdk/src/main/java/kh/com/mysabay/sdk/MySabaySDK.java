@@ -5,12 +5,18 @@ import android.content.Intent;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import kh.com.mysabay.sdk.callback.LoginListener;
+import kh.com.mysabay.sdk.callback.PaymentListener;
 import kh.com.mysabay.sdk.callback.UserInfoListener;
 import kh.com.mysabay.sdk.pojo.AppItem;
+import kh.com.mysabay.sdk.pojo.login.SubscribeLogin;
+import kh.com.mysabay.sdk.pojo.payment.SubscribePayment;
 import kh.com.mysabay.sdk.pojo.profile.UserProfileItem;
 import kh.com.mysabay.sdk.repository.UserRepo;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
@@ -38,9 +44,13 @@ public class MySabaySDK {
 
     private static Apps apps;
     private static MySabaySDK mySabaySDK;
+    private LoginListener loginListner;
+    private PaymentListener mPaymentListener;
 
     @Inject
     public MySabaySDK() {
+        LogUtil.debug(TAG, "init MySabaySDK");
+        EventBus.getDefault().register(this);
         apps = Apps.getInstance();
         apps.mComponent.inject(this);
     }
@@ -51,7 +61,9 @@ public class MySabaySDK {
         return mySabaySDK;
     }
 
-    public void showLoginView() {
+    public void showLoginView(LoginListener listener) {
+        if (listener != null)
+            this.loginListner = listener;
         apps.startActivity(new Intent(apps, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
@@ -77,12 +89,48 @@ public class MySabaySDK {
         });
     }
 
-    public void showShopView() {
+    public void showShopView(PaymentListener listener) {
+        if (listener == null) return;
+
+        this.mPaymentListener = listener;
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         if (appItem == null || StringUtils.isBlank(appItem.token)) {
             MessageUtil.displayToast(apps, "You need to login first");
             return;
         }
         apps.startActivity(new Intent(apps, StoreActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    }
+
+    @Subscribe
+    public void onLoginEvent(SubscribeLogin event) {
+        if (loginListner != null) {
+            if (!StringUtils.isBlank(event.accessToken)) {
+                loginListner.loginSuccess(event.accessToken);
+            } else
+                loginListner.loginFailed(event.error);
+        } else {
+            LogUtil.debug(TAG, "loginListerner null " + gson.toJson(event));
+        }
+    }
+
+    @Subscribe
+    public void onPaymentEvent(SubscribePayment event) {
+        if (mPaymentListener != null) {
+            if (event.dataAIP != null)
+                mPaymentListener.purchaseAIPSuccess(event.dataAIP);
+            else if (event.dataMySabay != null)
+                mPaymentListener.purchaseMySabaySuccess(event.dataMySabay);
+            else
+                mPaymentListener.purchaseFailed(event.dataError);
+        } else
+            LogUtil.debug(TAG, "loginListerner null " + gson.toJson(event));
+    }
+
+    public void destroy() {
+        EventBus.getDefault().unregister(this);
+        loginListner = null;
+        mPaymentListener = null;
+        mySabaySDK = null;
+        apps = null;
     }
 }

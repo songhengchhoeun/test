@@ -25,6 +25,10 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
 
     public static final String TAG = VerifiedFragment.class.getSimpleName();
 
+    public VerifiedFragment() {
+        super();
+    }
+
     @Override
     public int getLayoutId() {
         return R.layout.fragment_verified;

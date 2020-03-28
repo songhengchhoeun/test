@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -20,6 +21,7 @@ import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.pojo.login.LoginItem;
+import kh.com.mysabay.sdk.pojo.login.SubscribeLogin;
 import kh.com.mysabay.sdk.pojo.profile.UserProfileItem;
 import kh.com.mysabay.sdk.repository.UserRepo;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
@@ -144,13 +146,23 @@ public class UserApiVM extends ViewModel {
                             Apps.getInstance().saveAppItem(encrypted);
                             MessageUtil.displayToast(context, "verified code success");
                             LogUtil.debug(TAG, "write appItem success");
-                            LoginActivity.loginActivity.finish();
-                        } else
-                            LogUtil.error(TAG, "verified data is null");
-                    } else
-                        LogUtil.error(TAG, "verify code response with status :" + response.status);
 
-                }, throwable -> LogUtil.error(TAG, throwable.getLocalizedMessage())));
+                            EventBus.getDefault().post(new SubscribeLogin(item.data.accessToken, null));
+
+                            LoginActivity.loginActivity.finish();
+                        } else {
+                            EventBus.getDefault().post(new SubscribeLogin("", response.data));
+                            LogUtil.error(TAG, "verified data is null");
+                        }
+                    } else {
+                        EventBus.getDefault().post(new SubscribeLogin("", response.data));
+                        LogUtil.error(TAG, "verify code response with status :" + response.status);
+                    }
+
+                }, throwable -> {
+                    EventBus.getDefault().post(new SubscribeLogin("", throwable));
+                    LogUtil.error(TAG, throwable.getLocalizedMessage());
+                }));
     }
 
     public void postToLoginWithMySabay(Context context, String appSecret) {
@@ -180,14 +192,18 @@ public class UserApiVM extends ViewModel {
                 .subscribe(new AbstractDisposableObs<UserProfileItem>(context, _networkState) {
                     @Override
                     protected void onSuccess(UserProfileItem userProfileItem) {
-                        AppItem appItem = new AppItem(context.getString(R.string.app_secret), userProfileItem.data.refreshToken, userProfileItem.data.uuid);
-                        Apps.getInstance().saveAppItem(gson.toJson(appItem));
-                        context.runOnUiThread(context::finish);
+                        if (userProfileItem.data != null) {
+                            EventBus.getDefault().post(new SubscribeLogin(token, null));
+                            AppItem appItem = new AppItem(context.getString(R.string.app_secret), userProfileItem.data.refreshToken, userProfileItem.data.uuid);
+                            Apps.getInstance().saveAppItem(gson.toJson(appItem));
+                            context.runOnUiThread(context::finish);
+                        } else
+                            EventBus.getDefault().post(new SubscribeLogin("", userProfileItem.data));
                     }
 
                     @Override
                     protected void onErrors(Throwable error) {
-
+                        EventBus.getDefault().post(new SubscribeLogin("", error));
                     }
                 });
     }
