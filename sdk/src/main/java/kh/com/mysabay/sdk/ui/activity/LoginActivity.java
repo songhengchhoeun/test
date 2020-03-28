@@ -74,14 +74,13 @@ public class LoginActivity extends BaseActivity {
     public void initializeObjects(Bundle args) {
         mManager = getSupportFragmentManager();
         mHandler = new Handler();
-        if (mDeepLink != null && StringUtils.contains(mDeepLink.toString(), "user.master.mysabay.com/api/v1/user/mysabay/login/deeplink"))
-            initAddFragment(MySabayLoginFm.newInstance(mDeepLink.toString()), MySabayLoginFm.TAG);
-        else initAddFragment(LoginFragment.newInstance(), LoginFragment.TAG);
     }
 
     @Override
     public void assignValues() {
-
+        if (mDeepLink != null && StringUtils.contains(mDeepLink.toString(), "user.master.mysabay.com/api/v1/user/mysabay/login/deeplink"))
+            initAddFragment(MySabayLoginFm.newInstance(mDeepLink.toString()), MySabayLoginFm.TAG);
+        else initAddFragment(LoginFragment.newInstance(), LoginFragment.TAG);
     }
 
     @Override
