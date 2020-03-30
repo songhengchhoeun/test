@@ -15,7 +15,7 @@ Then add this dependency to your app build.gradle file.
 
 ```
 dependencies {
-    implementation ('kh.com.mysabay:sabaysdk:1.0.4')
+    implementation 'kh.com.mysabay:sabaysdk:1.0.6-b04'
 }
 ```
 
