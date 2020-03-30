@@ -19,6 +19,7 @@ import com.akexorcist.localizationactivity.core.OnLocaleChangedListener;
 
 import java.util.Locale;
 
+import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.utils.FontUtils;
 import kh.com.mysabay.sdk.utils.IdlingResourceHelper;
@@ -57,7 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         localizationDelegate.addOnLocaleChangedListener(this);
         localizationDelegate.onCreate();
-        setLanguage("");
+        setLanguage(Apps.getInstance().getSdkConfiguration().sdkLanguages.value);
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         //register check network change
@@ -190,14 +191,6 @@ public abstract class BaseActivity extends AppCompatActivity implements
     public final void setLanguage(Locale locale) {
         localizationDelegate.setLanguage(this, locale);
     }
-
-    /*public final void setDefaultLanguage(String language) {
-        localizationDelegate.setDefaultLanguage(language);
-    }
-
-    public final void setDefaultLanguage(Locale locale) {
-        localizationDelegate.setDefaultLanguage(locale);
-    }*/
 
     public final Locale getCurrentLanguage() {
         return localizationDelegate.getLanguage(this);

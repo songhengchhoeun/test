@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.jetbrains.annotations.Contract;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,22 +45,40 @@ public class MySabaySDK {
 
     private static Apps apps;
     private static MySabaySDK mySabaySDK;
+    private static SdkConfiguration mSdkConfiguration;
+
     private LoginListener loginListner;
     private PaymentListener mPaymentListener;
 
     @Inject
-    public MySabaySDK() {
+    public MySabaySDK(SdkConfiguration configuration) {
         LogUtil.debug(TAG, "init MySabaySDK");
         EventBus.getDefault().register(this);
+        mSdkConfiguration = configuration;
         apps = Apps.getInstance();
+        apps.setSdkConfiguration(configuration);
         apps.mComponent.inject(this);
+        mySabaySDK = this;
     }
 
+    public static class Impl {
+        public static synchronized void setDefaultInstanceConfiguration(SdkConfiguration configuration) {
+            new MySabaySDK(configuration);
+        }
+    }
+
+    @Contract(pure = true)
     public static MySabaySDK getInstance() {
-        if (mySabaySDK == null)
-            mySabaySDK = new MySabaySDK();
+        if (mSdkConfiguration == null)
+            throw new RuntimeException("This sdk is need SdkConfiguration");
         return mySabaySDK;
     }
+
+    /*
+
+    public synchronized void setDefaultInstanceConfiguration(SdkConfiguration configuration) {
+        this.mSdkConfiguration = configuration;
+    }*/
 
     public void showLoginView(LoginListener listener) {
         if (listener != null)

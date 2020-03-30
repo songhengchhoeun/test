@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.BuildConfig;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
@@ -84,7 +85,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
         if (!BillingProcessor.isIabServiceAvailable(v.getContext()))
             MessageUtil.displayDialog(v.getContext(), getString(R.string.upgrade_google_play));
 
-        bp = new BillingProcessor(v.getContext(), null, this);
+        bp = new BillingProcessor(v.getContext(), Apps.getInstance().getSdkConfiguration().licenseKey, Apps.getInstance().getSdkConfiguration().merchantId, this);
         bp.initialize();
         // or bp = BillingProcessor.newBillingProcessor(this, "YOUR LICENSE KEY FROM GOOGLE PLAY CONSOLE HERE", this);
         // See below on why this is a useful alternative

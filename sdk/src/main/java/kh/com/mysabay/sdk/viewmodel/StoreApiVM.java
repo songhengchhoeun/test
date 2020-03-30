@@ -21,6 +21,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.R;
+import kh.com.mysabay.sdk.SdkConfiguration;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
@@ -47,6 +48,7 @@ public class StoreApiVM extends ViewModel {
     private static final String TAG = StoreApiVM.class.getSimpleName();
 
     private final StoreRepo storeRepo;
+    private final SdkConfiguration sdkConfiguration;
 
     @Inject
     AppRxSchedulers appRxSchedulers;
@@ -71,6 +73,7 @@ public class StoreApiVM extends ViewModel {
         this.mDataSelected = new MediatorLiveData<>();
         this.mySabayItemMediatorLiveData = new MediatorLiveData<>();
         this.thirdPartyItemMediatorLiveData = new MediatorLiveData<>();
+        this.sdkConfiguration = Apps.getInstance().getSdkConfiguration();
     }
 
     @Override
@@ -84,7 +87,7 @@ public class StoreApiVM extends ViewModel {
 
     public void getShopFromServer(@NotNull Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
-        storeRepo.getShopItem(context.getString(R.string.app_secret), appItem.token).subscribeOn(appRxSchedulers.io())
+        storeRepo.getShopItem(sdkConfiguration.appSecret, appItem.token).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<ShopItem>(context, _networkState) {
             @Override
             protected void onSuccess(ShopItem item) {
@@ -127,7 +130,7 @@ public class StoreApiVM extends ViewModel {
 
     public void getMySabayCheckout(@NotNull Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
-        storeRepo.getMySabayCheckout(context.getString(R.string.app_secret), appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
+        storeRepo.getMySabayCheckout(sdkConfiguration.appSecret, appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new Observer<MySabayItem>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -155,7 +158,7 @@ public class StoreApiVM extends ViewModel {
 
     private void get3PartyCheckout(@NotNull Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
-        storeRepo.get3PartyCheckout(context.getString(R.string.app_secret), appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
+        storeRepo.get3PartyCheckout(sdkConfiguration.appSecret, appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<ThirdPartyItem>(context, _networkState) {
             @Override
             protected void onSuccess(ThirdPartyItem thirdPartyItem) {
@@ -174,7 +177,7 @@ public class StoreApiVM extends ViewModel {
     public void postToVerifyAppInPurchase(@NotNull Context context, GoogleVerifyBody body) {
         EventBus.getDefault().post(new SubscribePayment(null, body.receipt, null));
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
-        mCompos.add(storeRepo.postToVerifyGoogle(context.getString(R.string.app_secret), appItem.token, body).subscribeOn(appRxSchedulers.io())
+        mCompos.add(storeRepo.postToVerifyGoogle(sdkConfiguration.appSecret, appItem.token, body).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new Consumer<GoogleVerifyResponse>() {
                     @Override
                     public void accept(GoogleVerifyResponse googleVerifyResponse) throws Exception {
@@ -198,7 +201,7 @@ public class StoreApiVM extends ViewModel {
         List<kh.com.mysabay.sdk.pojo.mysabay.Data> listMySabayProvider = getMySabayProvider().getValue().data;
         if (listMySabayProvider.size() > 0 && shopItem != null) {
             PaymentBody body = new PaymentBody(appItem.uuid, shopItem.priceInSc.toString(), listMySabayProvider.get(0).code.toLowerCase(), listMySabayProvider.get(0).assetCode.toLowerCase());
-            storeRepo.postToPaid(context.getString(R.string.app_secret), appItem.token, body).subscribeOn(appRxSchedulers.io())
+            storeRepo.postToPaid(sdkConfiguration.appSecret, appItem.token, body).subscribeOn(appRxSchedulers.io())
                     .observeOn(appRxSchedulers.mainThread())
                     .subscribe(new AbstractDisposableObs<PaymentResponseItem>(context, _networkState) {
                         @Override

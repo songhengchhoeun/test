@@ -2,12 +2,18 @@ package kh.com.mysabay.sdk;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+
+import com.akexorcist.localizationactivity.core.LocalizationApplicationDelegate;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import kh.com.mysabay.sdk.di.BaseAppComponent;
 import kh.com.mysabay.sdk.di.DaggerBaseAppComponent;
+import kh.com.mysabay.sdk.utils.LogUtil;
 
 /**
  * Created by Tan Phirum on 3/7/20
@@ -15,20 +21,24 @@ import kh.com.mysabay.sdk.di.DaggerBaseAppComponent;
  */
 public class Apps extends Application {
 
-    //LocalizationApplicationDelegate mLocalizationApplicationDelegate = new LocalizationApplicationDelegate();
+    private static final String TAG = "Apps";
+
+    LocalizationApplicationDelegate mLocalizationApplicationDelegate = new LocalizationApplicationDelegate();
 
     private static Apps mInstance;
     private SharedPreferences mPreferences;
     public BaseAppComponent mComponent;
+    private SdkConfiguration mSdkConfiguration;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtil.debug(TAG, "init Apps");
         mInstance = this;
         this.mComponent = DaggerBaseAppComponent.create();
     }
 
-   /* @Override
+    @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(mLocalizationApplicationDelegate.attachBaseContext(base));
     }
@@ -42,7 +52,7 @@ public class Apps extends Application {
     @Override
     public Context getApplicationContext() {
         return mLocalizationApplicationDelegate.getApplicationContext(super.getApplicationContext());
-    }*/
+    }
 
     @Contract(pure = true)
     public static synchronized Apps getInstance() {
@@ -69,5 +79,13 @@ public class Apps extends Application {
 
     public String getAppItem() {
         return getPreferences().getString(Globals.EXT_KEY_APP_ITEM, null);
+    }
+
+    public SdkConfiguration getSdkConfiguration() {
+        return mSdkConfiguration;
+    }
+
+    public void setSdkConfiguration(SdkConfiguration mSdkConfiguration) {
+        this.mSdkConfiguration = mSdkConfiguration;
     }
 }

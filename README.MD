@@ -19,6 +19,21 @@ dependencies {
 }
 ```
 
+## Configuration
+
+MySabaySDK has default configuration with dark theme and sandbox url.
+
+```
+final SdkConfiguration configuration = new SdkConfiguration.Builder("APPLICATION_ID",
+                "AppScret", "LecenseKey",
+                "MarchantId")
+                .setSdkTheme(SdkTheme.Dark) //defualt dark
+                .setToUseSandBox(true) //defualt sandbox
+                .build();
+        MySabaySDK.Impl.setDefaultInstanceConfiguration(configuration);
+```
+NOTE: MySabaySdk need configuration
+
 ## Integration
 
 > Note that in order to use the store and checkout function, the user must login first.

@@ -18,6 +18,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.R;
+import kh.com.mysabay.sdk.SdkConfiguration;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.pojo.login.LoginItem;
@@ -53,6 +54,7 @@ public class UserApiVM extends ViewModel {
     private final MediatorLiveData<String> _login;
     public LiveData<String> login;
     public LiveData<String> loginMySabay;
+    private final SdkConfiguration sdkConfiguration;
 
     public CompositeDisposable mCompositeDisposable;
 
@@ -68,6 +70,7 @@ public class UserApiVM extends ViewModel {
         this.login = _login;
         this.loginMySabay = _loginMySabay;
         this.mCompositeDisposable = new CompositeDisposable();
+        this.sdkConfiguration = Apps.getInstance().getSdkConfiguration();
     }
 
     public void setLoginItemData(LoginItem item) {
@@ -186,7 +189,7 @@ public class UserApiVM extends ViewModel {
     }
 
     public void postToGetUserProfile(@NotNull Activity context, String token) {
-        this.userRepo.getUserProfile(context.getString(R.string.app_secret), token)
+        this.userRepo.getUserProfile(sdkConfiguration.appSecret, token)
                 .subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread())
                 .subscribe(new AbstractDisposableObs<UserProfileItem>(context, _networkState) {
@@ -194,7 +197,7 @@ public class UserApiVM extends ViewModel {
                     protected void onSuccess(UserProfileItem userProfileItem) {
                         if (userProfileItem.data != null) {
                             EventBus.getDefault().post(new SubscribeLogin(token, null));
-                            AppItem appItem = new AppItem(context.getString(R.string.app_secret), userProfileItem.data.refreshToken, userProfileItem.data.uuid);
+                            AppItem appItem = new AppItem(sdkConfiguration.appSecret, userProfileItem.data.refreshToken, userProfileItem.data.uuid);
                             Apps.getInstance().saveAppItem(gson.toJson(appItem));
                             context.runOnUiThread(context::finish);
                         } else
