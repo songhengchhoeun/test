@@ -8,7 +8,7 @@ public interface PaymentListener {
 
     void purchaseMySabaySuccess(Object dataMySabay);
 
-    void purchaseAIPSuccess(Object dataAIP);
+    void purchaseIAPSuccess(Object dataIAP);
 
     void purchaseFailed(Object dataError);
 }

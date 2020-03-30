@@ -32,7 +32,7 @@ final SdkConfiguration configuration = new SdkConfiguration.Builder("APPLICATION
                 .build();
         MySabaySDK.Impl.setDefaultInstanceConfiguration(configuration);
 ```
-NOTE: MySabaySdk need configuration
+> NOTE: MySabaySdk is need configuration
 
 ## Integration
 
@@ -80,7 +80,7 @@ MySabaySDK.getInstance().showShopView(new PaymentListener() {
                     }
 
                     @Override
-                    public void purchaseAIPSuccess(Object dataAIP) {
+                    public void purchaseIAPSuccess(Object dataIAP) {
                         // handle android app in purchase here
                     }
 

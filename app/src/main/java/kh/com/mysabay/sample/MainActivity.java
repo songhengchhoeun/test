@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void purchaseAIPSuccess(Object dataAIP) {
-                        MessageUtil.displayToast(v.getContext(), "dataAIP = " + dataAIP);
+                    public void purchaseIAPSuccess(Object dataIAP) {
+                        MessageUtil.displayToast(v.getContext(), "dataAIP = " + dataIAP);
                     }
 
                     @Override

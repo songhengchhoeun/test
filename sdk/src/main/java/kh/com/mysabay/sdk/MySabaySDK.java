@@ -139,8 +139,8 @@ public class MySabaySDK {
     @Subscribe
     public void onPaymentEvent(SubscribePayment event) {
         if (mPaymentListener != null) {
-            if (event.dataAIP != null)
-                mPaymentListener.purchaseAIPSuccess(event.dataAIP);
+            if (event.dataIAP != null)
+                mPaymentListener.purchaseIAPSuccess(event.dataIAP);
             else if (event.dataMySabay != null)
                 mPaymentListener.purchaseMySabaySuccess(event.dataMySabay);
             else

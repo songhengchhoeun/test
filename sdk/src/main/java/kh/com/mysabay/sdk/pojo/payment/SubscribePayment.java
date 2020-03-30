@@ -7,12 +7,12 @@ package kh.com.mysabay.sdk.pojo.payment;
 public class SubscribePayment {
 
     public final Object dataMySabay;
-    public final Object dataAIP;
+    public final Object dataIAP;
     public final Object dataError;
 
-    public SubscribePayment(Object dataMySabay, Object dataAIP, Object dataError) {
+    public SubscribePayment(Object dataMySabay, Object dataIAP, Object dataError) {
         this.dataMySabay = dataMySabay;
-        this.dataAIP = dataAIP;
+        this.dataIAP = dataIAP;
         this.dataError = dataError;
     }
 }
