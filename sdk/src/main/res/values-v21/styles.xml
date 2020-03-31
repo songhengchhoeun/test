@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="SdkAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorYellow</item>
+        <item name="colorPrimaryDark">@color/colorYellow</item>
+        <item name="colorAccent">@color/colorYellow</item>
+    </style>
+
+    <style name="SdkAppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="SdkAppTheme.NoActionBar.FullScreen">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@color/colorBackground</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="statusBarBackground">@color/colorBackground</item>
+        <item name="statusBarScrim">@color/colorBackground</item>
+        <item name="android:statusBarColor">@color/colorBackground</item>
+    </style>
+
+    <style name="SdkAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="SdkAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--<style name="ButtonPrimary">
+        <item name="android:background">@drawable/shape_button_primary</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/padding_35</item>
+    </style>
+
+
+    <style name="NavigationTabTextAppeareance" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">@dimen/font_size_sub_title</item>
+    </style>-->
+
+    <!--  <style name="BaseAppearanceTitle.MyAppearanceTitle">
+          <item name="android:textSize">@dimen/font_size_header</item>
+      </style>
+
+      <style name="BaseAppearanceTitle.MyAppearanceTitle.Accent">
+          <item name="android:textColor">@color/colorAccent</item>
+      </style>
+
+      <style name="MyAppearanceTitleBold">
+          <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+          <item name="android:textSize">@dimen/font_size_header</item>
+      </style>
+
+      <style name="MyAppearanceBody1">
+          <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+          <item name="android:textSize">@dimen/font_size_body</item>
+      </style>
+
+      <style name="MyAppearanceBody1.Primary">
+          <item name="android:textColor">@color/colorPrimary</item>
+      </style>
+
+      <style name="MyAppearanceBody1.Accent">
+          <item name="android:textColor">@color/colorAccent</item>
+      </style>
+
+      <style name="MyAppearanceBody1Bold">
+          <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+          <item name="android:textSize">@dimen/font_size_body</item>
+      </style>
+
+      <style name="MyAppearanceCaption">
+          <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+          <item name="android:textSize">@dimen/font_size_sub_title</item>
+      </style>
+
+      <style name="MyAppearanceCaption.Primary">
+          <item name="android:textColor">@color/colorPrimary</item>
+      </style>-->
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_15">15dp</dimen>
+    <dimen name="padding_20">20dp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+    <dimen name="padding_30">30dp</dimen>
+    <dimen name="padding_35">35dp</dimen>
+
+    <!--font size-->
+    <dimen name="font_size_sub_title">12sp</dimen>
+    <dimen name="font_size_body">14sp</dimen>
+    <dimen name="font_size_title">16sp</dimen>
+    <dimen name="font_size_header">22sp</dimen>
+    <dimen name="font_size_sub_header">18sp</dimen>
+    <dimen name="font_size_caption">10sp</dimen>
+    <dimen name="font_size_sub_caption">6sp</dimen>
+    <dimen name="font_size_20">20sp</dimen>
+    <dimen name="padding_2">2dp</dimen>
+    <dimen name="padding_8">8dp</dimen>
+
+    <integer name="layout_size">3</integer>
+
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="kh.com.mysabay.sdk">
+
+    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <application android:name=".Apps">
+
+        <activity
+            android:name=".ui.activity.StoreActivity"
+            android:theme="@style/SdkAppTheme.NoActionBar.FullScreen" />
+
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:theme="@style/SdkAppTheme.NoActionBar.FullScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="user.master.mysabay.com/api/v1/user/mysabay/login/deeplink/fallback"
+                    android:scheme="https" />
+                <data
+                    android:host="deeplink"
+                    android:scheme="user.master.mysabay.com/api/v1/user/mysabay/login" />
+                <data
+                    android:host="user.master.mysabay.com"
+                    android:scheme="mysabay55" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

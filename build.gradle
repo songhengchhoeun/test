@@ -1,0 +1,172 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    
+    repositories {
+        google()
+        jcenter()
+        
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.1'
+        
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    //android configuration
+    compileSdk = 29
+    minSdk = 19
+    targetSdk = 29
+    versioningName = "1.0.0"
+    versioningCode = 3
+    latestFastAdapterRelease = '4.1.0-b02'
+
+    SUPPORT_LIBRARY_VERSION = '28.0.0'
+    FRESCO_VERSION = '1.11.0'
+
+    lifeCycleVersion = "2.1.0"
+
+    supportLib = [
+            material: '1.0.0'
+    ]
+
+    rxLibVersions = [
+            rxandroid: '2.1.0',
+            rxjava   : '3.0.0-RC3'
+    ]
+
+    testUnitVersions = [
+            runner  : '1.1.1',
+            espresso: '3.1.1',
+            mockito : '2.25.1',
+    ]
+
+    thirdLibVersions = [
+            gson               : '2.8.5',
+            commonsLang3       : '3.8.1',
+            libphonenumber     : '8.10.3',
+            androidImageCropper: '2.8.+',
+            easingLibrary      : '2.1@aar',
+            daimajiaAnimLib    : '2.3@aar',
+            firebaseCore       : '16.0.9',
+            crashlytics        : '2.10.1',
+            rxbinding3         : "3.1.0",
+            picassoTransform   : "2.2.1",
+            gpuImageLib        : "2.+",
+            firestore          : "4.3.2",
+            glide              : "4.9.0",
+            glideTransform     : "4.+",
+            firebaseUIAuth     : "4.3.2",
+            photoView          : "2.3.0",
+            retrofit           : "2.6.2",
+            okhttp3            : "3.14.0"
+
+    ]
+
+    daggerVersion = '2.25.3'
+    roomVersion = "2.2.3"
+    multidexVersion = "2.0.1"
+    workerVersion = "2.3.1"
+
+}
+
+def compatibility(name) {
+    switch (name) {
+        case "dagger":
+            return "com.google.dagger:dagger:${daggerVersion}"
+        case "dagger-android":
+            return "com.google.dagger:dagger-android:${daggerVersion}"
+        case "dagger-android-support":
+            return "com.google.dagger:dagger-android-support:${daggerVersion}"
+        case "libphonenumber":
+            return "com.googlecode.libphonenumber:libphonenumber:${thirdLibVersions.libphonenumber}"
+        case "androidImageCropper":
+            return "com.theartofdev.edmodo:android-image-cropper:${thirdLibVersions.androidImageCropper}"
+        case "easingLibrary":
+            return "com.daimajia.easing:library:${thirdLibVersions.easingLibrary}"
+        case "daimajiaAnimLib":
+            return "com.daimajia.androidanimations:library:${thirdLibVersions.daimajiaAnimLib}"
+        case "commonsLang3":
+            return "org.apache.commons:commons-lang3:${thirdLibVersions.commonsLang3}"
+        case "rxandroid":
+            return "io.reactivex.rxjava2:rxandroid:${rxLibVersions.rxandroid}"
+        case "rxjava":
+            return "io.reactivex.rxjava3:rxjava:${rxLibVersions.rxjava}"
+        case "rxbinding3":
+            return "com.jakewharton.rxbinding3:rxbinding:${thirdLibVersions.rxbinding3}"
+        case "rxPermissions":
+            return "com.github.tbruyelle:rxpermissions:0.10.2"
+        case "gson":
+            return "com.google.code.gson:gson:${thirdLibVersions.gson}"
+        case "firebaseCore":
+            return "com.google.firebase:firebase-core:${thirdLibVersions.firebaseCore}"
+        case "crashlytics":
+            return "com.crashlytics.sdk.android:crashlytics:${thirdLibVersions.crashlytics}"
+        case "firestore":
+            return "com.firebaseui:firebase-ui-firestore:${thirdLibVersions.firestore}"
+        case "glide":
+            return "com.github.bumptech.glide:glide:${thirdLibVersions.glide}"
+        case "glideTransform":
+            return "jp.wasabeef:glide-transformations:${thirdLibVersions.glideTransform}"
+        case "firebaseUIAuth":
+            return "com.firebaseui:firebase-ui-auth:${thirdLibVersions.firebaseUIAuth}"
+        case "roomRuntime":
+            return "androidx.room:room-runtime:$roomVersion"
+        case "roomRxJava2":
+            return "androidx.room:room-rxjava2:$roomVersion"
+        case "roomTesting":
+            return "androidx.room:room-testing:$roomVersion"
+        case "roomGuava":
+            return "androidx.room:room-guava:$roomVersion"
+        case "photoView":
+            return "com.github.chrisbanes:PhotoView:$thirdLibVersions.photoView"
+        case "material":
+            return "com.google.android.material:material:$supportLib.material"
+        case "rxBindingMaterial":
+            return "com.jakewharton.rxbinding3:rxbinding-material:3.0.0"
+        case "lifecycleExtensions":
+            return "androidx.lifecycle:lifecycle-extensions:$lifeCycleVersion"
+        case "retrofit":
+            return "com.squareup.retrofit2:retrofit:$thirdLibVersions.retrofit"
+        case "converterScalars":
+            return "com.squareup.retrofit2:converter-scalars:2.7.0"
+        case "retrofit-convert-gson":
+            return "com.squareup.retrofit2:converter-gson:$thirdLibVersions.retrofit"
+        case "retrofit-adapter-rxjava2":
+            return "com.squareup.retrofit2:adapter-rxjava2:$thirdLibVersions.retrofit"
+        case "okhttp3-logging-interceptor":
+            return "com.squareup.okhttp3:logging-interceptor:$thirdLibVersions.okhttp3"
+        case "multidex":
+            return "androidx.multidex:multidex:$multidexVersion"
+        case "jodaTime":
+            return "joda-time:joda-time:2.10.5"
+        case "workManagerRx":
+            return "androidx.work:work-rxjava2:$workerVersion"
+        case "workManagerJava":
+            return "androidx.work:work-runtime:$workerVersion"
+        case "workManagerTesting":
+            return "androidx.work:work-testing:$workerVersion"
+    }
+
+}
+
+def static getDate() {
+    return new Date().format('yyyyMMddHHmm')
+}
+

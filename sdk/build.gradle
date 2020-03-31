@@ -1,0 +1,89 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 2
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+
+        resValue "string", "store_password", (project.findProperty("STORE_PASS") ?: "")
+        resValue "string", "key_store_password", (project.findProperty("KEY_STORE_PASS") ?: "")
+        resValue "string", "store_name", (project.findProperty("STORE_NAME") ?: "")
+        resValue "string", "alias", (project.findProperty("ALIAS") ?: "")
+        resValue "string", "app_secret", (project.findProperty("APP_SECRET") ?: "")
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    dataBinding {
+        enabled = true
+    }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+
+    //phone validation
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.10.3'
+    //material components
+    //implementation 'com.google.android.material:material:1.2.0-alpha05'
+    //pin library
+    implementation('com.alimuzaffar.lib:pinentryedittext:2.0.6') {
+        // Exclude is only needed if you already have
+        // androidx.appcompat as a dependency in your app.
+        exclude group: 'androidx.appcompat', module: 'appcompat'
+    }
+    //
+    implementation compatibility("lifecycleExtensions")
+    //dagger
+    implementation compatibility("dagger")
+    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+    implementation compatibility("material")
+    api compatibility("commonsLang3")
+    implementation compatibility("rxjava")
+    implementation compatibility("rxBindingMaterial")
+    implementation compatibility("gson")
+    implementation compatibility("retrofit")
+    implementation compatibility("retrofit-convert-gson")
+    implementation compatibility("retrofit-adapter-rxjava2")
+    implementation compatibility("okhttp3-logging-interceptor")
+    implementation compatibility("retrofit-convert-gson")
+    implementation compatibility("converterScalars")
+    //dialog
+    api 'com.afollestad.material-dialogs:core:0.9.6.0'
+    //rsa
+    api 'com.yakivmospan:scytale:1.0.1'
+    //localization strings
+    implementation 'com.akexorcist:localizationactivity:1.2.2'
+    //animation lib
+    api 'com.daimajia.easing:library:2.1@aar'
+    api 'com.daimajia.androidanimations:library:2.3@aar'
+    //api billing
+    //implementation 'com.android.billingclient:billing:2.1.0'
+    implementation 'com.anjlab.android.iab.v3:library:1.1.0'
+}

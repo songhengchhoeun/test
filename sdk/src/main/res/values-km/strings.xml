@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="phone_number">លេខទូរសព្ទ</string>
+    <string name="login">ចូល</string>
+    <string name="login_mysabay">ចូល​ជា​មួយ​នឹង MySabay</string>
+    <string name="confirm_otp">បញ្ជាក់ otp</string>
+    <string name="enter_the_otp_that_you_have_received_via_text_message">បញ្ចូលលេខ OTP ដែលអ្នកបានទទួលតាមរយៈសារជាអក្សរ៖</string>
+    <string name="confirm">បញ្ជាក់</string>
+    <string name="resend_otp"><u>ផ្ញើ OTP ម្តងទៀត</u></string>
+    <string name="label_close">Close</string>
+    <string name="ok">យល់ព្រម</string>
+    <string name="msg_has_connected_internet">អ៊ីនធឺណិតត្រូវបានតភ្ជាប់ឡើងវិញ</string>
+    <string name="msg_can_not_connect_internet">មិនអាចតភ្ជាប់អ៊ីនធឺណិត</string>
+    <string name="msg_can_not_connect_server">មិនអាចទំនាកទំនងជាមួយមាសុីនមេបានទេ។សូមព្យាយាមម្តងទៀត</string>
+    <string name="msg_no_data">មិនមានទិន្នន័យ</string>
+    <string name="title_retry">ម្តងទៀត</string>
+    <string name="msg_phone_incorrect">ទម្រង់លេខទូរស័ព្ទរបស់លោកអ្នកមិនត្រឹមត្រូវទេ</string>
+    <string name="msg_input_phone">បញ្ចូលលេខទូរស័ព្ទ</string>
+    <string name="arena_of_glory">arena of glory</string>
+    <string name="verify_code_required">លេខកូដចាំបាច់ត្រូវបញ្ចូល</string>
+    <string name="pay">បង់</string>
+    <string name="shops">ហាង</string>
+    <string name="total_s">សរុប: %s</string>
+    <string name="payment_options">ជម្រើស​ការ​ទូទាត់</string>
+    <string name="upgrade_google_play">In-app billing service is unavailable, please upgrade Google Play</string>
+    <string name="select_a_partner_bank">Select a partner bank</string>
+    <string name="mysabay">MySabay</string>
+    <string name="please_choose_payment_option">Please choose payment options</string>
+    <string name="cancel">Cancel</string>
+    <string name="payment_confirmation">បញ្ជាក់ការទូទាត់</string>
+    <string name="are_you_pay_with_my_sabay_provider">តើអ្នកពិតជាចង់បង់ប្រាក់ %s SC តាមរយ:ក្រុមហ៊ុនផ្តល់សេវាទូទាត់ប្រាក់ Mysabay មែនទេ?</string>
+</resources>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBackground"
+        tools:context=".ui.activity.LoginActivity">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/view_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_marginBottom="@dimen/padding_20"
+                android:id="@+id/img_logo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                app:srcCompat="@mipmap/ic_mysabay" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/padding_35"
+                android:text="@string/arena_of_glory"
+                android:textAllCaps="true"
+                android:textAppearance="@style/BaseAppearanceTitle.MyAppearanceTitle"
+                android:textStyle="bold"
+                app:textAllCaps="true" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_input_phone"
+                style="@style/SdkAppTheme.MyStyleOutlineBox"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/padding_35"
+                android:focusedByDefault="true"
+                android:gravity="center"
+                android:hint="@string/phone_number"
+                app:boxStrokeColor="@color/text_input_bg"
+                app:hintTextAppearance="@style/MyAppearanceBody1.Primary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:fontFamily="@font/font_battambang_regular"
+                    android:inputType="phone"
+                    android:singleLine="true"
+                    android:textColor="@color/colorYellow"
+                    android:textCursorDrawable="@null"
+                    app:hintTextAppearance="@style/MyAppearanceBody1.Primary" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_login"
+                style="@style/ButtonPrimary"
+                android:layout_width="220dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/padding_10"
+                android:fontFamily="@font/font_battambang_regular"
+                android:gravity="center"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/login"
+                android:textAppearance="@style/MyAppearanceBody1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_login_mysabay"
+                style="@style/ButtonPrimary"
+                android:layout_width="220dp"
+                android:layout_gravity="center"
+                android:fontFamily="@font/font_battambang_regular"
+                android:gravity="center"
+                android:text="@string/login_mysabay"
+                android:textAppearance="@style/MyAppearanceBody1" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <include
+            android:id="@+id/view_empty"
+            layout="@layout/view_empty"
+            android:visibility="gone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
