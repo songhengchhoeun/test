@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.BuildConfig;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
@@ -45,6 +46,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, UserApiVM>
 
     @Override
     public void initializeObjects(View v, Bundle args) {
+        mViewBinding.tvMySabayAppName.setText(Apps.getInstance().getSdkConfiguration().mySabayAppName);
         this.viewModel = LoginActivity.loginActivity.viewModel;
     }
 

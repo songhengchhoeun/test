@@ -16,9 +16,10 @@ public class SdkConfiguration {
     public boolean isSandBox;
     public SdkTheme sdkTheme;
     public SdkLanguages sdkLanguages;
+    public String mySabayAppName;
 
     private SdkConfiguration(String appId, String appSecret, String licenseKey, String merchantId,
-                             boolean isSandBox, SdkTheme sdkTheme, SdkLanguages sdkLanguages) {
+                             boolean isSandBox, SdkTheme sdkTheme, SdkLanguages sdkLanguages, String mySabayAppName) {
         this.appId = appId;
         this.appSecret = appSecret;
         this.licenseKey = licenseKey;
@@ -26,6 +27,7 @@ public class SdkConfiguration {
         this.isSandBox = isSandBox;
         this.sdkTheme = sdkTheme;
         this.sdkLanguages = sdkLanguages;
+        this.mySabayAppName = mySabayAppName;
     }
 
     public static class Builder {
@@ -33,15 +35,17 @@ public class SdkConfiguration {
         private final String appSecret;
         private final String licenseKey;
         private final String merchantId;
+        private final String mySabayAppName;
         private boolean isSandBox = true;
         private SdkTheme sdkTheme = SdkTheme.Dark;
         private SdkLanguages sdkLanguages = SdkLanguages.En;
 
-        public Builder(String appId, String appSecret, String licenseKey, String merchantId) {
+        public Builder(String appId, String appSecret, String licenseKey, String merchantId, String mySabayAppName) {
             this.appId = appId;
             this.appSecret = appSecret;
             this.licenseKey = licenseKey;
             this.merchantId = merchantId;
+            this.mySabayAppName = mySabayAppName;
         }
 
         public Builder setToUseSandBox(boolean isSandBox) {
@@ -60,7 +64,7 @@ public class SdkConfiguration {
         }
 
         public SdkConfiguration build() {
-            return new SdkConfiguration(appId, appSecret, licenseKey, merchantId, isSandBox, sdkTheme, sdkLanguages);
+            return new SdkConfiguration(appId, appSecret, licenseKey, merchantId, isSandBox, sdkTheme, sdkLanguages, mySabayAppName);
         }
     }
 }

@@ -11,6 +11,7 @@ import kh.com.mysabay.sdk.pojo.payment.PaymentBody;
 import kh.com.mysabay.sdk.pojo.payment.PaymentResponseItem;
 import kh.com.mysabay.sdk.pojo.shop.ShopItem;
 import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
+import kh.com.mysabay.sdk.pojo.thirdParty.payment.ResponseItem;
 import kh.com.mysabay.sdk.webservice.api.StoreApi;
 
 /**
@@ -50,5 +51,10 @@ public class StoreRepo implements StoreApi {
     @Override
     public Observable<PaymentResponseItem> postToPaid(String appSecret, String token, PaymentBody body) {
         return this.storeApi.postToPaid(appSecret, "Bearer " + token, body);
+    }
+
+    @Override
+    public Observable<ResponseItem> postToChargeOneTime(String appSecret, String token, PaymentBody body) {
+        return this.storeApi.postToChargeOneTime(appSecret, "Bearer " + token, body);
     }
 }

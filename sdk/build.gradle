@@ -88,4 +88,3 @@ dependencies {
     //implementation project(path: ':pinentryedittext')
     implementation 'org.greenrobot:eventbus:3.2.0'
 }
-

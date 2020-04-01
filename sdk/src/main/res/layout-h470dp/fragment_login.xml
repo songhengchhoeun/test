@@ -20,19 +20,19 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_marginBottom="@dimen/padding_20"
                 android:id="@+id/img_logo"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/padding_20"
                 app:srcCompat="@mipmap/ic_mysabay" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_my_sabay_app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/padding_35"
-                android:text="@string/arena_of_glory"
                 android:textAllCaps="true"
                 android:textAppearance="@style/BaseAppearanceTitle.MyAppearanceTitle"
                 android:textStyle="bold"
@@ -41,11 +41,11 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txt_input_phone"
                 style="@style/SdkAppTheme.MyStyleOutlineBox"
-                android:layout_marginStart="50dp"
-                android:layout_marginEnd="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
                 android:layout_marginBottom="@dimen/padding_35"
                 android:focusedByDefault="true"
                 android:gravity="center"

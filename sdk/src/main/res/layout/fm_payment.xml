@@ -173,8 +173,7 @@
                     android:button="@drawable/radio_button_state"
                     android:gravity="start|center"
                     android:text="@string/select_a_partner_bank"
-                    android:textColor="@color/colorYellow"
-                    android:visibility="gone" />
+                    android:textColor="@color/colorYellow"/>
             </RadioGroup>
 
             <androidx.appcompat.widget.AppCompatButton

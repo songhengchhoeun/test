@@ -20,7 +20,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import kh.com.mysabay.sdk.Apps;
-import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.SdkConfiguration;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.NetworkState;
@@ -33,7 +32,11 @@ import kh.com.mysabay.sdk.pojo.payment.SubscribePayment;
 import kh.com.mysabay.sdk.pojo.shop.Data;
 import kh.com.mysabay.sdk.pojo.shop.ShopItem;
 import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
+import kh.com.mysabay.sdk.pojo.thirdParty.payment.ResponseItem;
 import kh.com.mysabay.sdk.repository.StoreRepo;
+import kh.com.mysabay.sdk.ui.activity.StoreActivity;
+import kh.com.mysabay.sdk.ui.fragment.BankVerifiedFm;
+import kh.com.mysabay.sdk.ui.fragment.PaymentFm;
 import kh.com.mysabay.sdk.utils.AppRxSchedulers;
 import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.utils.MessageUtil;
@@ -85,6 +88,11 @@ public class StoreApiVM extends ViewModel {
         }
     }
 
+    /**
+     * List all item from server
+     *
+     * @param context
+     */
     public void getShopFromServer(@NotNull Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         storeRepo.getShopItem(sdkConfiguration.appSecret, appItem.token).subscribeOn(appRxSchedulers.io())
@@ -128,6 +136,11 @@ public class StoreApiVM extends ViewModel {
         return this.mDataSelected;
     }
 
+    /**
+     * Check user has authorize to use with mysabay payment or not
+     *
+     * @param context
+     */
     public void getMySabayCheckout(@NotNull Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         storeRepo.getMySabayCheckout(sdkConfiguration.appSecret, appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
@@ -145,18 +158,23 @@ public class StoreApiVM extends ViewModel {
             @Override
             public void onError(Throwable e) {
                 LogUtil.debug(TAG, "error " + e.getLocalizedMessage());
-                get3PartyCheckout(context);
+                //        get3PartyCheckout(context);
             }
 
             @Override
             public void onComplete() {
-                get3PartyCheckout(context);
+                //      get3PartyCheckout(context);
             }
         });
 
     }
 
-    private void get3PartyCheckout(@NotNull Context context) {
+    /**
+     * show list all bank provider
+     *
+     * @param context
+     */
+    public void get3PartyCheckout(@NotNull Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         storeRepo.get3PartyCheckout(sdkConfiguration.appSecret, appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<ThirdPartyItem>(context, _networkState) {
@@ -174,25 +192,30 @@ public class StoreApiVM extends ViewModel {
 
     }
 
-    public void postToVerifyAppInPurchase(@NotNull Context context, GoogleVerifyBody body) {
+    public void postToVerifyAppInPurchase(@NotNull Context context, @NotNull GoogleVerifyBody body) {
         EventBus.getDefault().post(new SubscribePayment(null, body.receipt, null));
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         mCompos.add(storeRepo.postToVerifyGoogle(sdkConfiguration.appSecret, appItem.token, body).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new Consumer<GoogleVerifyResponse>() {
                     @Override
                     public void accept(GoogleVerifyResponse googleVerifyResponse) throws Exception {
-                       // EventBus.getDefault().post(new SubscribePayment(null, googleVerifyResponse.data, null));
+                        // EventBus.getDefault().post(new SubscribePayment(null, googleVerifyResponse.data, null));
                         MessageUtil.displayDialog(context, googleVerifyResponse.message);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                  //      EventBus.getDefault().post(new SubscribePayment(null, null, throwable));
+                        //      EventBus.getDefault().post(new SubscribePayment(null, null, throwable));
                         LogUtil.error(TAG, "error " + throwable.getLocalizedMessage());
                     }
                 }));
     }
 
+    /**
+     * This method is use to buy item with mysabay payment
+     *
+     * @param context
+     */
     public void postToPaidWithProvider(Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         Data shopItem = getItemSelected().getValue();
@@ -216,6 +239,33 @@ public class StoreApiVM extends ViewModel {
                         }
                     });
         }
+    }
 
+
+    public void postToPaidWithBank(StoreActivity context, kh.com.mysabay.sdk.pojo.thirdParty.Data data) {
+        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        Data shopItem = getItemSelected().getValue();
+
+        if (data != null && shopItem != null) {
+            PaymentBody body = new PaymentBody(appItem.uuid, shopItem.priceInSc.toString(), data.code.toLowerCase(), data.assetCode.toLowerCase());
+            storeRepo.postToChargeOneTime(sdkConfiguration.appSecret, appItem.token, body).subscribeOn(appRxSchedulers.io())
+                    .observeOn(appRxSchedulers.mainThread())
+                    .subscribe(new AbstractDisposableObs<ResponseItem>(context, _networkState) {
+                        @Override
+                        protected void onSuccess(ResponseItem response) {
+                            if (response.status == 200) {
+                                context.initAddFragment(BankVerifiedFm.newInstance(response.data), PaymentFm.TAG, true);
+                            }
+                            //EventBus.getDefault().post(new SubscribePayment(item, null, null));
+                            //MessageUtil.displayDialog(context, response.data.m.message);
+                        }
+
+                        @Override
+                        protected void onErrors(Throwable error) {
+                            LogUtil.info(TAG, "error " + error.getLocalizedMessage());
+                            // EventBus.getDefault().post(new SubscribePayment(null, null, error));
+                        }
+                    });
+        }
     }
 }

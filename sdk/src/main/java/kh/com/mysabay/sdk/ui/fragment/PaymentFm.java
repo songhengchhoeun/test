@@ -3,11 +3,15 @@ package kh.com.mysabay.sdk.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -28,8 +32,11 @@ import java.util.List;
 import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.BuildConfig;
 import kh.com.mysabay.sdk.R;
+import kh.com.mysabay.sdk.adapter.BankProviderAdapter;
 import kh.com.mysabay.sdk.base.BaseFragment;
+import kh.com.mysabay.sdk.callback.OnRcvItemClick;
 import kh.com.mysabay.sdk.databinding.FmPaymentBinding;
+import kh.com.mysabay.sdk.databinding.PartialBankProviderBinding;
 import kh.com.mysabay.sdk.pojo.googleVerify.DataBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.ReceiptBody;
@@ -37,6 +44,7 @@ import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
 import kh.com.mysabay.sdk.pojo.shop.Data;
 import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
+import kh.com.mysabay.sdk.utils.FontUtils;
 import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.viewmodel.StoreApiVM;
@@ -119,9 +127,10 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
         viewModel.getThirdPartyProviders().observe(this, new Observer<ThirdPartyItem>() {
             @Override
             public void onChanged(ThirdPartyItem thirdPartyItem) {
+
                 if (thirdPartyItem.status == 200) {
                     if (thirdPartyItem.data.size() > 0) {
-                        mViewBinding.rdbThirdBankProvider.setVisibility(View.VISIBLE);
+                        showBankProviders(getContext(), thirdPartyItem.data);
                     } else
                         mViewBinding.rdbThirdBankProvider.setVisibility(View.GONE);
                 } else
@@ -161,7 +170,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
                             });
 
                 } else if (checkedId == R.id.rdb_third_bank_provider) {
-                    MessageUtil.displayToast(v.getContext(), "In development");
+                    viewModel.get3PartyCheckout(v.getContext());
                 } else if (checkedId == R.id.rdb_pre_auth_pay) {
 
                 } else
@@ -291,5 +300,34 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
     public void onDestroy() {
         if (bp != null) bp.release();
         super.onDestroy();
+    }
+
+    private MaterialDialog dialog;
+
+    private void showBankProviders(Context context, List<kh.com.mysabay.sdk.pojo.thirdParty.Data> data) {
+        PartialBankProviderBinding view = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.partial_bank_provider, null, false);
+        RecyclerView rcv = view.bankRcv;
+        BankProviderAdapter adapter = new BankProviderAdapter(context, data, new OnRcvItemClick() {
+            @Override
+            public void onItemClick(Object item) {
+                viewModel.postToPaidWithBank((StoreActivity) getActivity(), (kh.com.mysabay.sdk.pojo.thirdParty.Data) item);
+                if (dialog != null)
+                    dialog.dismiss();
+            }
+        });
+        rcv.setLayoutManager(new LinearLayoutManager(context));
+        rcv.setHasFixedSize(true);
+        rcv.setAdapter(adapter);
+        dialog = new MaterialDialog.Builder(context)
+                .typeface(FontUtils.getTypefaceKhmerBold(context), FontUtils.getTypefaceKhmer(context))
+                .customView(view.getRoot(), true)
+                .canceledOnTouchOutside(false)
+                .positiveText(R.string.label_close).onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                }).build();
+        dialog.show();
     }
 }

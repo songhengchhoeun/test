@@ -38,11 +38,11 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_my_sabay_app_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/padding_35"
-                android:text="@string/arena_of_glory"
                 android:textAllCaps="true"
                 android:textAppearance="@style/BaseAppearanceTitle.MyAppearanceTitle"
                 android:textStyle="bold"

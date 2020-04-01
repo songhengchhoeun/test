@@ -15,7 +15,6 @@
     <string name="title_retry">Retry</string>
     <string name="msg_phone_incorrect">your phone number format is incorrect</string>
     <string name="msg_input_phone">Input phone number</string>
-    <string name="arena_of_glory">arena of glory</string>
     <string name="verify_code_required">verify code is required</string>
     <string name="pay">pay</string>
     <string name="shops">Shops</string>
@@ -28,4 +27,6 @@
     <string name="cancel">Cancel</string>
     <string name="payment_confirmation">Payment Confirmation</string>
     <string name="are_you_pay_with_my_sabay_provider">Are you sure you want to pay %s SC through Mysabay Payment Provider?</string>
+    <string name="partnered_payment_providers">partnered payment providers</string>
+    <string name="select_a_partnered_payment_provider_fro_pre_authorization">Select a partnered payment provider for pre-authorization.</string>
 </resources>
