@@ -40,7 +40,7 @@ public class ServiceGenerator {
     @Provides
     public Retrofit instanceUser() {
         return new Retrofit.Builder()
-                .baseUrl(Apps.getInstance().getSdkConfiguration().isSandBox ? "https://user.master.mysabay.com/" : "https://user.mysabay.com/")
+                .baseUrl(Apps.getInstance().getSdkConfiguration().isSandBox ? "https://user.testing.mysabay.com/" : "https://user.mysabay.com/")
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -52,7 +52,7 @@ public class ServiceGenerator {
     @Provides
     public Retrofit instanceStore() {
         return new Retrofit.Builder()
-                .baseUrl(Apps.getInstance().getSdkConfiguration().isSandBox ? "https://store.master.mysabay.com/" : "https://store.mysabay.com/")
+                .baseUrl(Apps.getInstance().getSdkConfiguration().isSandBox ? "https://store.testing.mysabay.com/" : "https://store.mysabay.com/")
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

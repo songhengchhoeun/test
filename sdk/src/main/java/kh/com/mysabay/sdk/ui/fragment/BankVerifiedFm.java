@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import kh.com.mysabay.sdk.BuildConfig;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.PartialBankProviderVerifiedBinding;
@@ -58,7 +59,15 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initializeObjects(View v, Bundle args) {
-        WebView.setWebContentsDebuggingEnabled(true);
+
+        // The java script string to execute in web view after page loaded
+        // First line put a value in input box
+        // Second line submit the form
+        final String js = "javascript:document.getElementById('search_form_input_homepage').value='android';" +
+                "document.getElementById('search_button_homepage').click()";
+
+
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
         mViewBinding.wv.getSettings().setJavaScriptEnabled(true);
         mViewBinding.wv.getSettings().setLoadsImagesAutomatically(true);
         mViewBinding.wv.getSettings().setLoadWithOverviewMode(true);
@@ -67,20 +76,23 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
         mViewBinding.wv.getSettings().setSupportZoom(true);
         mViewBinding.wv.getSettings().setBuiltInZoomControls(true);
         mViewBinding.wv.getSettings().setDisplayZoomControls(false);
+        mViewBinding.wv.getSettings().setDomStorageEnabled(true);
+        mViewBinding.wv.getSettings().setMinimumFontSize(1);
+        mViewBinding.wv.getSettings().setMinimumLogicalFontSize(1);
         mViewBinding.wv.clearHistory();
         mViewBinding.wv.clearCache(true);
         mViewBinding.wv.setWebViewClient(new WebViewClient() {
             @Nullable
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-/*
-                LogUtil.debug(TAG, "url =" + request.getUrl() + " token =" + request.getUrl().getQueryParameter("access_token"));
-                String token = request.getUrl().getQueryParameter("access_token");
-                if (!StringUtils.isBlank(token) && getActivity() != null)
+                //  LogUtil.debug(TAG, "url =" + request.getUrl());
+                //String token = request.getUrl().getQueryParameter("access_token");
+                /*if (!StringUtils.isBlank(token) && getActivity() != null)
                     getActivity().runOnUiThread(() -> {
                         viewModel.postToGetUserProfile(getActivity(), token);
                     });*/
 
+                LogUtil.debug(TAG, "shouldInterceptRequest : " + request.getUrl());
                 return super.shouldInterceptRequest(view, request);
             }
 
@@ -90,18 +102,17 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
                 LogUtil.debug(TAG, "Message " + resend.toString());
                 super.onFormResubmission(view, dontResend, resend);
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                LogUtil.debug(TAG, "onPageFinished " + url);
+            }
         });
     }
 
     @Override
     public void assignValues() {
-        /*if (StringUtils.isBlank(mDeepLink)) {
-            Map<String, String> header = new HashMap<>();
-            header.put("app_secret", "9c85c50a4362f687cd4507771ba81db5cf50eaa0b3008f4f943f77ba3ac6386b");
-            mViewBinding.wv.loadUrl("https://user.master.mysabay.com/api/v1/user/mysabay/login", header);
-        } else
-            mViewBinding.wv.loadUrl(mDeepLink);*/
-        String html = showFormVerified(mPaymentResponseItem);
+        String html = scriptFormValidate(mPaymentResponseItem);
         LogUtil.debug(TAG, html);
         mViewBinding.wv.loadDataWithBaseURL("https://store.testing.mysabay.com/", html, "text/html", "utf-8", "https://store.testing.mysabay.com/");
     }
@@ -139,38 +150,27 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
         // (shared instance with the Activity and the other Fragment)
     }
 
-    private String showFormVerified(Data item) {
+    private String scriptFormValidate(Data item) {
         return "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
-                "    <title>Demo Payment Provider</title>\n" +
                 "    <meta charset=\"utf-8\">\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
                 "    <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css\">\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "    <section class=\"section\">\n" +
-                "        <div class=\"container\">\n" +
-                "            <h1 class=\"title\">Demo Payment Provider</h1>\n" +
-                "        </div>\n" +
-                "    </section>\n" +
-                "    <section class=\"section\">\n" +
-                "        <div class=\"container\">\n" +
-                "            <h1 class=\"title\">Acleda-Migs</h1>\n" +
-                "            <p>Onetime payment flow</p>\n" +
-                "            <form action=\"" + item.requestUrl + "\" method=\"post\">\n" +
-                "                <input type=\"hidden\" name=\"hash\" value=\"" + item.hash + "\">\n" +
-                "                <input type=\"hidden\" name=\"signature\" value=\"" + item.signature + "\">\n" +
-                "                <input type=\"hidden\" name=\"public_key\" value=\"" + item.publicKey + "\">\n" +
-                "                \n" +
-                "                <div class=\"field\">\n" +
-                "                    <div class=\"control\">\n" +
-                "                        <button class=\"button is-link\" type=\"submit\">Submit</button>\n" +
-                "                    </div>\n" +
-                "                </div>\n" +
-                "            </form>\n" +
-                "        </div>\n" +
-                "    </section>\n" +
+                "    <script src=\"https://code.jquery.com/jquery-3.4.1.js\"></script>\n" +
+                "    <h1>Please Wait</h1>\n" +
+                "    <form id=\"frm\" action=\"" + item.requestUrl + "\" method=\"post\">\n" +
+                "        <input type=\"hidden\" name=\"hash\" value=\"" + item.hash + "\">\n" +
+                "        <input type=\"hidden\" name=\"signature\" value=\"" + item.signature + "\">\n" +
+                "        <input type=\"hidden\" name=\"public_key\" value=\"" + item.publicKey + "\">\n" +
+                "    </form>\n" +
+                "    <script>\n" +
+                "        $( document ).ready(function() {\n" +
+                "            $(\"#frm\").submit()\n" +
+                "        });\n" +
+                "    </script>\n" +
                 "\u200B\n" +
                 "</body>\n" +
                 "</html>";
