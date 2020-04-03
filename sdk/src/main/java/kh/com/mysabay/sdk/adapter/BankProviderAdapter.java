@@ -2,7 +2,6 @@ package kh.com.mysabay.sdk.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -24,8 +23,10 @@ public class BankProviderAdapter extends RecyclerView.Adapter<BankProviderVH> {
     private List<Data> dataList;
     private LayoutInflater mInflater;
     private OnRcvItemClick mListener;
+    private Context mContext;
 
     public BankProviderAdapter(Context context, List<Data> dataList, OnRcvItemClick listener) {
+        this.mContext = context;
         this.dataList = dataList;
         this.mInflater = LayoutInflater.from(context);
         this.mListener = listener;
@@ -41,12 +42,9 @@ public class BankProviderAdapter extends RecyclerView.Adapter<BankProviderVH> {
     public void onBindViewHolder(@NonNull BankProviderVH holder, int position) {
         Data item = dataList.get(position);
         holder.setBankName(item.serviceName);
-        holder.view.viewBankItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null)
-                    mListener.onItemClick(item);
-            }
+        holder.showBankIcon(mContext, item.logo);
+        holder.view.viewBankItem.setOnClickListener(v -> {
+            if (mListener != null) mListener.onItemClick(item);
         });
     }
 

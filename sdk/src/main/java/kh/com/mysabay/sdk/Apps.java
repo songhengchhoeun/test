@@ -81,6 +81,14 @@ public class Apps extends Application {
         return getPreferences().getString(Globals.EXT_KEY_APP_ITEM, null);
     }
 
+    public void saveMethodSelected(String item) {
+        SharedPreferences.Editor editor = getPreferences().edit();
+        editor.putString(Globals.EXT_KEY_PAYMENT_METHOD, item);
+        editor.apply();
+    }
+
+    //public
+
     public SdkConfiguration getSdkConfiguration() {
         return mSdkConfiguration;
     }

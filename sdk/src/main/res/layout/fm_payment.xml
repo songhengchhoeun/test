@@ -51,8 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/padding_10"
-                    android:layout_marginBottom="@dimen/padding_10"
-                    android:background="@color/colorBackground">
+                    android:layout_marginBottom="@dimen/padding_10">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/appCompatImageView"

@@ -64,7 +64,7 @@ public class StoreApiVM extends ViewModel {
     private final CompositeDisposable mCompos;
     private final MediatorLiveData<Data> mDataSelected;
     private final MediatorLiveData<MySabayItem> mySabayItemMediatorLiveData;
-    private final MediatorLiveData<ThirdPartyItem> thirdPartyItemMediatorLiveData;
+    public final MediatorLiveData<ThirdPartyItem> _thirdPartyItemMediatorLiveData;
 
 
     @Inject
@@ -75,7 +75,7 @@ public class StoreApiVM extends ViewModel {
         this.mCompos = new CompositeDisposable();
         this.mDataSelected = new MediatorLiveData<>();
         this.mySabayItemMediatorLiveData = new MediatorLiveData<>();
-        this.thirdPartyItemMediatorLiveData = new MediatorLiveData<>();
+        this._thirdPartyItemMediatorLiveData = new MediatorLiveData<>();
         this.sdkConfiguration = Apps.getInstance().getSdkConfiguration();
     }
 
@@ -120,7 +120,7 @@ public class StoreApiVM extends ViewModel {
     }
 
     public LiveData<ThirdPartyItem> getThirdPartyProviders() {
-        return thirdPartyItemMediatorLiveData;
+        return _thirdPartyItemMediatorLiveData;
     }
 
     public LiveData<MySabayItem> getMySabayProvider() {
@@ -181,7 +181,7 @@ public class StoreApiVM extends ViewModel {
             @Override
             protected void onSuccess(ThirdPartyItem thirdPartyItem) {
                 LogUtil.debug(TAG, "ThirdPartyItem " + thirdPartyItem);
-                thirdPartyItemMediatorLiveData.setValue(thirdPartyItem);
+                _thirdPartyItemMediatorLiveData.setValue(thirdPartyItem);
             }
 
             @Override

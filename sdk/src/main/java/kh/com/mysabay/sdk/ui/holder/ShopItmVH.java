@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
+import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.databinding.PartialShopItemBinding;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
 import kh.com.mysabay.sdk.ui.fragment.PaymentFm;
+import kh.com.mysabay.sdk.utils.SdkTheme;
 
 /**
  * Created by Tan Phirum on 3/13/20
@@ -24,8 +26,11 @@ public class ShopItmVH extends RecyclerView.ViewHolder implements View.OnClickLi
     public ShopItmVH(@NonNull View itemView) {
         super(itemView);
         this.viewBinding = DataBindingUtil.bind(itemView);
-        if (this.viewBinding != null)
+        if (this.viewBinding != null) {
+            this.viewBinding.card.setBackgroundResource(Apps.getInstance().getSdkConfiguration().sdkTheme == SdkTheme.Dark ?
+                    R.color.colorBackground : R.color.colorWhite);
             this.viewBinding.card.setOnClickListener(this);
+        }
     }
 
 

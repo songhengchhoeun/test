@@ -9,7 +9,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,15 +33,12 @@ import kh.com.mysabay.sdk.BuildConfig;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.adapter.BankProviderAdapter;
 import kh.com.mysabay.sdk.base.BaseFragment;
-import kh.com.mysabay.sdk.callback.OnRcvItemClick;
 import kh.com.mysabay.sdk.databinding.FmPaymentBinding;
 import kh.com.mysabay.sdk.databinding.PartialBankProviderBinding;
 import kh.com.mysabay.sdk.pojo.googleVerify.DataBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.ReceiptBody;
-import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
 import kh.com.mysabay.sdk.pojo.shop.Data;
-import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
 import kh.com.mysabay.sdk.utils.FontUtils;
 import kh.com.mysabay.sdk.utils.LogUtil;
@@ -62,6 +58,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
 
     private Data mData;
     private static String PURCHASE_ID = "android.test.purchased";
+    private MaterialDialog dialogBank;
 
     @NotNull
     @Contract("_ -> new")
@@ -89,7 +86,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
     @Override
     public void initializeObjects(@NotNull View v, Bundle args) {
         mViewBinding.viewMainPayment.setBackgroundResource(colorCodeBackground());
-        mViewBinding.viewPaymentDetail.setBackgroundResource(colorCodeBackground());
+        mViewBinding.materialCardView.setBackgroundResource(colorCodeBackground());
 
         viewModel.setShopItemSelected(mData);
         viewModel.getMySabayCheckout(v.getContext());
@@ -114,30 +111,20 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
             }
         });
 
-        viewModel.getMySabayProvider().observe(this, new Observer<MySabayItem>() {
-            @Override
-            public void onChanged(MySabayItem mySabayItem) {
-                if (mySabayItem.status == 200) {
-                    if (mySabayItem.data.size() > 0)
-                        mViewBinding.rdbMySabay.setVisibility(View.VISIBLE);
-                    else
-                        mViewBinding.rdbMySabay.setVisibility(View.GONE);
-                } else
+        viewModel.getMySabayProvider().observe(this, mySabayItem -> {
+            if (mySabayItem.status == 200) {
+                if (mySabayItem.data.size() > 0)
+                    mViewBinding.rdbMySabay.setVisibility(View.VISIBLE);
+                else
                     mViewBinding.rdbMySabay.setVisibility(View.GONE);
-            }
+            } else
+                mViewBinding.rdbMySabay.setVisibility(View.GONE);
         });
 
-        viewModel.getThirdPartyProviders().observe(this, new Observer<ThirdPartyItem>() {
-            @Override
-            public void onChanged(ThirdPartyItem thirdPartyItem) {
-
-                if (thirdPartyItem.status == 200) {
-                    if (thirdPartyItem.data.size() > 0) {
-                        showBankProviders(getContext(), thirdPartyItem.data);
-                    } else
-                        mViewBinding.rdbThirdBankProvider.setVisibility(View.GONE);
-                } else
-                    mViewBinding.rdbThirdBankProvider.setVisibility(View.GONE);
+        viewModel.getThirdPartyProviders().observe(this, thirdPartyItem -> {
+            if (thirdPartyItem != null && thirdPartyItem.status == 200) {
+                if (thirdPartyItem.data.size() > 0)
+                    showBankProviders(getContext(), thirdPartyItem.data);
             }
         });
     }
@@ -305,32 +292,33 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
         super.onDestroy();
     }
 
-    private MaterialDialog dialog;
-
     private void showBankProviders(Context context, List<kh.com.mysabay.sdk.pojo.thirdParty.Data> data) {
+        if (dialogBank != null) {
+            dialogBank.dismiss();
+        }
         PartialBankProviderBinding view = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.partial_bank_provider, null, false);
         RecyclerView rcv = view.bankRcv;
-        BankProviderAdapter adapter = new BankProviderAdapter(context, data, new OnRcvItemClick() {
-            @Override
-            public void onItemClick(Object item) {
-                viewModel.postToPaidWithBank((StoreActivity) getActivity(), (kh.com.mysabay.sdk.pojo.thirdParty.Data) item);
-                if (dialog != null)
-                    dialog.dismiss();
-            }
+        BankProviderAdapter adapter = new BankProviderAdapter(context, data, item -> {
+            viewModel.postToPaidWithBank((StoreActivity) getActivity(), (kh.com.mysabay.sdk.pojo.thirdParty.Data) item);
+            if (dialogBank != null)
+                dialogBank.dismiss();
+            viewModel._thirdPartyItemMediatorLiveData.setValue(null);
+            dialogBank = null;
         });
         rcv.setLayoutManager(new LinearLayoutManager(context));
         rcv.setHasFixedSize(true);
         rcv.setAdapter(adapter);
-        dialog = new MaterialDialog.Builder(context)
+        dialogBank = new MaterialDialog.Builder(context)
                 .typeface(FontUtils.getTypefaceKhmerBold(context), FontUtils.getTypefaceKhmer(context))
                 .customView(view.getRoot(), true)
                 .canceledOnTouchOutside(false)
-                .positiveText(R.string.label_close).onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
+                .cancelable(false)
+                .positiveText(R.string.label_close).onPositive((dialog, which) -> {
+                    dialog.dismiss();
+                    dialogBank = null;
+                    viewModel._thirdPartyItemMediatorLiveData.setValue(null);
+
                 }).build();
-        dialog.show();
+        dialogBank.show();
     }
 }

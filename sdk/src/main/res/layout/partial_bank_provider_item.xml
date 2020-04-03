@@ -5,8 +5,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_5"
-        android:layout_marginBottom="@dimen/padding_5"
+        android:layout_margin="@dimen/padding_5"
         app:cardCornerRadius="@dimen/padding_5">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,6 +36,7 @@
                 android:layout_marginStart="@dimen/padding_15"
                 android:layout_marginEnd="@dimen/padding_15"
                 android:text="chip mong bank"
+                android:textAppearance="@style/MyAppearanceCaption"
                 app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView2"
                 app:layout_constraintEnd_toStartOf="@+id/img_right"
                 app:layout_constraintStart_toEndOf="@+id/appCompatImageView2"

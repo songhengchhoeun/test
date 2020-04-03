@@ -1,24 +1,16 @@
 package kh.com.mysabay.sdk;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Handler;
-import android.webkit.WebView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.akexorcist.localizationactivity.core.LanguageSetting;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
-
-import kh.com.mysabay.sdk.utils.FontUtils;
 
 public class Globals {
 
@@ -32,6 +24,7 @@ public class Globals {
     private static final String EXT_KEY_DISCOUNT = "EXT_KEY_DISCOUNT";
     public static final String EXT_KEY_DATA = "ext_key_data";
     public static final String EXT_KEY_APP_ITEM = "EXT_KEY_APP_ITEM";
+    public static final String EXT_KEY_PAYMENT_METHOD = "EXT_KEY_PAYMENT_METHOD";
 
 
     /**

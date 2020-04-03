@@ -2,15 +2,13 @@ package kh.com.mysabay.sdk.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
+import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FragmentVerifiedBinding;
@@ -18,6 +16,7 @@ import kh.com.mysabay.sdk.pojo.login.LoginItem;
 import kh.com.mysabay.sdk.ui.activity.LoginActivity;
 import kh.com.mysabay.sdk.utils.KeyboardUtils;
 import kh.com.mysabay.sdk.utils.MessageUtil;
+import kh.com.mysabay.sdk.utils.SdkTheme;
 import kh.com.mysabay.sdk.viewmodel.UserApiVM;
 
 /**
@@ -41,6 +40,9 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
     public void initializeObjects(View v, Bundle args) {
         mViewBinding.viewMainVerified.setBackgroundResource(colorCodeBackground());
         mViewBinding.btnBack.setBackgroundResource(colorCodeBackground());
+        if (Apps.getInstance().getSdkConfiguration().sdkTheme == SdkTheme.Light)
+            mViewBinding.tvResendOtp.setTextColor(getResources().getColor(R.color.colorWhite700));
+        
         this.viewModel = LoginActivity.loginActivity.viewModel;
     }
 
