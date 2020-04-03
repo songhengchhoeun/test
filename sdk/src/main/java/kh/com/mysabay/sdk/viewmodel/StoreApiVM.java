@@ -254,6 +254,7 @@ public class StoreApiVM extends ViewModel {
                         @Override
                         protected void onSuccess(ResponseItem response) {
                             if (response.status == 200) {
+                                Apps.getInstance().saveMethodSelected(gson.toJson(data.withIsPaidWith(false)));
                                 context.initAddFragment(BankVerifiedFm.newInstance(response.data), PaymentFm.TAG, true);
                             }
                             //EventBus.getDefault().post(new SubscribePayment(item, null, null));

@@ -127,45 +127,51 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
                     showBankProviders(getContext(), thirdPartyItem.data);
             }
         });
+
+        kh.com.mysabay.sdk.pojo.thirdParty.Data paidMethod = gson.fromJson(Apps.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
+        if (paidMethod != null) {
+            mViewBinding.rdbPreAuthPay.setText(paidMethod.serviceName);
+            mViewBinding.rdbPreAuthPay.setVisibility(paidMethod.isPaidWith ? View.VISIBLE : View.GONE);
+            mViewBinding.rdbPreAuthPay.setChecked(paidMethod.isPaidWith);
+        }
     }
 
     @Override
     public void addListeners() {
-        mViewBinding.btnPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int checkedId = mViewBinding.radioGroup.getCheckedRadioButtonId();
+        mViewBinding.btnPay.setOnClickListener(v -> {
+            int checkedId = mViewBinding.radioGroup.getCheckedRadioButtonId();
 
-                if (checkedId == R.id.rdb_in_app_purchase) {
-                    if (bp.isOneTimePurchaseSupported() && (viewModel.getItemSelected().getValue() != null)) {
-                        if (!BuildConfig.DEBUG)
-                            PURCHASE_ID = viewModel.getItemSelected().getValue().packageId;
-                        boolean isPurchase = bp.purchase(getActivity(), PURCHASE_ID);
-                        boolean isConsumePurchase = bp.consumePurchase(PURCHASE_ID);
+            if (checkedId == R.id.rdb_in_app_purchase) {
+                if (bp.isOneTimePurchaseSupported() && (viewModel.getItemSelected().getValue() != null)) {
+                    if (!BuildConfig.DEBUG)
+                        PURCHASE_ID = viewModel.getItemSelected().getValue().packageId;
+                    boolean isPurchase = bp.purchase(getActivity(), PURCHASE_ID);
+                    boolean isConsumePurchase = bp.consumePurchase(PURCHASE_ID);
 
-                        LogUtil.info(TAG, "purchase =" + isPurchase + ", comsumePurcase = " + isConsumePurchase);
-                    } else
-                        MessageUtil.displayDialog(v.getContext(), "sorry your device not support in app purchase");
-
-                } else if (checkedId == R.id.rdb_my_sabay) {
-                    Data data = viewModel.getItemSelected().getValue();
-                    if (data == null) return;
-
-                    MessageUtil.displayDialog(v.getContext(), getString(R.string.payment_confirmation),
-                            String.format(getString(R.string.are_you_pay_with_my_sabay_provider), data.priceInSc.toString()), getString(R.string.cancel), getString(R.string.confirm), null, new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    viewModel.postToPaidWithProvider(v.getContext());
-                                }
-                            });
-
-                } else if (checkedId == R.id.rdb_third_bank_provider) {
-                    viewModel.get3PartyCheckout(v.getContext());
-                } else if (checkedId == R.id.rdb_pre_auth_pay) {
-
+                    LogUtil.info(TAG, "purchase =" + isPurchase + ", comsumePurcase = " + isConsumePurchase);
                 } else
-                    MessageUtil.displayToast(v.getContext(), getString(R.string.please_choose_payment_option));
-            }
+                    MessageUtil.displayDialog(v.getContext(), "sorry your device not support in app purchase");
+
+            } else if (checkedId == R.id.rdb_my_sabay) {
+                Data data = viewModel.getItemSelected().getValue();
+                if (data == null) return;
+
+                MessageUtil.displayDialog(v.getContext(), getString(R.string.payment_confirmation),
+                        String.format(getString(R.string.are_you_pay_with_my_sabay_provider), data.priceInSc.toString()), getString(R.string.cancel), getString(R.string.confirm), null, new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                viewModel.postToPaidWithProvider(v.getContext());
+                            }
+                        });
+
+            } else if (checkedId == R.id.rdb_third_bank_provider) {
+                viewModel.get3PartyCheckout(v.getContext());
+            } else if (checkedId == R.id.rdb_pre_auth_pay) {
+                kh.com.mysabay.sdk.pojo.thirdParty.Data paidItem = gson.fromJson(Apps.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
+                if (paidItem != null)
+                    viewModel.postToPaidWithBank((StoreActivity) getActivity(), paidItem);
+            } else
+                MessageUtil.displayToast(v.getContext(), getString(R.string.please_choose_payment_option));
         });
 
         mViewBinding.btnBack.setOnClickListener(v -> {

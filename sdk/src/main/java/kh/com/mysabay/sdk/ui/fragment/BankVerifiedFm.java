@@ -36,6 +36,7 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
     private static final String EXT_KEY_PaymentResponseItem = "PaymentResponseItem";
 
     private Data mPaymentResponseItem;
+    private boolean isFinished = false;
 
     @NotNull
     public static BankVerifiedFm newInstance(Data item) {
@@ -46,11 +47,12 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
         return f;
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if (getArguments() != null)
             mPaymentResponseItem = getArguments().getParcelable(EXT_KEY_PaymentResponseItem);
-
+        setRetainInstance(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -62,43 +64,70 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initializeObjects(View v, Bundle args) {
-        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
-        mViewBinding.wv.getSettings().setJavaScriptEnabled(true);
-        mViewBinding.wv.getSettings().setLoadsImagesAutomatically(true);
-        mViewBinding.wv.getSettings().setLoadWithOverviewMode(true);
-        mViewBinding.wv.getSettings().setUseWideViewPort(true);
-        mViewBinding.wv.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        mViewBinding.wv.getSettings().setSupportZoom(true);
-        mViewBinding.wv.getSettings().setBuiltInZoomControls(true);
-        mViewBinding.wv.getSettings().setDisplayZoomControls(false);
-        mViewBinding.wv.getSettings().setDomStorageEnabled(true);
-        mViewBinding.wv.getSettings().setMinimumFontSize(1);
-        mViewBinding.wv.getSettings().setMinimumLogicalFontSize(1);
-        mViewBinding.wv.clearHistory();
-        mViewBinding.wv.clearCache(true);
-        mViewBinding.wv.setWebViewClient(new WebViewClient() {
-            @Nullable
-            @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                LogUtil.debug(TAG, "shouldInterceptRequest : " + request.getUrl());
-                return super.shouldInterceptRequest(view, request);
-            }
+        if (args != null) {
+            mViewBinding.wv.restoreState(args);
+        } else {
+            WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
+            mViewBinding.wv.getSettings().setJavaScriptEnabled(true);
+            mViewBinding.wv.getSettings().setLoadsImagesAutomatically(true);
+            mViewBinding.wv.getSettings().setLoadWithOverviewMode(true);
+            mViewBinding.wv.getSettings().setUseWideViewPort(true);
+            mViewBinding.wv.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+            mViewBinding.wv.getSettings().setSupportZoom(true);
+            mViewBinding.wv.getSettings().setBuiltInZoomControls(true);
+            mViewBinding.wv.getSettings().setDisplayZoomControls(false);
+            mViewBinding.wv.getSettings().setDomStorageEnabled(true);
+            mViewBinding.wv.getSettings().setMinimumFontSize(1);
+            mViewBinding.wv.getSettings().setMinimumLogicalFontSize(1);
+            mViewBinding.wv.clearHistory();
+            mViewBinding.wv.clearCache(true);
+            mViewBinding.wv.setWebViewClient(new WebViewClient() {
+                @Nullable
+                @Override
+                public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                    LogUtil.debug(TAG, "shouldInterceptRequest : ");
+                    return super.shouldInterceptRequest(view, request);
+                }
 
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                LogUtil.debug(TAG, "onPageFinished " + url);
-            }
-        });
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    isFinished = true;
+                    LogUtil.debug(TAG, "onPageFinished " + url);
+                    if (url.contains("https://explorer.ssn.digital/v1/payments/")) {
+                        if (getActivity() == null) return;
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                kh.com.mysabay.sdk.pojo.thirdParty.Data data = gson.fromJson(Apps.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
+                                data.withIsPaidWith(true);
+                                Apps.getInstance().saveMethodSelected(gson.toJson(data));
+                            }
+                        });
+                        LogUtil.debug(TAG, "payment success");
+                    }
+                }
+            });
+            String html = scriptFormValidate(mPaymentResponseItem);
+            mViewBinding.wv.loadDataWithBaseURL(Apps.getInstance().storeApiUrl(), html, "text/html", "utf-8", Apps.getInstance().storeApiUrl());
+        }
     }
 
     @Override
     public void assignValues() {
-        String html = scriptFormValidate(mPaymentResponseItem);
-        mViewBinding.wv.loadDataWithBaseURL(Apps.getInstance().storeApiUrl(), html, "text/html", "utf-8", Apps.getInstance().storeApiUrl());
     }
 
     @Override
     public void addListeners() {
+        mViewBinding.btnBack.setOnClickListener(v -> {
+            if (mViewBinding.wv.canGoBack())
+                mViewBinding.wv.goBack();
+            else {
+                if (getActivity() != null)
+                    getActivity().onBackPressed();
+            }
+        });
+
         mViewBinding.btnClose.setOnClickListener(v -> {
             if (getActivity() != null)
                 getActivity().onBackPressed();
@@ -131,6 +160,13 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
         ((StoreActivity) context).userComponent.inject(this);
         // Now you can access loginViewModel here and onCreateView too
         // (shared instance with the Activity and the other Fragment)
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mViewBinding.wv.saveState(outState);
+
     }
 
     @NotNull

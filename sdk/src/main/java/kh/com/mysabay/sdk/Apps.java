@@ -87,7 +87,9 @@ public class Apps extends Application {
         editor.apply();
     }
 
-    //public
+    public String getMethodSelected() {
+        return getPreferences().getString(Globals.EXT_KEY_PAYMENT_METHOD, "");
+    }
 
     public SdkConfiguration getSdkConfiguration() {
         return mSdkConfiguration;
