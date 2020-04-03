@@ -88,6 +88,9 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
 
     @Override
     public void initializeObjects(@NotNull View v, Bundle args) {
+        mViewBinding.viewMainPayment.setBackgroundResource(colorCodeBackground());
+        mViewBinding.viewPaymentDetail.setBackgroundResource(colorCodeBackground());
+
         viewModel.setShopItemSelected(mData);
         viewModel.getMySabayCheckout(v.getContext());
         if (!BillingProcessor.isIabServiceAvailable(v.getContext()))

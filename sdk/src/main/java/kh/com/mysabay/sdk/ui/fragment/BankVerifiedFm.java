@@ -3,7 +3,6 @@ package kh.com.mysabay.sdk.ui.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -14,6 +13,10 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.BuildConfig;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
@@ -31,10 +34,10 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
 
     public static final String TAG = BankVerifiedFm.class.getSimpleName();
     private static final String EXT_KEY_PaymentResponseItem = "PaymentResponseItem";
-    private String mDeepLink;
 
     private Data mPaymentResponseItem;
 
+    @NotNull
     public static BankVerifiedFm newInstance(Data item) {
         Bundle args = new Bundle();
         args.putParcelable(EXT_KEY_PaymentResponseItem, item);
@@ -59,14 +62,6 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initializeObjects(View v, Bundle args) {
-
-        // The java script string to execute in web view after page loaded
-        // First line put a value in input box
-        // Second line submit the form
-        final String js = "javascript:document.getElementById('search_form_input_homepage').value='android';" +
-                "document.getElementById('search_button_homepage').click()";
-
-
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
         mViewBinding.wv.getSettings().setJavaScriptEnabled(true);
         mViewBinding.wv.getSettings().setLoadsImagesAutomatically(true);
@@ -85,22 +80,8 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
             @Nullable
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                //  LogUtil.debug(TAG, "url =" + request.getUrl());
-                //String token = request.getUrl().getQueryParameter("access_token");
-                /*if (!StringUtils.isBlank(token) && getActivity() != null)
-                    getActivity().runOnUiThread(() -> {
-                        viewModel.postToGetUserProfile(getActivity(), token);
-                    });*/
-
                 LogUtil.debug(TAG, "shouldInterceptRequest : " + request.getUrl());
                 return super.shouldInterceptRequest(view, request);
-            }
-
-            @Override
-            public void onFormResubmission(WebView view, Message dontResend, Message resend) {
-                LogUtil.debug(TAG, "dontResent " + dontResend);
-                LogUtil.debug(TAG, "Message " + resend.toString());
-                super.onFormResubmission(view, dontResend, resend);
             }
 
             @Override
@@ -113,13 +94,15 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
     @Override
     public void assignValues() {
         String html = scriptFormValidate(mPaymentResponseItem);
-        LogUtil.debug(TAG, html);
-        mViewBinding.wv.loadDataWithBaseURL("https://store.testing.mysabay.com/", html, "text/html", "utf-8", "https://store.testing.mysabay.com/");
+        mViewBinding.wv.loadDataWithBaseURL(Apps.getInstance().storeApiUrl(), html, "text/html", "utf-8", Apps.getInstance().storeApiUrl());
     }
 
     @Override
     public void addListeners() {
-
+        mViewBinding.btnClose.setOnClickListener(v -> {
+            if (getActivity() != null)
+                getActivity().onBackPressed();
+        });
     }
 
     @Override
@@ -150,7 +133,9 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
         // (shared instance with the Activity and the other Fragment)
     }
 
-    private String scriptFormValidate(Data item) {
+    @NotNull
+    @Contract(pure = true)
+    private String scriptFormValidate(@NotNull Data item) {
         return "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +

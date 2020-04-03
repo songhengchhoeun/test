@@ -2,9 +2,12 @@ package kh.com.mysabay.sdk.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,6 +39,8 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
 
     @Override
     public void initializeObjects(View v, Bundle args) {
+        mViewBinding.viewMainVerified.setBackgroundResource(colorCodeBackground());
+        mViewBinding.btnBack.setBackgroundResource(colorCodeBackground());
         this.viewModel = LoginActivity.loginActivity.viewModel;
     }
 
@@ -60,7 +65,7 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
                 viewModel.postToVerified(getContext(), Integer.parseInt(str.toString()));
             } else {
                 KeyboardUtils.hideKeyboard(getContext(), mViewBinding.edtVerifyCode);
-                MessageUtil.displayToast(getContext(), "verified failed");
+                //MessageUtil.displayToast(getContext(), "verified failed");
                 mViewBinding.edtVerifyCode.setError(true);
                 mViewBinding.edtVerifyCode.postDelayed(() ->
                         mViewBinding.edtVerifyCode.setText(null), 1000);
@@ -68,15 +73,6 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
         });
 
         viewModel.liveNetworkState.observe(this, this::showProgressState);
-
-       /* viewModel.ver.observe(this, new Observer<Object>() {
-            @Override
-            public void onChanged(Object o) {
-                LogUtil.debug(TAG, "success with object " + gson.toJson(o));
-                if (getActivity() instanceof LoginActivity)
-                    ((LoginActivity) getActivity()).initAddFragment(new VerifiedFragment(), VerifiedFragment.TAG, true);
-            }
-        });*/
 
         mViewBinding.tvResendOtp.setOnClickListener(v -> {
             mViewBinding.edtVerifyCode.setText("");
@@ -92,12 +88,10 @@ public class VerifiedFragment extends BaseFragment<FragmentVerifiedBinding, User
                 MessageUtil.displayToast(v.getContext(), getString(R.string.verify_code_required));
         });
 
-        mViewBinding.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getActivity() != null)
-                    getActivity().onBackPressed();
-            }
+        //
+        mViewBinding.btnBack.setOnClickListener(v -> {
+            if (getActivity() != null)
+                getActivity().onBackPressed();
         });
     }
 

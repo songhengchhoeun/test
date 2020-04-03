@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
         final SdkConfiguration configuration = new SdkConfiguration.Builder(BuildConfig.APPLICATION_ID,
                 "9c85c50a4362f687cd4507771ba81db5cf50eaa0b3008f4f943f77ba3ac6386b",
                 "",
-                "", "Arena of Glory")
-                .setSdkTheme(SdkTheme.Dark)
+                "", "SDK sample")
+                .setSdkTheme(SdkTheme.Light)
                 .setToUseSandBox(true).build();
         MySabaySDK.Impl.setDefaultInstanceConfiguration(configuration);
 
@@ -39,11 +39,10 @@ public class MainActivity extends AppCompatActivity {
                         "Logout", "Get user information",
                         (dialog, which) -> {
                             MySabaySDK.getInstance().logout();
-                            mViewBinding.viewPb.setVisibility(View.GONE);
                         }, (dialog, which) -> MySabaySDK.getInstance().getUserInfo(info -> {
                             MessageUtil.displayDialog(v.getContext(), info);
-                            mViewBinding.viewPb.setVisibility(View.GONE);
                         }));
+                mViewBinding.viewPb.setVisibility(View.GONE);
             } else
                 MySabaySDK.getInstance().showLoginView(new LoginListener() {
                     @Override

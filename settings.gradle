@@ -1,3 +1,3 @@
 rootProject.name='SabaySdk'
-include ':app', ':pinentryedittext'
+include ':app'
 include ':sdk'

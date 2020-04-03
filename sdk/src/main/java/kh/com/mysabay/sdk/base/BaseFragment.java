@@ -28,9 +28,12 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
+import kh.com.mysabay.sdk.Apps;
+import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.utils.IdlingResourceHelper;
 import kh.com.mysabay.sdk.utils.MessageUtil;
+import kh.com.mysabay.sdk.utils.SdkTheme;
 
 /**
  * Created by Tan Phirum on 3/4/20
@@ -216,6 +219,15 @@ public abstract class BaseFragment<D extends ViewDataBinding, V extends ViewMode
         if (assignEmptyView() == null)
             throw new IllegalArgumentException("view Empty can't be null");
         assignEmptyView().setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    public int colorCodeBackground() {
+        int colorCode;
+        if (Apps.getInstance().getSdkConfiguration().sdkTheme == SdkTheme.Dark) {
+            colorCode = R.color.colorBackground;
+        } else
+            colorCode = R.color.colorWhite;
+        return colorCode;
     }
 
 }

@@ -88,4 +88,12 @@ public class Apps extends Application {
     public void setSdkConfiguration(SdkConfiguration mSdkConfiguration) {
         this.mSdkConfiguration = mSdkConfiguration;
     }
+
+    public String userApiUrl() {
+        return mSdkConfiguration.isSandBox ? "https://user.testing.mysabay.com/" : "https://user.mysabay.com/";
+    }
+
+    public String storeApiUrl() {
+        return mSdkConfiguration.isSandBox ? "https://store.testing.mysabay.com/" : "https://store.mysabay.com/";
+    }
 }
