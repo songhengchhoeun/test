@@ -216,7 +216,7 @@ public class StoreApiVM extends ViewModel {
      *
      * @param context
      */
-    public void postToPaidWithProvider(Context context) {
+    public void postToPaidWithMySabayProvider(Context context) {
         AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
         Data shopItem = getItemSelected().getValue();
         if (getMySabayProvider().getValue() == null) return;
