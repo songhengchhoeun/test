@@ -40,7 +40,7 @@ public class SdkConfiguration {
         private SdkTheme sdkTheme = SdkTheme.Dark;
         private SdkLanguages sdkLanguages = SdkLanguages.En;
 
-        public Builder(String appId, String appSecret, String licenseKey, String merchantId, String mySabayAppName) {
+        public Builder(String appId, String mySabayAppName, String appSecret, String licenseKey, String merchantId) {
             this.appId = appId;
             this.appSecret = appSecret;
             this.licenseKey = licenseKey;

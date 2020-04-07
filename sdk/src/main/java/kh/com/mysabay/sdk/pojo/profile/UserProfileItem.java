@@ -9,6 +9,8 @@ import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Tan Phirum on 3/10/20
@@ -25,6 +27,8 @@ public class UserProfileItem implements Parcelable {
     public final static Parcelable.Creator<UserProfileItem> CREATOR = new Creator<UserProfileItem>() {
 
 
+        @NotNull
+        @Contract("_ -> new")
         @SuppressWarnings({
                 "unchecked"
         })
@@ -32,13 +36,15 @@ public class UserProfileItem implements Parcelable {
             return new UserProfileItem(in);
         }
 
+        @NotNull
+        @Contract(value = "_ -> new", pure = true)
         public UserProfileItem[] newArray(int size) {
             return (new UserProfileItem[size]);
         }
 
     };
 
-    protected UserProfileItem(Parcel in) {
+    protected UserProfileItem(@NotNull Parcel in) {
         this.status = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.data = ((Data) in.readValue((Data.class.getClassLoader())));
     }
@@ -79,6 +85,7 @@ public class UserProfileItem implements Parcelable {
         return new HashCodeBuilder().append(data).append(status).toHashCode();
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -91,7 +98,7 @@ public class UserProfileItem implements Parcelable {
         return new EqualsBuilder().append(data, rhs.data).append(status, rhs.status).isEquals();
     }
 
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NotNull Parcel dest, int flags) {
         dest.writeValue(status);
         dest.writeValue(data);
     }
