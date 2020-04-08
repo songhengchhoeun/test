@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         final SdkConfiguration configuration = new SdkConfiguration.Builder(
-                BuildConfig.APPLICATION_ID, // mysabay app Id
+                "55", // mysabay app Id
                 "SDK sample", //mysabay  app name
                 "9c85c50a4362f687cd4507771ba81db5cf50eaa0b3008f4f943f77ba3ac6386b", //MySabay App Secret
                 "", // license key

@@ -5,13 +5,19 @@ This is the official MySabay SDK for native Android application. To use this SDK
 ## Create your application
 
 Create your MySabay application if you don't have one yet at [MySabay App Dashboard](https://kh.mysabay.com:8443/index.html) and copy your `appId` 
-and `appSecret` for the integration.
+and `appSecret` for the integration. 
+
+## Workflow
+The login and payment workflow is described with the following diagram for communication between CP app, server, mySabay SDK and mySabay API.
+
+### Login flow
+<img src="Images/user-login-flow.png">
 
 ## Installation
 
 Add Jitpack to your project build.gralde file
 
-```
+```gradle
 allprojects {
     repositories {
         ...
@@ -22,7 +28,7 @@ allprojects {
 
 Then add this dependency to your app build.gradle file.
 
-```
+```gradle
 dependencies {
     implementation 'kh.com.mysabay:sabaysdk:1.0.6-b06'
 }
@@ -32,17 +38,18 @@ dependencies {
 
 MySabaySDK has default configuration with dark theme and sandbox url.
 
-```
+```java
 final SdkConfiguration configuration = new SdkConfiguration.Builder(
-                BuildConfig.APPLICATION_ID, // mysabay app Id
-                "SDK sample", //mysabay  app name
-                "9c85c50a4362f687cd4507771ba81db5cf50eaa0b3008f4f943f77ba3ac6386b", //MySabay App Secret
-                "", // license key and required in production
-                "") // merchant id and required in production
-                .setSdkTheme(SdkTheme.Light) // optional configure
-                .setToUseSandBox(true) // optional configure
-                .build();
-        MySabaySDK.Impl.setDefaultInstanceConfiguration(configuration);
+                                        "{MySabayAppId}", // mysabay app Id
+                                        "SDK sample", //mysabay  app name
+                                        "{MySabayAppSecret}", //MySabay App Secret
+                                        "{LicenseKey}", // Android license key
+                                        "{MerchantID}") // Android merchant id
+                                        .setSdkTheme(SdkTheme.Light) // optional, default to dark
+                                        .setToUseSandBox(true) // optional, default to true
+                                        .build();
+                                        
+MySabaySDK.Impl.setDefaultInstanceConfiguration(configuration);
 ```
 > NOTE: MySabaySdk is need configuration
 
@@ -55,83 +62,90 @@ final SdkConfiguration configuration = new SdkConfiguration.Builder(
 
 Call 
 
-```
+```java
     MySabaySDK.getInstance().showLoginView(new LoginListener() {
-                        @Override
-                        public void loginSuccess(String accessToken) {
-                            MessageUtil.displayToast(v.getContext(), "accessToken = " + accessToken);
-                        }
-    
-                        @Override
-                        public void loginFailed(Object error) {
-                            MessageUtil.displayToast(v.getContext(), "error = " + error);
-                        }
-                    });
+        @Override
+        public void loginSuccess(String accessToken) {
+            MessageUtil.displayToast(v.getContext(), "accessToken = " + accessToken);
+        }
+
+        @Override
+        public void loginFailed(Object error) {
+            MessageUtil.displayToast(v.getContext(), "error = " + error);
+        }
+    });
 ``` 
 to open login screen
 
 * **Show user profile**
 
-```android
+```java
 
     MySabaySDK.getInstance().getUserProfile(new UserInfoListener() {
-                                    @Override
-                                    public void userInfo(String info) {
-                                        // handle user infomation here
-                                    }
-                                });
+        @Override
+        public void userInfo(String info) {
+            // handle user infomation here
+        }
+    });
 ```
 
 * **Store and checkout**
 
-```
-MySabaySDK.getInstance().showStoreView(new PaymentListener() {
-                    @Override
-                    public void purchaseMySabaySuccess(Object dataMySabay) {
-                        // handle mysabay payemtn success herer
-                    }
+```java
+    MySabaySDK.getInstance().showStoreView(new PaymentListener() {
+        @Override
+        public void purchaseMySabaySuccess(Object dataMySabay) {
+            // handle mysabay payment success here
+        }
 
-                    @Override
-                    public void purchaseIAPSuccess(Object dataIAP) {
-                        // handle android app in purchase here
-                    }
+        @Override
+        public void purchaseIAPSuccess(Object dataIAP) {
+            // handle android in app purchase here
+        }
 
-                    @Override
-                    public void purchaseFailed(Object dataError) {
-                        // hanlde error
-                    }
-                });
+        @Override
+        public void purchaseFailed(Object dataError) {
+            // hanlde error
+        }
+    });
 ```
 
 * **Refresh token** 
 
-```
-        MySabaySDK.getInstance().refreshToken(new RefreshTokenListener() {
-                        @Override
-                        public void refreshSuccess(String token) {
-                            // work with token
-                        }
-
-                        @Override
-                        public void refreshFailed(Throwable error) {
-                            //handle error here
-                        }
-                    });
+```java
+    MySabaySDK.getInstance().refreshToken(new RefreshTokenListener() {
+        @Override
+        public void refreshSuccess(String token) {
+            // work with token
+        }
+    
+        @Override
+        public void refreshFailed(Throwable error) {
+            //handle error here
+        }
+    });
 ```
 
 * **Get current token**
 
-```
+```java
     MySabaySDK.getInstance().currentToken();
 ```
 
 * **Check valid token**
 
-```
-       MySabaySDK.getInstance().isTokenValid();
-
+```java
+    MySabaySDK.getInstance().isTokenValid();
 ```
 
 * **Logout**
 
-Call ```MySabaySDK.getInstance().logout();```
+To logout user session from the app use the following method:
+
+``` java
+    MySabaySDK.getInstance().logout();
+```
+
+## mySabay API
+### Server side validation
+In order for the CP server to validate the user access token received from the client as valid, mySabay also hosts pulic user api for fetching user profile and validating token. The API document is available [here](https://api-reference.mysabay.com/).
