@@ -14,7 +14,7 @@
         android:layout_margin="@dimen/padding_20"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBackground"
+        app:cardBackgroundColor="@color/colorBackground"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
@@ -25,7 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/colorBackground"
             android:gravity="center"
             android:orientation="vertical">
 

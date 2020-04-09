@@ -16,7 +16,6 @@
     <string name="title_retry">ម្តងទៀត</string>
     <string name="msg_phone_incorrect">ទម្រង់លេខទូរស័ព្ទរបស់លោកអ្នកមិនត្រឹមត្រូវទេ</string>
     <string name="msg_input_phone">បញ្ចូលលេខទូរស័ព្ទ</string>
-    <string name="arena_of_glory">arena of glory</string>
     <string name="verify_code_required">លេខកូដចាំបាច់ត្រូវបញ្ចូល</string>
     <string name="pay">បង់</string>
     <string name="shops">ហាង</string>
@@ -29,4 +28,6 @@
     <string name="cancel">Cancel</string>
     <string name="payment_confirmation">បញ្ជាក់ការទូទាត់</string>
     <string name="are_you_pay_with_my_sabay_provider">តើអ្នកពិតជាចង់បង់ប្រាក់ %s SC តាមរយ:ក្រុមហ៊ុនផ្តល់សេវាទូទាត់ប្រាក់ Mysabay មែនទេ?</string>
+    <string name="partnered_payment_providers">អ្នកផ្តល់ការទូទាត់ជាដៃគូ</string>
+    <string name="select_a_partnered_payment_provider_fro_pre_authorization">ជ្រើសរើសអ្នកផ្តល់ការទូទាត់ជាដៃគូសម្រាប់ការអនុញ្ញាតក្នុងការទូទាត់លើកក្រោយ។</string>
 </resources>

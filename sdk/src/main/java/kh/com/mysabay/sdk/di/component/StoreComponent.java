@@ -3,6 +3,7 @@ package kh.com.mysabay.sdk.di.component;
 import dagger.Subcomponent;
 import kh.com.mysabay.sdk.di.scopes.ActivityScope;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
+import kh.com.mysabay.sdk.ui.fragment.BankVerifiedFm;
 import kh.com.mysabay.sdk.ui.fragment.PaymentFm;
 import kh.com.mysabay.sdk.ui.fragment.ShopsFragment;
 
@@ -27,4 +28,6 @@ public interface StoreComponent {
     void inject(ShopsFragment shopsFragment);
 
     void inject(PaymentFm paymentFm);
+
+    void inject(BankVerifiedFm bankVerifiedFm);
 }

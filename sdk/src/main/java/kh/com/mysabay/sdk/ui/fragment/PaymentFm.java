@@ -3,13 +3,15 @@ package kh.com.mysabay.sdk.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.anjlab.android.iab.v3.BillingCommunicationException;
 import com.anjlab.android.iab.v3.BillingHistoryRecord;
@@ -25,17 +27,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.BuildConfig;
 import kh.com.mysabay.sdk.R;
+import kh.com.mysabay.sdk.adapter.BankProviderAdapter;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FmPaymentBinding;
+import kh.com.mysabay.sdk.databinding.PartialBankProviderBinding;
 import kh.com.mysabay.sdk.pojo.googleVerify.DataBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.GoogleVerifyBody;
 import kh.com.mysabay.sdk.pojo.googleVerify.ReceiptBody;
-import kh.com.mysabay.sdk.pojo.mysabay.MySabayItem;
 import kh.com.mysabay.sdk.pojo.shop.Data;
-import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
+import kh.com.mysabay.sdk.utils.FontUtils;
 import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.viewmodel.StoreApiVM;
@@ -53,6 +57,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
 
     private Data mData;
     private static String PURCHASE_ID = "android.test.purchased";
+    private MaterialDialog dialogBank;
 
     @NotNull
     @Contract("_ -> new")
@@ -79,12 +84,15 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
 
     @Override
     public void initializeObjects(@NotNull View v, Bundle args) {
+        mViewBinding.viewMainPayment.setBackgroundResource(colorCodeBackground());
+        mViewBinding.materialCardView.setBackgroundResource(colorCodeBackground());
+
         viewModel.setShopItemSelected(mData);
         viewModel.getMySabayCheckout(v.getContext());
         if (!BillingProcessor.isIabServiceAvailable(v.getContext()))
             MessageUtil.displayDialog(v.getContext(), getString(R.string.upgrade_google_play));
 
-        bp = new BillingProcessor(v.getContext(), null, this);
+        bp = new BillingProcessor(v.getContext(), Apps.getInstance().getSdkConfiguration().licenseKey, Apps.getInstance().getSdkConfiguration().merchantId, this);
         bp.initialize();
         // or bp = BillingProcessor.newBillingProcessor(this, "YOUR LICENSE KEY FROM GOOGLE PLAY CONSOLE HERE", this);
         // See below on why this is a useful alternative
@@ -102,70 +110,64 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
             }
         });
 
-        viewModel.getMySabayProvider().observe(this, new Observer<MySabayItem>() {
-            @Override
-            public void onChanged(MySabayItem mySabayItem) {
-                if (mySabayItem.status == 200) {
-                    if (mySabayItem.data.size() > 0)
-                        mViewBinding.rdbMySabay.setVisibility(View.VISIBLE);
-                    else
-                        mViewBinding.rdbMySabay.setVisibility(View.GONE);
-                } else
+        viewModel.getMySabayProvider().observe(this, mySabayItem -> {
+            if (mySabayItem.status == 200) {
+                if (mySabayItem.data.size() > 0)
+                    mViewBinding.rdbMySabay.setVisibility(View.VISIBLE);
+                else
                     mViewBinding.rdbMySabay.setVisibility(View.GONE);
+            } else
+                mViewBinding.rdbMySabay.setVisibility(View.GONE);
+        });
+
+        viewModel.getThirdPartyProviders().observe(this, thirdPartyItem -> {
+            if (thirdPartyItem != null && thirdPartyItem.status == 200) {
+                if (thirdPartyItem.data.size() > 0)
+                    showBankProviders(getContext(), thirdPartyItem.data);
             }
         });
 
-        viewModel.getThirdPartyProviders().observe(this, new Observer<ThirdPartyItem>() {
-            @Override
-            public void onChanged(ThirdPartyItem thirdPartyItem) {
-                if (thirdPartyItem.status == 200) {
-                    if (thirdPartyItem.data.size() > 0) {
-                        mViewBinding.rdbThirdBankProvider.setVisibility(View.VISIBLE);
-                    } else
-                        mViewBinding.rdbThirdBankProvider.setVisibility(View.GONE);
-                } else
-                    mViewBinding.rdbThirdBankProvider.setVisibility(View.GONE);
-            }
-        });
+        kh.com.mysabay.sdk.pojo.thirdParty.Data paidMethod = gson.fromJson(Apps.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
+        if (paidMethod != null) {
+            mViewBinding.rdbPreAuthPay.setText(paidMethod.serviceName);
+            mViewBinding.rdbPreAuthPay.setVisibility(paidMethod.isPaidWith ? View.VISIBLE : View.GONE);
+            mViewBinding.rdbPreAuthPay.setChecked(paidMethod.isPaidWith);
+        }
     }
 
     @Override
     public void addListeners() {
-        mViewBinding.btnPay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int checkedId = mViewBinding.radioGroup.getCheckedRadioButtonId();
+        mViewBinding.btnPay.setOnClickListener(v -> {
+            int checkedId = mViewBinding.radioGroup.getCheckedRadioButtonId();
 
-                if (checkedId == R.id.rdb_in_app_purchase) {
-                    if (bp.isOneTimePurchaseSupported() && (viewModel.getItemSelected().getValue() != null)) {
-                        if (!BuildConfig.DEBUG)
-                            PURCHASE_ID = viewModel.getItemSelected().getValue().packageId;
-                        boolean isPurchase = bp.purchase(getActivity(), PURCHASE_ID);
-                        boolean isConsumePurchase = bp.consumePurchase(PURCHASE_ID);
+            if (checkedId == R.id.rdb_in_app_purchase) {
+                if (bp.isOneTimePurchaseSupported() && (viewModel.getItemSelected().getValue() != null)) {
+                    if (!BuildConfig.DEBUG)
+                        PURCHASE_ID = viewModel.getItemSelected().getValue().packageId;
+                    boolean isPurchase = bp.purchase(getActivity(), PURCHASE_ID);
+                    boolean isConsumePurchase = bp.consumePurchase(PURCHASE_ID);
 
-                        LogUtil.info(TAG, "purchase =" + isPurchase + ", comsumePurcase = " + isConsumePurchase);
-                    } else
-                        MessageUtil.displayDialog(v.getContext(), "sorry your device not support in app purchase");
-
-                } else if (checkedId == R.id.rdb_my_sabay) {
-                    Data data = viewModel.getItemSelected().getValue();
-                    if (data == null) return;
-
-                    MessageUtil.displayDialog(v.getContext(), getString(R.string.payment_confirmation),
-                            String.format(getString(R.string.are_you_pay_with_my_sabay_provider), data.priceInSc.toString()), getString(R.string.cancel), getString(R.string.confirm), null, new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    viewModel.postToPaidWithProvider(v.getContext());
-                                }
-                            });
-
-                } else if (checkedId == R.id.rdb_third_bank_provider) {
-                    MessageUtil.displayToast(v.getContext(), "In development");
-                } else if (checkedId == R.id.rdb_pre_auth_pay) {
-
+                    LogUtil.info(TAG, "purchase =" + isPurchase + ", comsumePurcase = " + isConsumePurchase);
                 } else
-                    MessageUtil.displayToast(v.getContext(), getString(R.string.please_choose_payment_option));
-            }
+                    MessageUtil.displayDialog(v.getContext(), "sorry your device not support in app purchase");
+
+            } else if (checkedId == R.id.rdb_my_sabay) {
+                Data data = viewModel.getItemSelected().getValue();
+                if (data == null) return;
+
+                MessageUtil.displayDialog(v.getContext(), getString(R.string.payment_confirmation),
+                        String.format(getString(R.string.are_you_pay_with_my_sabay_provider), data.priceInSc.toString()), getString(R.string.cancel),
+                        getString(R.string.confirm), null,
+                        (dialog, which) -> viewModel.postToPaidWithMySabayProvider(v.getContext()));
+
+            } else if (checkedId == R.id.rdb_third_bank_provider) {
+                viewModel.get3PartyCheckout(v.getContext());
+            } else if (checkedId == R.id.rdb_pre_auth_pay) {
+                kh.com.mysabay.sdk.pojo.thirdParty.Data paidItem = gson.fromJson(Apps.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
+                if (paidItem != null)
+                    viewModel.postToPaidWithBank((StoreActivity) getActivity(), paidItem);
+            } else
+                MessageUtil.displayToast(v.getContext(), getString(R.string.please_choose_payment_option));
         });
 
         mViewBinding.btnBack.setOnClickListener(v -> {
@@ -290,5 +292,35 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
     public void onDestroy() {
         if (bp != null) bp.release();
         super.onDestroy();
+    }
+
+    private void showBankProviders(Context context, List<kh.com.mysabay.sdk.pojo.thirdParty.Data> data) {
+        if (dialogBank != null) {
+            dialogBank.dismiss();
+        }
+        PartialBankProviderBinding view = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.partial_bank_provider, null, false);
+        RecyclerView rcv = view.bankRcv;
+        BankProviderAdapter adapter = new BankProviderAdapter(context, data, item -> {
+            viewModel.postToPaidWithBank((StoreActivity) getActivity(), (kh.com.mysabay.sdk.pojo.thirdParty.Data) item);
+            if (dialogBank != null)
+                dialogBank.dismiss();
+            viewModel._thirdPartyItemMediatorLiveData.setValue(null);
+            dialogBank = null;
+        });
+        rcv.setLayoutManager(new LinearLayoutManager(context));
+        rcv.setHasFixedSize(true);
+        rcv.setAdapter(adapter);
+        dialogBank = new MaterialDialog.Builder(context)
+                .typeface(FontUtils.getTypefaceKhmerBold(context), FontUtils.getTypefaceKhmer(context))
+                .customView(view.getRoot(), true)
+                .canceledOnTouchOutside(false)
+                .cancelable(false)
+                .positiveText(R.string.label_close).onPositive((dialog, which) -> {
+                    dialog.dismiss();
+                    dialogBank = null;
+                    viewModel._thirdPartyItemMediatorLiveData.setValue(null);
+
+                }).build();
+        dialogBank.show();
     }
 }

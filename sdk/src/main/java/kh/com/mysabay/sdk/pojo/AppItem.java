@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by Tan Phirum on 3/9/20
  * Gmail phirumtan@gmail.com
@@ -24,24 +26,30 @@ public class AppItem implements Parcelable {
     @Expose
     public String uuid;
 
-    public AppItem(String appSecret, String token, String uuid) {
+    @SerializedName("expire")
+    @Expose
+    public long expire;
+
+    public AppItem(String appSecret, String token, String uuid, long expire) {
         this.appSecret = appSecret;
         this.token = token;
         this.uuid = uuid;
+        this.expire = expire;
     }
 
     public AppItem(String appSecret, String token) {
-        this(appSecret, token, null);
+        this(appSecret, token, null, 0);
     }
 
     public AppItem(String appSecret) {
-        this(appSecret, null, null);
+        this(appSecret, null, null, 0);
     }
 
-    protected AppItem(Parcel in) {
+    protected AppItem(@NotNull Parcel in) {
         appSecret = in.readString();
         token = in.readString();
         uuid = in.readString();
+        expire = in.readLong();
     }
 
     public static final Creator<AppItem> CREATOR = new Creator<AppItem>() {
@@ -71,6 +79,11 @@ public class AppItem implements Parcelable {
         return this;
     }
 
+    public AppItem withExpired(long expire) {
+        this.expire = expire;
+        return this;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -81,5 +94,6 @@ public class AppItem implements Parcelable {
         dest.writeString(appSecret);
         dest.writeString(token);
         dest.writeString(uuid);
+        dest.writeLong(expire);
     }
 }

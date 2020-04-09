@@ -30,6 +30,9 @@ public class Data implements Parcelable {
     @SerializedName("logo")
     @Expose
     public String logo;
+
+    public boolean isPaidWith;
+
     public final static Parcelable.Creator<Data> CREATOR = new Creator<Data>() {
 
 
@@ -91,6 +94,11 @@ public class Data implements Parcelable {
 
     public Data withLogo(String logo) {
         this.logo = logo;
+        return this;
+    }
+
+    public Data withIsPaidWith(boolean isPaidWith) {
+        this.isPaidWith = isPaidWith;
         return this;
     }
 

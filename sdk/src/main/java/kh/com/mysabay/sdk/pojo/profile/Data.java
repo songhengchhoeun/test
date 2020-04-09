@@ -9,6 +9,8 @@ import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by Tan Phirum on 3/10/20
@@ -48,10 +50,12 @@ public class Data implements Parcelable {
     public String refreshToken;
     @SerializedName("expire")
     @Expose
-    public Integer expire;
+    public long expire;
     public final static Parcelable.Creator<Data> CREATOR = new Creator<Data>() {
 
 
+        @NotNull
+        @Contract("_ -> new")
         @SuppressWarnings({
                 "unchecked"
         })
@@ -59,13 +63,15 @@ public class Data implements Parcelable {
             return new Data(in);
         }
 
+        @NotNull
+        @Contract(value = "_ -> new", pure = true)
         public Data[] newArray(int size) {
             return (new Data[size]);
         }
 
     };
 
-    protected Data(Parcel in) {
+    protected Data(@NotNull Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.uuid = ((String) in.readValue((String.class.getClassLoader())));
         this.serviceId = ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -76,7 +82,7 @@ public class Data implements Parcelable {
         this.createdAt = ((String) in.readValue((String.class.getClassLoader())));
         this.updatedAt = ((String) in.readValue((String.class.getClassLoader())));
         this.refreshToken = ((String) in.readValue((String.class.getClassLoader())));
-        this.expire = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.expire = ((long) in.readValue((Long.class.getClassLoader())));
     }
 
     /**
@@ -98,7 +104,9 @@ public class Data implements Parcelable {
      * @param updatedAt
      * @param refreshToken
      */
-    public Data(Integer id, String uuid, Integer serviceId, Integer mysabayUserId, String serviceUserId, Integer status, String lastLogin, String createdAt, String updatedAt, String refreshToken, Integer expire) {
+    public Data(Integer id, String uuid, Integer serviceId, Integer mysabayUserId,
+                String serviceUserId, Integer status, String lastLogin, String createdAt, String updatedAt,
+                String refreshToken, long expire) {
         super();
         this.id = id;
         this.uuid = uuid;
@@ -163,7 +171,7 @@ public class Data implements Parcelable {
         return this;
     }
 
-    public Data withExpire(Integer expire) {
+    public Data withExpire(long expire) {
         this.expire = expire;
         return this;
     }

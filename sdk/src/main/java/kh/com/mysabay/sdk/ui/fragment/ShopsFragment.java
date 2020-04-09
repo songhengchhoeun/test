@@ -49,6 +49,9 @@ public class ShopsFragment extends BaseFragment<FmShopBinding, StoreApiVM> {
 
     @Override
     public void initializeObjects(@NotNull View v, Bundle args) {
+        mViewBinding.viewMainShop.setBackgroundResource(colorCodeBackground());
+        mViewBinding.rcv.setBackgroundResource(colorCodeBackground());
+
         mAdapter = new ShopAdapter(v.getContext());
         mAdapter.setHasStableIds(true);
         mLayoutManager = new GridLayoutManager(v.getContext(), getResources().getInteger(R.integer.layout_size));

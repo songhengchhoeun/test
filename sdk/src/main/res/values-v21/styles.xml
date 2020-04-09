@@ -18,8 +18,6 @@
         <item name="android:windowContentOverlay">@color/colorBackground</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
-        <item name="statusBarBackground">@color/colorBackground</item>
-        <item name="statusBarScrim">@color/colorBackground</item>
         <item name="android:statusBarColor">@color/colorBackground</item>
     </style>
 

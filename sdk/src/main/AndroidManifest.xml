@@ -5,11 +5,10 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application android:name=".Apps">
-
+        <activity android:name=".ui.activity.BankProviderActivity"></activity>
         <activity
             android:name=".ui.activity.StoreActivity"
             android:theme="@style/SdkAppTheme.NoActionBar.FullScreen" />
-
         <activity
             android:name=".ui.activity.LoginActivity"
             android:theme="@style/SdkAppTheme.NoActionBar.FullScreen">

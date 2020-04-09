@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/view_main_payment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorBackground">
@@ -46,11 +47,11 @@
                 app:strokeWidth="1dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/view_payment_detail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/padding_10"
-                    android:layout_marginBottom="@dimen/padding_10"
-                    android:background="@color/colorBackground">
+                    android:layout_marginBottom="@dimen/padding_10">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/appCompatImageView"
@@ -173,8 +174,7 @@
                     android:button="@drawable/radio_button_state"
                     android:gravity="start|center"
                     android:text="@string/select_a_partner_bank"
-                    android:textColor="@color/colorYellow"
-                    android:visibility="gone" />
+                    android:textColor="@color/colorYellow"/>
             </RadioGroup>
 
             <androidx.appcompat.widget.AppCompatButton

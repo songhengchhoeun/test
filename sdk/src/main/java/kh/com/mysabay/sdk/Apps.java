@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import kh.com.mysabay.sdk.di.BaseAppComponent;
 import kh.com.mysabay.sdk.di.DaggerBaseAppComponent;
+import kh.com.mysabay.sdk.utils.LogUtil;
 
 /**
  * Created by Tan Phirum on 3/7/20
@@ -20,17 +21,20 @@ import kh.com.mysabay.sdk.di.DaggerBaseAppComponent;
  */
 public class Apps extends Application {
 
-    LocalizationApplicationDelegate mLocalizationApplicationDelegate = new LocalizationApplicationDelegate(this);
+    private static final String TAG = "Apps";
+
+    LocalizationApplicationDelegate mLocalizationApplicationDelegate = new LocalizationApplicationDelegate();
 
     private static Apps mInstance;
     private SharedPreferences mPreferences;
     public BaseAppComponent mComponent;
+    private SdkConfiguration mSdkConfiguration;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtil.debug(TAG, "init Apps");
         mInstance = this;
-
         this.mComponent = DaggerBaseAppComponent.create();
     }
 
@@ -75,5 +79,31 @@ public class Apps extends Application {
 
     public String getAppItem() {
         return getPreferences().getString(Globals.EXT_KEY_APP_ITEM, null);
+    }
+
+    public void saveMethodSelected(String item) {
+        SharedPreferences.Editor editor = getPreferences().edit();
+        editor.putString(Globals.EXT_KEY_PAYMENT_METHOD, item);
+        editor.apply();
+    }
+
+    public String getMethodSelected() {
+        return getPreferences().getString(Globals.EXT_KEY_PAYMENT_METHOD, "");
+    }
+
+    public SdkConfiguration getSdkConfiguration() {
+        return mSdkConfiguration;
+    }
+
+    public void setSdkConfiguration(SdkConfiguration mSdkConfiguration) {
+        this.mSdkConfiguration = mSdkConfiguration;
+    }
+
+    public String userApiUrl() {
+        return mSdkConfiguration.isSandBox ? "https://user.testing.mysabay.com/" : "https://user.mysabay.com/";
+    }
+
+    public String storeApiUrl() {
+        return mSdkConfiguration.isSandBox ? "https://store.testing.mysabay.com/" : "https://store.mysabay.com/";
     }
 }

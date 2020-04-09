@@ -8,6 +8,7 @@ import kh.com.mysabay.sdk.pojo.payment.PaymentBody;
 import kh.com.mysabay.sdk.pojo.payment.PaymentResponseItem;
 import kh.com.mysabay.sdk.pojo.shop.ShopItem;
 import kh.com.mysabay.sdk.pojo.thirdParty.ThirdPartyItem;
+import kh.com.mysabay.sdk.pojo.thirdParty.payment.ResponseItem;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -36,5 +37,10 @@ public interface StoreApi {
     @POST("api/v1/charge/auth")
     Observable<PaymentResponseItem> postToPaid(@Header("app_secret") String appSecret, @Header("Authorization") String token,
                                                @Body() PaymentBody body);
+
+    @POST("api/v1/charge/onetime")
+    Observable<ResponseItem> postToChargeOneTime(@Header("app_secret") String appSecret, @Header("Authorization") String token,
+                                                 @Body() PaymentBody body);
+
 
 }
