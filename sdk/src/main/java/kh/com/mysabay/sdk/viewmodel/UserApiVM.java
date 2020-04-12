@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
-import kh.com.mysabay.sdk.Apps;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.SdkConfiguration;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.NetworkState;
@@ -69,7 +69,7 @@ public class UserApiVM extends ViewModel {
         this.login = _login;
         this.loginMySabay = _loginMySabay;
         this.mCompositeDisposable = new CompositeDisposable();
-        this.sdkConfiguration = Apps.getInstance().getSdkConfiguration();
+        this.sdkConfiguration = MySabaySDK.getInstance().getSdkConfiguration();
     }
 
     public void setLoginItemData(LoginItem item) {
@@ -145,7 +145,7 @@ public class UserApiVM extends ViewModel {
                         if (response.data != null) {
                             AppItem appItem = new AppItem(item.data.appSecret, item.data.accessToken, response.data.uuid, item.data.expire);
                             String encrypted = gson.toJson(appItem);
-                            Apps.getInstance().saveAppItem(encrypted);
+                            MySabaySDK.getInstance().saveAppItem(encrypted);
                             MessageUtil.displayToast(context, "verified code success");
                             LogUtil.debug(TAG, "write appItem success");
 
@@ -197,7 +197,7 @@ public class UserApiVM extends ViewModel {
                         if (userProfileItem.data != null) {
                             EventBus.getDefault().post(new SubscribeLogin(token, null));
                             AppItem appItem = new AppItem(sdkConfiguration.appSecret, userProfileItem.data.refreshToken, userProfileItem.data.uuid, userProfileItem.data.expire);
-                            Apps.getInstance().saveAppItem(gson.toJson(appItem));
+                            MySabaySDK.getInstance().saveAppItem(gson.toJson(appItem));
                             context.runOnUiThread(context::finish);
                         } else
                             EventBus.getDefault().post(new SubscribeLogin("", userProfileItem.data));

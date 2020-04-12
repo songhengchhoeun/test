@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
-import kh.com.mysabay.sdk.Apps;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.pojo.NetworkState;
 import kh.com.mysabay.sdk.utils.IdlingResourceHelper;
@@ -223,7 +223,7 @@ public abstract class BaseFragment<D extends ViewDataBinding, V extends ViewMode
 
     public int colorCodeBackground() {
         int colorCode;
-        if (Apps.getInstance().getSdkConfiguration().sdkTheme == SdkTheme.Dark) {
+        if (MySabaySDK.getInstance().getSdkConfiguration().sdkTheme == SdkTheme.Dark) {
             colorCode = R.color.colorBackground;
         } else
             colorCode = R.color.colorWhite;

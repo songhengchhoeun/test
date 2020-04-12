@@ -89,7 +89,7 @@ project.afterEvaluate {
         pkg {
             repo = 'SabaySdk' // the name of the repository you created on Bintray
             name = 'kh.com.mysabay.sabaysdk' // the name of the package you created inside it
-            userOrg = 'khmerdev'
+            userOrg = 'sabay-digital'
             version {
                 name = PUBLISH_VERSION
                 released = new Date()

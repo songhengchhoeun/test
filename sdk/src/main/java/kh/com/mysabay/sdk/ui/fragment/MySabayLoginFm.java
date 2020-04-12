@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import kh.com.mysabay.sdk.Apps;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FmMysabayLoginBinding;
@@ -112,7 +112,7 @@ public class MySabayLoginFm extends BaseFragment<FmMysabayLoginBinding, UserApiV
     public void assignValues() {
         if (StringUtils.isBlank(mDeepLink)) {
             Map<String, String> header = new HashMap<>();
-            header.put("app_secret", Apps.getInstance().getSdkConfiguration().appSecret);
+            header.put("app_secret", MySabaySDK.getInstance().getSdkConfiguration().appSecret);
 
             mViewBinding.wv.loadUrl("https://user.master.mysabay.com/api/v1/user/mysabay/login", header);
         } else

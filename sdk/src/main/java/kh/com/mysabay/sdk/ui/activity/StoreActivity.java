@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.Globals;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseActivity;
 import kh.com.mysabay.sdk.di.component.StoreComponent;
@@ -30,7 +30,7 @@ public class StoreActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         // Creation of the main graph using the application graph
-        userComponent = Apps.getInstance().mComponent.storeComponent().create();
+        userComponent = MySabaySDK.getInstance().mComponent.storeComponent().create();
         // Make Dagger instantiate @Inject fields in MaiActivity
         userComponent.inject(this);
         super.onCreate(savedInstanceState);

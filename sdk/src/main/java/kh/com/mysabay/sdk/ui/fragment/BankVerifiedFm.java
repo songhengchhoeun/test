@@ -16,8 +16,8 @@ import androidx.annotation.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.BuildConfig;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.PartialBankProviderVerifiedBinding;
@@ -99,9 +99,9 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                kh.com.mysabay.sdk.pojo.thirdParty.Data data = gson.fromJson(Apps.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
+                                kh.com.mysabay.sdk.pojo.thirdParty.Data data = gson.fromJson(MySabaySDK.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
                                 data.withIsPaidWith(true);
-                                Apps.getInstance().saveMethodSelected(gson.toJson(data));
+                                MySabaySDK.getInstance().saveMethodSelected(gson.toJson(data));
                             }
                         });
                         LogUtil.debug(TAG, "payment success");
@@ -109,7 +109,7 @@ public class BankVerifiedFm extends BaseFragment<PartialBankProviderVerifiedBind
                 }
             });
             String html = scriptFormValidate(mPaymentResponseItem);
-            mViewBinding.wv.loadDataWithBaseURL(Apps.getInstance().storeApiUrl(), html, "text/html", "utf-8", Apps.getInstance().storeApiUrl());
+            mViewBinding.wv.loadDataWithBaseURL(MySabaySDK.getInstance().storeApiUrl(), html, "text/html", "utf-8", MySabaySDK.getInstance().storeApiUrl());
         }
     }
 
