@@ -1,6 +1,9 @@
 package kh.com.mysabay.sdk;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
@@ -17,6 +20,8 @@ import kh.com.mysabay.sdk.callback.LoginListener;
 import kh.com.mysabay.sdk.callback.PaymentListener;
 import kh.com.mysabay.sdk.callback.RefreshTokenListener;
 import kh.com.mysabay.sdk.callback.UserInfoListener;
+import kh.com.mysabay.sdk.di.BaseAppComponent;
+import kh.com.mysabay.sdk.di.DaggerBaseAppComponent;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.login.SubscribeLogin;
 import kh.com.mysabay.sdk.pojo.payment.SubscribePayment;
@@ -28,6 +33,8 @@ import kh.com.mysabay.sdk.utils.AppRxSchedulers;
 import kh.com.mysabay.sdk.utils.LogUtil;
 import kh.com.mysabay.sdk.utils.MessageUtil;
 import kh.com.mysabay.sdk.webservice.AbstractDisposableObs;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Tan Phirum on 3/11/20
@@ -45,33 +52,40 @@ public class MySabaySDK {
     @Inject
     AppRxSchedulers appRxSchedulers;
 
-    private static Apps apps;
+    private SharedPreferences mPreferences;
+    public BaseAppComponent mComponent;
+    public Application mAppContext;
+
     private static MySabaySDK mySabaySDK;
-    private static SdkConfiguration mSdkConfiguration;
+    private SdkConfiguration mSdkConfiguration;
 
     private LoginListener loginListner;
     private PaymentListener mPaymentListener;
 
     @Inject
-    public MySabaySDK(SdkConfiguration configuration) {
+    public MySabaySDK(Application application, SdkConfiguration configuration) {
         LogUtil.debug(TAG, "init MySabaySDK");
-        EventBus.getDefault().register(this);
-        mSdkConfiguration = configuration;
-        apps = Apps.getInstance();
-        apps.setSdkConfiguration(configuration);
-        apps.mComponent.inject(this);
         mySabaySDK = this;
+        this.mAppContext = application;
+        this.mComponent = DaggerBaseAppComponent.create();
+        mSdkConfiguration = configuration;
+        this.mComponent.inject(this);
+        EventBus.getDefault().register(this);
     }
 
     public static class Impl {
-        public static synchronized void setDefaultInstanceConfiguration(SdkConfiguration configuration) {
-            new MySabaySDK(configuration);
+        public static synchronized void setDefaultInstanceConfiguration(Application application, SdkConfiguration configuration) {
+            new MySabaySDK(application, configuration);
         }
     }
 
     @Contract(pure = true)
     public static MySabaySDK getInstance() {
-        if (mSdkConfiguration == null)
+        if (mySabaySDK == null)
+            throw new NullPointerException("initialize mysabaySdk in application");
+        if (mySabaySDK.mAppContext == null)
+            throw new NullPointerException("Please provide application context");
+        if (mySabaySDK.mSdkConfiguration == null)
             throw new RuntimeException("This sdk is need SdkConfiguration");
         return mySabaySDK;
     }
@@ -84,7 +98,7 @@ public class MySabaySDK {
     public void showLoginView(LoginListener listener) {
         if (listener != null)
             this.loginListner = listener;
-        apps.startActivity(new Intent(apps, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        mAppContext.startActivity(new Intent(mAppContext, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     /**
@@ -93,11 +107,11 @@ public class MySabaySDK {
      * @return true has logged , false otherwise
      */
     public boolean isLogIn() {
-        return !StringUtils.isBlank(Apps.getInstance().getAppItem());
+        return !StringUtils.isBlank(MySabaySDK.getInstance().getAppItem());
     }
 
     public void logout() {
-        apps.saveAppItem("");
+        saveAppItem("");
     }
 
     /**
@@ -106,16 +120,16 @@ public class MySabaySDK {
      * @param listener
      */
     public void getUserProfile(UserInfoListener listener) {
-        AppItem item = gson.fromJson(apps.getAppItem(), AppItem.class);
+        AppItem item = gson.fromJson(getAppItem(), AppItem.class);
         userRepo.getUserProfile(item.appSecret, item.token).subscribeOn(appRxSchedulers.io())
-                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<UserProfileItem>(apps) {
+                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<UserProfileItem>(mAppContext) {
             @Override
             protected void onSuccess(UserProfileItem userProfileItem) {
                 if (listener != null) {
                     if (userProfileItem.status == 200) {
                         item.withToken(userProfileItem.data.refreshToken);
                         item.withExpired(userProfileItem.data.expire);
-                        Apps.getInstance().saveAppItem(gson.toJson(item));
+                        MySabaySDK.getInstance().saveAppItem(gson.toJson(item));
                         listener.userInfo(gson.toJson(userProfileItem));
                     } else
                         onErrors(new Error(gson.toJson(userProfileItem)));
@@ -140,28 +154,28 @@ public class MySabaySDK {
         if (listener == null) return;
 
         this.mPaymentListener = listener;
-        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        AppItem appItem = gson.fromJson(MySabaySDK.getInstance().getAppItem(), AppItem.class);
         if (appItem == null || StringUtils.isBlank(appItem.token)) {
-            MessageUtil.displayToast(apps, "You need to login first");
+            MessageUtil.displayToast(mAppContext, "You need to login first");
             return;
         }
-        apps.startActivity(new Intent(apps, StoreActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        mAppContext.startActivity(new Intent(mAppContext, StoreActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     /**
      * @param listener
      */
     public void refreshToken(RefreshTokenListener listener) {
-        AppItem item = gson.fromJson(apps.getAppItem(), AppItem.class);
+        AppItem item = gson.fromJson(getAppItem(), AppItem.class);
         userRepo.getUserProfile(item.appSecret, item.token).subscribeOn(appRxSchedulers.io())
-                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<UserProfileItem>(apps) {
+                .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<UserProfileItem>(mAppContext) {
             @Override
             protected void onSuccess(UserProfileItem userProfileItem) {
                 if (listener != null) {
                     if (userProfileItem.status == 200) {
                         item.withToken(userProfileItem.data.refreshToken);
                         item.withExpired(userProfileItem.data.expire);
-                        Apps.getInstance().saveAppItem(gson.toJson(item));
+                        MySabaySDK.getInstance().saveAppItem(gson.toJson(item));
                         listener.refreshSuccess(userProfileItem.data.refreshToken);
                     } else
                         onErrors(new Error(gson.toJson(userProfileItem)));
@@ -182,7 +196,7 @@ public class MySabaySDK {
      * @return with token that valid
      */
     public String currentToken() {
-        AppItem item = gson.fromJson(apps.getAppItem(), AppItem.class);
+        AppItem item = gson.fromJson(getAppItem(), AppItem.class);
         return item.token;
     }
 
@@ -190,7 +204,7 @@ public class MySabaySDK {
      * @return true if token is valid, false otherwise
      */
     public boolean isTokenValid() {
-        AppItem item = gson.fromJson(apps.getAppItem(), AppItem.class);
+        AppItem item = gson.fromJson(getAppItem(), AppItem.class);
         if (System.currentTimeMillis() == item.expire)
             return false;
         else return true;
@@ -227,6 +241,54 @@ public class MySabaySDK {
         loginListner = null;
         mPaymentListener = null;
         mySabaySDK = null;
-        apps = null;
+        mAppContext = null;
+    }
+
+    public SharedPreferences getPreferences(Activity context) {
+        if (mPreferences == null)
+            mPreferences = context.getSharedPreferences(Globals.PREF_NAME, MODE_PRIVATE);
+        return mPreferences;
+    }
+
+    public SharedPreferences getPreferences() {
+        if (mPreferences == null)
+            mPreferences = mAppContext.getSharedPreferences(Globals.PREF_NAME, MODE_PRIVATE);
+        return mPreferences;
+    }
+
+    public void saveAppItem(String item) {
+        SharedPreferences.Editor editor = getPreferences().edit();
+        editor.putString(Globals.EXT_KEY_APP_ITEM, item);
+        editor.apply();
+    }
+
+    public String getAppItem() {
+        return getPreferences().getString(Globals.EXT_KEY_APP_ITEM, null);
+    }
+
+    public void saveMethodSelected(String item) {
+        SharedPreferences.Editor editor = getPreferences().edit();
+        editor.putString(Globals.EXT_KEY_PAYMENT_METHOD, item);
+        editor.apply();
+    }
+
+    public String getMethodSelected() {
+        return getPreferences().getString(Globals.EXT_KEY_PAYMENT_METHOD, "");
+    }
+
+    public SdkConfiguration getSdkConfiguration() {
+        return mSdkConfiguration;
+    }
+
+    public void setSdkConfiguration(SdkConfiguration mSdkConfiguration) {
+        mSdkConfiguration = mSdkConfiguration;
+    }
+
+    public String userApiUrl() {
+        return mSdkConfiguration.isSandBox ? "https://user.testing.mysabay.com/" : "https://user.mysabay.com/";
+    }
+
+    public String storeApiUrl() {
+        return mSdkConfiguration.isSandBox ? "https://store.testing.mysabay.com/" : "https://store.mysabay.com/";
     }
 }

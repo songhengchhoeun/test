@@ -19,7 +19,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import kh.com.mysabay.sdk.Apps;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.SdkConfiguration;
 import kh.com.mysabay.sdk.pojo.AppItem;
 import kh.com.mysabay.sdk.pojo.NetworkState;
@@ -76,7 +76,7 @@ public class StoreApiVM extends ViewModel {
         this.mDataSelected = new MediatorLiveData<>();
         this.mySabayItemMediatorLiveData = new MediatorLiveData<>();
         this._thirdPartyItemMediatorLiveData = new MediatorLiveData<>();
-        this.sdkConfiguration = Apps.getInstance().getSdkConfiguration();
+        this.sdkConfiguration = MySabaySDK.getInstance().getSdkConfiguration();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class StoreApiVM extends ViewModel {
      * @param context
      */
     public void getShopFromServer(@NotNull Context context) {
-        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        AppItem appItem = gson.fromJson(MySabaySDK.getInstance().getAppItem(), AppItem.class);
         storeRepo.getShopItem(sdkConfiguration.appSecret, appItem.token).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<ShopItem>(context, _networkState) {
             @Override
@@ -142,7 +142,7 @@ public class StoreApiVM extends ViewModel {
      * @param context
      */
     public void getMySabayCheckout(@NotNull Context context) {
-        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        AppItem appItem = gson.fromJson(MySabaySDK.getInstance().getAppItem(), AppItem.class);
         storeRepo.getMySabayCheckout(sdkConfiguration.appSecret, appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new Observer<MySabayItem>() {
             @Override
@@ -175,7 +175,7 @@ public class StoreApiVM extends ViewModel {
      * @param context
      */
     public void get3PartyCheckout(@NotNull Context context) {
-        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        AppItem appItem = gson.fromJson(MySabaySDK.getInstance().getAppItem(), AppItem.class);
         storeRepo.get3PartyCheckout(sdkConfiguration.appSecret, appItem.token, appItem.uuid).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new AbstractDisposableObs<ThirdPartyItem>(context, _networkState) {
             @Override
@@ -194,7 +194,7 @@ public class StoreApiVM extends ViewModel {
 
     public void postToVerifyAppInPurchase(@NotNull Context context, @NotNull GoogleVerifyBody body) {
         EventBus.getDefault().post(new SubscribePayment(null, body.receipt, null));
-        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        AppItem appItem = gson.fromJson(MySabaySDK.getInstance().getAppItem(), AppItem.class);
         mCompos.add(storeRepo.postToVerifyGoogle(sdkConfiguration.appSecret, appItem.token, body).subscribeOn(appRxSchedulers.io())
                 .observeOn(appRxSchedulers.mainThread()).subscribe(new Consumer<GoogleVerifyResponse>() {
                     @Override
@@ -217,7 +217,7 @@ public class StoreApiVM extends ViewModel {
      * @param context
      */
     public void postToPaidWithMySabayProvider(Context context) {
-        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        AppItem appItem = gson.fromJson(MySabaySDK.getInstance().getAppItem(), AppItem.class);
         Data shopItem = getItemSelected().getValue();
         if (getMySabayProvider().getValue() == null) return;
 
@@ -243,7 +243,7 @@ public class StoreApiVM extends ViewModel {
 
 
     public void postToPaidWithBank(StoreActivity context, kh.com.mysabay.sdk.pojo.thirdParty.Data data) {
-        AppItem appItem = gson.fromJson(Apps.getInstance().getAppItem(), AppItem.class);
+        AppItem appItem = gson.fromJson(MySabaySDK.getInstance().getAppItem(), AppItem.class);
         Data shopItem = getItemSelected().getValue();
 
         if (data != null && shopItem != null) {
@@ -254,7 +254,7 @@ public class StoreApiVM extends ViewModel {
                         @Override
                         protected void onSuccess(ResponseItem response) {
                             if (response.status == 200) {
-                                Apps.getInstance().saveMethodSelected(gson.toJson(data.withIsPaidWith(false)));
+                                MySabaySDK.getInstance().saveMethodSelected(gson.toJson(data.withIsPaidWith(false)));
                                 context.initAddFragment(BankVerifiedFm.newInstance(response.data), PaymentFm.TAG, true);
                             }
                             //EventBus.getDefault().post(new SubscribePayment(item, null, null));

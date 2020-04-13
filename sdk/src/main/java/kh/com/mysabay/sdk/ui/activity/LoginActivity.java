@@ -16,8 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 
-import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.Globals;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseActivity;
 import kh.com.mysabay.sdk.di.component.UserComponent;
@@ -52,7 +52,7 @@ public class LoginActivity extends BaseActivity {
         mDeepLink = intent.getData();
         LogUtil.debug(TAG, "");
         // Creation of the main graph using the application graph
-        userComponent = Apps.getInstance().mComponent.mainComponent().create();
+        userComponent = MySabaySDK.getInstance().mComponent.mainComponent().create();
         // Make Dagger instantiate @Inject fields in MaiActivity
         userComponent.inject(this);
         loginActivity = this;

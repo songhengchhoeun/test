@@ -10,8 +10,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.BuildConfig;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.webservice.api.StoreApi;
 import kh.com.mysabay.sdk.webservice.api.UserApi;
 import okhttp3.OkHttpClient;
@@ -41,7 +41,7 @@ public class ServiceGenerator {
     @Provides
     public Retrofit instanceUser() {
         return new Retrofit.Builder()
-                .baseUrl(Apps.getInstance().userApiUrl())
+                .baseUrl(MySabaySDK.getInstance().userApiUrl())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -53,7 +53,7 @@ public class ServiceGenerator {
     @Provides
     public Retrofit instanceStore() {
         return new Retrofit.Builder()
-                .baseUrl(Apps.getInstance().storeApiUrl())
+                .baseUrl(MySabaySDK.getInstance().storeApiUrl())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
-import kh.com.mysabay.sdk.Apps;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.databinding.PartialShopItemBinding;
 import kh.com.mysabay.sdk.ui.activity.StoreActivity;
@@ -27,7 +27,7 @@ public class ShopItmVH extends RecyclerView.ViewHolder implements View.OnClickLi
         super(itemView);
         this.viewBinding = DataBindingUtil.bind(itemView);
         if (this.viewBinding != null) {
-            this.viewBinding.card.setBackgroundResource(Apps.getInstance().getSdkConfiguration().sdkTheme == SdkTheme.Dark ?
+            this.viewBinding.card.setBackgroundResource(MySabaySDK.getInstance().getSdkConfiguration().sdkTheme == SdkTheme.Dark ?
                     R.color.colorBackground : R.color.colorWhite);
             this.viewBinding.card.setOnClickListener(this);
         }

@@ -15,8 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.BuildConfig;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.base.BaseFragment;
 import kh.com.mysabay.sdk.databinding.FragmentLoginBinding;
@@ -47,7 +47,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, UserApiVM>
     @Override
     public void initializeObjects(View v, Bundle args) {
         mViewBinding.viewMainLogin.setBackgroundResource(colorCodeBackground());
-        mViewBinding.tvMySabayAppName.setText(Apps.getInstance().getSdkConfiguration().mySabayAppName);
+        mViewBinding.tvMySabayAppName.setText(MySabaySDK.getInstance().getSdkConfiguration().mySabayAppName);
         this.viewModel = LoginActivity.loginActivity.viewModel;
     }
 
@@ -80,11 +80,11 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, UserApiVM>
             if (StringUtils.isAnyBlank(phoneNo)) {
                 showCheckFields(mViewBinding.edtPhone, R.string.msg_input_phone);
             } else
-                viewModel.postToLogin(v.getContext(), Apps.getInstance().getSdkConfiguration().appSecret, phoneNo);
+                viewModel.postToLogin(v.getContext(), MySabaySDK.getInstance().getSdkConfiguration().appSecret, phoneNo);
         });
 
         mViewBinding.btnLoginMysabay.setOnClickListener(v ->
-                viewModel.postToLoginWithMySabay(v.getContext(), Apps.getInstance().getSdkConfiguration().appSecret));
+                viewModel.postToLoginWithMySabay(v.getContext(), MySabaySDK.getInstance().getSdkConfiguration().appSecret));
 
 
     }

@@ -27,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import kh.com.mysabay.sdk.Apps;
 import kh.com.mysabay.sdk.BuildConfig;
+import kh.com.mysabay.sdk.MySabaySDK;
 import kh.com.mysabay.sdk.R;
 import kh.com.mysabay.sdk.adapter.BankProviderAdapter;
 import kh.com.mysabay.sdk.base.BaseFragment;
@@ -92,7 +92,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
         if (!BillingProcessor.isIabServiceAvailable(v.getContext()))
             MessageUtil.displayDialog(v.getContext(), getString(R.string.upgrade_google_play));
 
-        bp = new BillingProcessor(v.getContext(), Apps.getInstance().getSdkConfiguration().licenseKey, Apps.getInstance().getSdkConfiguration().merchantId, this);
+        bp = new BillingProcessor(v.getContext(), MySabaySDK.getInstance().getSdkConfiguration().licenseKey, MySabaySDK.getInstance().getSdkConfiguration().merchantId, this);
         bp.initialize();
         // or bp = BillingProcessor.newBillingProcessor(this, "YOUR LICENSE KEY FROM GOOGLE PLAY CONSOLE HERE", this);
         // See below on why this is a useful alternative
@@ -127,7 +127,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
             }
         });
 
-        kh.com.mysabay.sdk.pojo.thirdParty.Data paidMethod = gson.fromJson(Apps.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
+        kh.com.mysabay.sdk.pojo.thirdParty.Data paidMethod = gson.fromJson(MySabaySDK.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
         if (paidMethod != null) {
             mViewBinding.rdbPreAuthPay.setText(paidMethod.serviceName);
             mViewBinding.rdbPreAuthPay.setVisibility(paidMethod.isPaidWith ? View.VISIBLE : View.GONE);
@@ -163,7 +163,7 @@ public class PaymentFm extends BaseFragment<FmPaymentBinding, StoreApiVM> implem
             } else if (checkedId == R.id.rdb_third_bank_provider) {
                 viewModel.get3PartyCheckout(v.getContext());
             } else if (checkedId == R.id.rdb_pre_auth_pay) {
-                kh.com.mysabay.sdk.pojo.thirdParty.Data paidItem = gson.fromJson(Apps.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
+                kh.com.mysabay.sdk.pojo.thirdParty.Data paidItem = gson.fromJson(MySabaySDK.getInstance().getMethodSelected(), kh.com.mysabay.sdk.pojo.thirdParty.Data.class);
                 if (paidItem != null)
                     viewModel.postToPaidWithBank((StoreActivity) getActivity(), paidItem);
             } else
