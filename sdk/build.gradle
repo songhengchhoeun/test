@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-group='kh.com.mysabay'
-version='1.0.1-o'
+group='com.test.khmer'
+version='1.1.7'
 
 android {
     compileSdkVersion 29
@@ -27,7 +27,7 @@ android {
             abortOnError false
         }
     }
-    
+
     buildTypes {
         release {
             minifyEnabled false
